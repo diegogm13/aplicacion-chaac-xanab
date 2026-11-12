@@ -1,0 +1,51 @@
+﻿> Building...
+√ Building...
+Initial chunk files   | Names                     |  Raw size | Estimated transfer size
+chunk-TS5EJWUE.js     | -                         | 277.32 kB |                75.21 kB
+main-4WMHGJZL.js      | main                      |  76.93 kB |                20.86 kB
+chunk-7LSFYN3C.js     | -                         |  35.85 kB |                 7.56 kB
+polyfills-DOYHMSTV.js | polyfills                 |  35.73 kB |                11.58 kB
+styles-PMPATNK7.css   | styles                    |  11.13 kB |                 2.34 kB
+chunk-5RB5IDEF.js     | -                         |   1.48 kB |               596 bytes
+chunk-OB2BRZIJ.js     | -                         |   1.10 kB |               485 bytes
+chunk-UXB4G4KM.js     | -                         | 980 bytes |               980 bytes
+chunk-74JOYYOK.js     | -                         | 368 bytes |               368 bytes
+
+                      | Initial total             | 440.87 kB |               119.97 kB
+
+Lazy chunk files      | Names                     |  Raw size | Estimated transfer size
+chunk-WXJMA2XV.js     | admin-dashboard-component |  66.27 kB |                13.74 kB
+chunk-CI5Y67LZ.js     | terminos-uso-component    |  19.78 kB |                 5.63 kB
+chunk-NSXHJSCP.js     | carrito-component         |  15.15 kB |                 3.92 kB
+chunk-BQPFDUMT.js     | home-component            |  13.51 kB |                 3.68 kB
+chunk-PPBRDY6Y.js     | perfil-component          |  13.19 kB |                 3.40 kB
+chunk-IUKXDBGC.js     | categoria-component       |  11.79 kB |                 3.21 kB
+chunk-OSDF7SZE.js     | registro-component        |  11.61 kB |                 3.31 kB
+chunk-66YSHP2Y.js     | login-component           |  11.04 kB |                 3.44 kB
+chunk-TD44F7PX.js     | contacto-component        |   8.32 kB |                 2.63 kB
+chunk-5XTZEOPT.js     | compra-final-component    |   6.92 kB |                 2.09 kB
+chunk-UVCOZMBQ.js     | mis-compras-component     |   6.87 kB |                 2.14 kB
+chunk-5PCCEAS2.js     | verify-email-component    |   3.31 kB |                 1.19 kB
+chunk-57O6DUY6.js     | -                         |   2.40 kB |               904 bytes
+chunk-TN6CRIGU.js     | -                         | 588 bytes |               588 bytes
+chunk-T2VHP7QZ.js     | -                         | 548 bytes |               548 bytes
+...and 1 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [15.468 seconds] - 2026-11-12T01:54:30.294Z
+
+node.exe : ▲ [WARNING] src/app/Components/carrito/carrito.component.css exceeded maximum budget. Budget 6.00 kB was 
+not met by 119 bytes with a total of 6.12 kB.
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (▲ [WARNING] src...tal of 6.12 kB.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+
+▲ [WARNING] src/app/Components/admin/admin-dashboard/admin-dashboard.component.css exceeded maximum budget. Budget 
+6.00 kB was not met by 5.01 kB with a total of 11.01 kB.
+
+
+Output location: C:\Users\dg660\Documents\chaac-xanab\chaac-xanab-dg\dist\mi-proyecto-angular
+

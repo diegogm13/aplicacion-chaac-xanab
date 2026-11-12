@@ -12,7 +12,7 @@ Auditoría técnica de la solución CHAAC XANAB (app móvil Flutter + API NestJS
 | Red del cliente | Wi-Fi Intel Dual Band AC 8265 (enlace 300 Mbps) |
 | App móvil | `chaac_xanab_app` versión **1.0.0+1** · Flutter 3.44.0 / Dart 3.12.0 · huella SHA-256 de `lib/`: `891028365E2473C8`. Código evaluado = primer commit del repositorio de la app, **`2272970`** (rama `main`; antes no estaba en Git, ver OBS-06) |
 | API | `backend-chaac-xanab` commit evaluado **`bbf3f21`** (“Release 1.0.0”); pruebas de la práctica en el commit **`c700802`**, rama `practica11-whitebox` · NestJS 10.4 · Node 24.15 (local) |
-| Sitio web | `chaac-xanab-dg` (Angular) commit **`6a03504`**; consume la misma API |
+| Sitio web | `chaac-xanab-dg` · Angular 21 + Vitest 4 (jsdom) · commit evaluado **`6a03504`**; pruebas en **`a2ae93c`** (rama `practica11-whitebox`) · publicado en `https://chaac-xanab-dg.vercel.app` (SPA estática; `/api/*` se reenvía al backend con un *rewrite* de Vercel) |
 | Servidor | Vercel serverless, región **iad1** (Washington D.C.); con 10 usuarios concurrentes también **cle1** · `https://backend-chaac-xanab.vercel.app/api` (IPs 216.198.79.131 / 64.29.17.131) |
 | BD servidor | PostgreSQL administrado por Supabase (acceso vía service role desde la API) |
 | BD local | SQLite 3.53.4 (`chaac_xanab.db`, versión de esquema 3) |
@@ -28,6 +28,10 @@ powershell -ExecutionPolicy Bypass -File practica11/scripts/medir_red.ps1
 node practica11/scripts/carga.mjs
 # API (desde backend-chaac-xanab)
 npx jest --coverage
+# Sitio web (desde chaac-xanab-dg)
+npm install --no-save @vitest/coverage-v8@4.0.18
+npx ng test --watch=false --include="src/app/practica11/**/*.spec.ts" --coverage
+powershell -ExecutionPolicy Bypass -File ../chaac_xanab_app/practica11/scripts/medir_web.ps1
 ```
 
 ---
@@ -48,6 +52,10 @@ npx jest --coverage
 | API | `productos/*`, `categorias/*` | Catálogo con caché en memoria (TTL 60 s) |
 | API | `compras/*` | Alta de compra: valida stock, calcula total, inserta cabecera+renglones, descuenta stock |
 | API | `admin/*`, `bitacora/*` | CRUD de administración y auditoría |
+| Sitio web | `interceptors/auth.interceptor.ts` | Agrega el JWT a cada petición; ante 401 cierra sesión y redirige a `/login` |
+| Sitio web | `Services/auth.service.ts`, `guards/*.guard.ts` | Token en `localStorage`, decodificación del JWT en el navegador, protección de rutas y de `/admin` |
+| Sitio web | `Services/cart.service.ts` | Carrito en `localStorage` (cálculo de cantidades y total) |
+| Sitio web | `utils/password-policy.ts` | Política de contraseña (misma regla que el backend) |
 | API | `supabase/supabase.service.ts` | **Único acceso a BD** (cliente service role) |
 
 **Funciones que se conectan con el servidor:** `ApiClient.get/post/put → _enviar()` (todas las peticiones de la app pasan por aquí) y `ApiService.obtenerProductos()` (pantalla de consulta de la Práctica 3).
@@ -63,6 +71,9 @@ npx jest --coverage
 | `npm outdated` | NestJS 10.4 (última 12.4), `multer` 1.4.5-lts (última 2.5), `nodemailer` 6.10 (última 10.5), `@supabase/supabase-js` 2.100→2.119 | [backend/practica11/npm_outdated.txt] |
 | `npm audit --omit=dev` | **15 vulnerabilidades: 1 crítica, 8 altas, 5 moderadas, 1 baja** (crítica: `proxy-addr`; altas: `body-parser`, `path-to-regexp`, `multer`, `nodemailer`, `ws`, `lodash`, `@nestjs/config`, `@nestjs/platform-express`) | [backend/practica11/npm_audit.txt] → DEF-11 |
 | Búsqueda de secretos (regex de JWT, `sk_`, `AKIA`, `password=`, `api_key=`) | Sin credenciales reales en código; sólo datos ficticios en `*.spec.ts`. `.env` está en `.gitignore` y nunca se versionó (`git log -- .env` vacío) | — |
+| `ng build` (sitio, compilación de producción con verificación de tipos) | **0 errores**; 2 avisos de presupuesto CSS (`carrito.component.css` 6.12 kB y `admin-dashboard.component.css` superan 6 kB); paquete inicial 440.9 kB (120.0 kB transferidos) | [web/ng_build.txt] |
+| `npm audit --omit=dev` (sitio) | **13 vulnerabilidades: 2 críticas, 10 altas, 1 moderada** | [web/npm_audit_web.txt] → DEF-11 |
+| Suite Vitest existente del sitio | 1 de 2 pruebas falla: la spec de plantilla prueba la clase `App` (`app.ts`), que **no se usa** (`main.ts` arranca `AppComponent`) | [web/ng_test.log] → OBS-10 |
 | Suite Jest existente (antes de la práctica) | **13 pruebas fallando en 5 suites** (no se ejecutaba) | [backend/practica11/jest.log] → DEF-07 |
 
 ### 1.3 Puntos de revisión obligatorios
@@ -70,9 +81,9 @@ npx jest --coverage
 | Punto | Hallazgo | Ubicación |
 |---|---|---|
 | Métodos sin manejo de excepciones | `TiendaScreen._cargar()` sólo atrapa `ApiException`; un `TypeError` por JSON inesperado escapa (DEF-10). `CarritoService.agregar()` no controla `ArgumentError` de `clamp(1, 0)` (DEF-02) ni `DatabaseException` UNIQUE en concurrencia (DEF-03) | `tienda_screen.dart:49-59`, `carrito_service.dart:46-66` |
-| Credenciales o claves expuestas | Ninguna. JWT del usuario guardado en `SharedPreferences` **sin cifrar** (OBS-01) | `auth_service.dart:42` |
+| Credenciales o claves expuestas | Ninguna. JWT del usuario guardado en `SharedPreferences` **sin cifrar** (OBS-01) y, en el sitio, en `localStorage` (accesible a cualquier script; sin CSP que lo limite, DEF-09) | `auth_service.dart:42`, `auth.service.ts:28` |
 | Validaciones duplicadas o inexistentes | Antes: reglas repetidas en `login/registro/checkout` → se centralizaron en `Validaciones`. Login exige sólo `@` y el registro un correo completo (OBS-02). SQLite sin `CHECK` en `edad` (DEF-04). `UsuarioDao.actualizar()` acepta `id == null` y manda `whereArgs: [null]` (sqflite lo advierte en ejecución, OBS-03) | `validaciones.dart`, `usuario_dao.dart:20-23` |
-| Código inaccesible o redundante | Constructor privado `Validaciones._()` (intencional). `main.ts` (local) y `api/index.ts` (Vercel) duplican la configuración y **ya divergieron**: sólo `main.ts` aplica `helmet()` (DEF-09) | `api/index.ts:16-29` |
+| Código inaccesible o redundante | Sitio: `app.ts`, `app.html`, `app.css` y `app.spec.ts` son restos de la plantilla que nunca se cargan (OBS-10). Constructor privado `Validaciones._()` (intencional). `main.ts` (local) y `api/index.ts` (Vercel) duplican la configuración y **ya divergieron**: sólo `main.ts` aplica `helmet()` (DEF-09) | `api/index.ts:16-29` |
 | Consultas con datos sin validar | App: todo con `?` parametrizado (probado contra `"1 OR 1=1; DROP TABLE..."`). API: PostgREST parametriza; `buscarPorTermino` construye un filtro `.or()` con texto del usuario pero lo sanitiza (quita `, ( ) % _ \` y limita a 100 caracteres) — verificado con prueba | `productos.service.ts:52-80` |
 | Red bloqueando el hilo principal | No hay E/S síncrona en `lib/` (sin `*Sync()`/`sleep`). `jsonDecode` corre en el isolate de UI: 0.30 ms para el catálogo actual, 21.2 ms con 100× los datos (1.27 frames) | [rendimiento_app.json] |
 | Recursos no liberados | Controladores de texto se liberan en `dispose()`. `ApiClient` usa un `http.Client` singleton (correcto, reutiliza conexiones). `setState` tras `await` sin `mounted` en `tienda_screen.dart:51,56` | `tienda_screen.dart` |
@@ -267,6 +278,35 @@ Ramas no cubiertas: los `?? null` / `?? []` defensivos sobre respuestas de Supab
 
 ---
 
+### 3.5 Sitio web (frontend Angular)
+
+Pruebas en `chaac-xanab-dg/src/app/practica11/` con Vitest + `TestBed`. Las peticiones HTTP se interceptan con `HttpTestingController`, así que pasan por el `authInterceptor` real. [web/ng_test.log]
+
+**Métodos analizados**
+
+| Tipo | Método | V(G) | Caminos / casos | Resultado |
+|---|---|---|---|---|
+| Validación | `passwordPolicyError()` — 5 `if … return` en cascada | 6 | Cada regla en falso por separado, contraseña válida, **límites 7 y 8 caracteres**, vacía y orden de evaluación (11 casos) | 11/11 ✔ |
+| Cálculo | `CartService.addToCart()`, `updateQuantity()`, `getTotal()`, `loadCart()` | 2 c/u | Producto nuevo o existente, otra talla, **cantidad que no baja de 1**, persistencia en `localStorage`, JSON corrupto (11 casos) | 11/11 ✔, 3 confirman DEF-13 |
+| Comunicación | `authInterceptor` — D1 `token`, D2 `status === 401` (C1) `&& token` (C2) | 3 | Sin token / con token; 401 con sesión → cierra sesión y redirige; 401 sin sesión (login fallido) → no redirige; **403 → conserva la sesión**; error de red (status 0) | ✔ |
+| Comunicación | `AuthService` (`getCurrentUser`, `isLoggedIn`, `login`, `logout`) y guards | 3 / 3 | Token ausente, mal formado o vencido; sin `exp`; rol cliente o admin; login con y sin éxito; logout sin red; **contrato de 9 rutas** contra `AuthController` | ✔, 2 confirman DEF-14 |
+| Comunicación | `ComprasService` | 1 | `POST /api/compras` con el DTO correcto; el error 400 llega al componente | ✔ |
+
+**Cobertura de los módulos críticos del sitio** (`ng test --coverage`): **100 % de instrucciones, 100 % de ramas y 100 % de funciones** en `password-policy.ts`, `cart.service.ts`, `auth.service.ts`, `compras.service.ts`, `auth.interceptor.ts`, `auth.guard.ts` y `admin.guard.ts` [web/cobertura_web.json]. Suite completa: **42 de 43**; la única falla es la spec de plantilla sobre código muerto (OBS-10).
+
+**El sitio en producción** (`https://chaac-xanab-dg.vercel.app`, `medir_web.ps1`) [web/web.json]
+
+| Medición | Resultado |
+|---|---|
+| 10 × `GET /` (HTML de 1,528 bytes) | 10/10 = 200 · promedio **296.0 ms** (mín. 250.1, máx. 411.1, σ 43.3) · `x-vercel-cache: HIT` |
+| Paquete `main-*.js` (24,664 bytes, 3 descargas) | 0.355 / 0.313 / 0.300 s → 0.556 / 0.631 / 0.658 Mbps |
+| 10 × `GET /api/productos` **a través del sitio** (rewrite) | 1.ª petición **3,053 ms** (arranque en frío); las 9 restantes promedian **311.5 ms** |
+| 10 × `GET /api/productos` **directo a la API** | promedio **296.4 ms** (σ 16.0) → el salto del rewrite agrega ≈ 15 ms |
+| Rutas | `/`, `/login` → 200; **`/no-existe` → 200** (la SPA responde todo con `index.csr.html`, OBS-11); `/api/no-existe` → 404 y `/api/auth/me` sin token → 401 (los códigos de la API se conservan a través del rewrite) |
+| Cabeceras | `strict-transport-security` presente; **sin** `content-security-policy`, `x-frame-options` ni `x-content-type-options` (DEF-09) |
+
+**Almacenamiento del navegador (persistencia del sitio):** el carrito (`chaac_cart`) y el token (`chaac_token`) viven en `localStorage`. Se probó que el carrito sobrevive al recargar la página, que un JSON corrupto se recupera como carrito vacío y que un JSON válido que no es una lista rompe el cálculo del total (DEF-13).
+
 ## 4. Fase 4 — White Box de la base de datos
 
 ### 4.1 Operaciones (SQLite local, mismo motor y código que en el teléfono vía `sqflite_common_ffi`)
@@ -453,6 +493,8 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | DEF-07 | API (pruebas, `admin-usuarios.service.ts:228`, `migration-borrado-usuario.sql`) | Media | Suite desactualizada (13 fallas) y borrado físico que elimina historial de compras |
 | DEF-09 | API (`api/index.ts`) | Media | `helmet()` no se aplica en Vercel (confirmado en producción) |
 | DEF-10 | App (`tienda_screen.dart:49-59`) | Media | `TypeError` no controlado al recibir JSON inesperado |
+| DEF-14 | Sitio web (`Services/auth.service.ts:52-61`) | Media | El JWT se decodifica con `atob`: un nombre con acento sale corrupto y una sesión válida puede tratarse como cerrada |
+| DEF-13 | Sitio web (`Services/cart.service.ts:43-58`) | Media | El carrito identifica productos por nombre, no tiene tope de stock y se rompe con datos alterados |
 | DEF-12 | API (`bitacora.service.ts:18-31`, `auth.service.ts` login) | Media | Los logins fallidos con correo inexistente no quedan en la bitácora (falla silenciosa) |
 | DEF-02 | App (`carrito_service.dart:57,61,71`) | Baja | `clamp(1, 0)` lanza `ArgumentError` con stock 0 |
 | DEF-04 | App (`app_database.dart:20-28`) | Baja | `usuarios` sin `CHECK`: acepta edad no numérica |
@@ -484,8 +526,9 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 - **Pasos:** `npm audit --omit=dev` en `backend-chaac-xanab`.
 - **Esperado:** 0 críticas/altas.
 - **Observado:** 1 crítica (`proxy-addr`), 8 altas (`body-parser`, `path-to-regexp`, `multer`, `nodemailer`, `ws`, `lodash`, `@nestjs/config`, `@nestjs/platform-express`).
-- **Evidencia:** `practica11/npm_audit.txt`.
-- **Corrección:** `npm audit fix`, después actualizar `multer` a 2.x y `nodemailer`, y planear la migración de NestJS 10 → 11/12; volver a correr la suite (100 pruebas) como red de seguridad.
+- **Sitio web:** `npm audit --omit=dev` en `chaac-xanab-dg` reporta 13 más (2 críticas, 10 altas, 1 moderada).
+- **Evidencia:** `practica11/npm_audit.txt`, `web/npm_audit_web.txt`.
+- **Corrección:** `npm audit fix` en ambos proyectos, después actualizar `multer` a 2.x y `nodemailer`, y planear la migración de NestJS 10 → 11/12; volver a correr la suite (100 pruebas) como red de seguridad.
 
 ### DEF-05 — 500 con id no UUID
 - **Pasos:** `curl https://backend-chaac-xanab.vercel.app/api/productos/abc`.
@@ -512,8 +555,9 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 - **Pasos:** `curl -D - https://backend-chaac-xanab.vercel.app/api/productos`.
 - **Esperado:** cabeceras de `helmet` (`X-Content-Type-Options: nosniff`, `X-Frame-Options`, CSP) y sin `X-Powered-By`.
 - **Observado:** `x-powered-by: Express`; sin `x-content-type-options`, `x-frame-options` ni CSP. `helmet()` está en `src/main.ts` pero `api/index.ts` (entry de Vercel) no lo llama.
-- **Evidencia:** `cabeceras_productos.txt`, `red.json › cabeceras`.
-- **Corrección:** extraer `configurarApp(app)` compartido por ambos entry points con `helmet()`, prefijo, pipes y CORS.
+- **Sitio web:** `https://chaac-xanab-dg.vercel.app` tampoco envía `content-security-policy`, `x-frame-options` ni `x-content-type-options`. Esto importa más porque el token vive en `localStorage`: sin CSP, cualquier script inyectado lo puede leer, y sin `x-frame-options` el sitio se puede incrustar en otra página (*clickjacking*).
+- **Evidencia:** `cabeceras_productos.txt`, `red.json › cabeceras`, `web/cabeceras_sitio.txt`, `web/web.json › cabeceras`.
+- **Corrección:** API → extraer `configurarApp(app)` compartido por ambos entry points con `helmet()`, prefijo, pipes y CORS. Sitio → agregar en `vercel.json` una sección `headers` con `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` y `Referrer-Policy`.
 
 ### DEF-10 — Excepción no controlada en el catálogo
 - **Pasos:** el servidor responde 200 con un objeto (p. ej. `{"message":"mantenimiento"}`) en lugar de una lista.
@@ -521,6 +565,21 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 - **Observado:** `TiendaService.productos()` lanza `TypeError` (cast `as List<dynamic>`); `_cargar()` sólo atrapa `ApiException`, así que la excepción escapa y la tienda queda vacía sin mensaje. Además `setState` tras `await` sin `mounted` (líneas 51 y 56).
 - **Evidencia:** `test/rendimiento_test.dart` “DEFECTO DEF-10” (en prueba de widget el framework lo reporta como excepción no capturada).
 - **Corrección:** en `ApiClient`/servicios convertir errores de forma (`TypeError`, `FormatException`) en `ApiException('Respuesta inesperada del servidor')`, y en `_cargar()` agregar `catch (_)` genérico + `if (!mounted) return`.
+
+### DEF-14 — Decodificación incorrecta del JWT en el sitio web
+- **Pasos:** 1) El backend firma un JWT con `name: "José Peña"` (jsonwebtoken codifica en **base64url + UTF-8**). 2) El sitio llama a `AuthService.getCurrentUser()`, que hace `JSON.parse(atob(payload))`.
+- **Esperado:** `name === "José Peña"`; y si el token está vigente, `isLoggedIn() === true`.
+- **Observado:** `name === "JosÃ© PeÃ±a"`, porque `atob` devuelve bytes Latin-1 y no UTF-8. Si el payload en base64url contiene `-` o `_` (ocurre con ciertos nombres o correos), `atob` lanza una excepción: `getCurrentUser()` devuelve `null`, **`isLoggedIn()` devuelve `false` con un token vigente** y los guards mandan al usuario a `/login`.
+- **Evidencia:** `comunicacion.spec.ts` → “DEFECTO DEF-14” (2 pruebas).
+- **Corrección:** decodificar como base64url → bytes → UTF-8:
+  `const b = payload.replace(/-/g, '+').replace(/_/g, '/'); JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))))`, o mejor, usar `/api/auth/me` como fuente del nombre y del rol.
+
+### DEF-13 — Carrito del sitio web: identidad por nombre, sin tope y sin validar
+- **Pasos:** 1) Agregar dos productos **distintos** (ids diferentes, precios 2,000 y 3,500) que tengan el mismo nombre. 2) Pulsar “agregar” 100 veces. 3) Poner `{"a":1}` en `localStorage['chaac_cart']` y recargar.
+- **Esperado:** 2 renglones con total 5,500; cantidad limitada al stock; carrito vacío si los datos guardados no son válidos.
+- **Observado:** 1 renglón con cantidad 2 y **total 4,000** (se compara `product.name`, no `product.id`); 100 piezas sin límite (el servidor sólo lo detecta hasta el checkout); `getTotal()` lanza `TypeError`. `updateQuantity()` con un índice inexistente también lanza `TypeError`.
+- **Evidencia:** `cart.service.spec.ts` → 3 pruebas “DEFECTO DEF-13” y la prueba de índice inexistente.
+- **Corrección:** comparar por `product.id`; guardar el `stock` en `CartProduct` y limitar la cantidad con `Math.min`; en `loadCart()` validar `Array.isArray(...)`; validar el índice en `updateQuantity`/`removeFromCart`.
 
 ### DEF-12 — La bitácora no registra los logins fallidos de producción
 - **Pasos:** 1) `node practica11/scripts/carga.mjs` envía 60 `POST /api/auth/login` con `practica11-carga@example.invalid` (todas responden 401, como se esperaba). 2) En el SQL Editor de Supabase: `SELECT count(*) FROM bitacora WHERE usuario_email = 'practica11-carga@example.invalid'` y `SELECT … FROM bitacora WHERE created_at >= '2026-11-12 00:30:00+00'`.
@@ -552,6 +611,10 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 - **OBS-05** Catálogo de producción con datos de prueba (“PRUEBA EDIT OK mvmuvnqq”, `image_url: null`) y categoría “Runing”.
 - **OBS-06** La carpeta de la app Flutter no estaba bajo Git, así que no había forma de identificar la versión evaluada. **Corregido durante la práctica:** se inicializó el repositorio (commit `2272970`); la huella SHA-256 de §0 sigue como respaldo.
 - **OBS-07** Caché en memoria por instancia serverless: tras editar un producto, otras instancias (se observaron `iad1` y `cle1`) pueden servir datos viejos hasta 60 s.
+- **OBS-09** El valor por defecto de `FRONTEND_URL` en `auth.service.ts` del backend es `https://chaacxanab.vercel.app`, que responde **404**; el sitio real es `https://chaac-xanab-dg.vercel.app`. Si la variable no está definida en Vercel, los enlaces de verificación de correo llevan a una página inexistente.
+- **OBS-10** En el sitio, `app.ts`/`app.html`/`app.css` y su `app.spec.ts` son restos de la plantilla: `main.ts` arranca `AppComponent`. La spec falla (“Hello, mi-proyecto-angular”) y hace que `ng test` termine en error. Conviene borrar esos 4 archivos.
+- **OBS-11** El sitio responde **200** a cualquier ruta (`/no-existe`) por el *rewrite* a `index.csr.html`; hace falta una ruta comodín (`**`) con una página “no encontrado”.
+- **OBS-12** El rol de `/admin` se decide en el navegador leyendo el JWT **sin verificar la firma**: un token editado muestra la interfaz de administración (probado). No es una brecha de datos, porque cada endpoint `admin/*` vuelve a validar firma y rol en el servidor (401/403 probados), pero sí expone la interfaz.
 - **OBS-08** Sin límite de peticiones para correos inexistentes en `/auth/login` (el bloqueo sólo aplica a cuentas existentes): los 60 intentos de la prueba de carga se procesaron sin ninguna limitación.
 
 ---
@@ -577,6 +640,10 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | WEB-04 | Autenticación y autorización | **Aprobado** — 401 (sin token, firma, expirado, sin `sub`, bloqueo) vs 403 (compra ajena, admin) | `http.e2e.spec.ts` |
 | WEB-05 | Latencia HTTP | **Aprobado** — 316.5 ms promedio con conexión nueva; 118 ms reutilizada (objetivo ≤ 500 ms) | `red.json` |
 | WEB-06 | Consistencia de respuesta | **Aprobado** — 10/10 respuestas de 10,585 bytes con la misma estructura | `red.json › http_10` |
+| WEB-07 | Sitio: cobertura de los módulos críticos | **Aprobado** — 100 % de instrucciones y ramas; 41 pruebas nuevas | `web/cobertura_web.json`, `web/ng_test.log` |
+| WEB-08 | Sitio: sesión y autorización en el cliente | **Aprobado con defecto** — el interceptor distingue 401 de 403 y los guards redirigen bien; DEF-14 (JWT mal decodificado) y OBS-12 | `comunicacion.spec.ts` |
+| WEB-09 | Sitio: lógica del carrito | **Aprobado con defecto** — cálculo y persistencia correctos; DEF-13 | `cart.service.spec.ts` |
+| WEB-10 | Sitio: carga y latencia en producción | **Aprobado** — página 296.0 ms (10/10 = 200); API por el sitio +15 ms frente a la directa; arranque en frío de 3,053 ms en la 1.ª petición | `web/web.json` |
 
 ### Base de datos
 | ID | Prueba | Resultado | Evidencia |
@@ -611,6 +678,9 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | Ping máximo | ms | 20 paquetes | 31 |
 | Pérdida de paquetes | % | 20 paquetes | 0 |
 | Latencia HTTP | ms | 10 solicitudes | 316.5 (mín. 265.9, máx. 397.0) |
+| Latencia del sitio web (`GET /`) | ms | 10 solicitudes | 296.0 (mín. 250.1, máx. 411.1) |
+| Latencia de la API vía el sitio | ms | 10 solicitudes | 311.5 sin la 1.ª (3,053 en frío) vs. 296.4 directa |
+| Descarga del paquete JS del sitio | Mbps | 3 mediciones | 0.556 / 0.631 / 0.658 (24,664 bytes) |
 | Tiempo de descarga (imagen 72 KB) | s | 3 | 0.497 / 0.192 / 0.192 |
 | Tasa de descarga | Mbps | 3 | 1.161 / 3.003 / 3.015 (prom. 2.393) |
 | Tasa de subida | Mbps | 3 | 1.283 / 1.535 / 1.707 (prom. 1.508) |
@@ -626,8 +696,8 @@ Ver §5.D.
 | Latencia promedio (HTTP) | 316.5 ms | ≤ 500 ms | ✔ |
 | Pérdida de paquetes | 0 % | 0 % | ✔ |
 | Tasa de transferencia (descarga / subida) | 2.393 / 1.508 Mbps | — | — |
-| Cobertura de instrucciones (app / API, críticos) | 99.6 % / 98.8 % | ≥ 85 % | ✔ |
-| Cobertura de ramas (app / API, críticos) | 96.6 % / 84.6 % | ≥ 80 % | ✔ |
+| Cobertura de instrucciones (app / API / sitio, críticos) | 99.6 % / 98.8 % / 100 % | ≥ 85 % | ✔ |
+| Cobertura de ramas (app / API / sitio, críticos) | 96.6 % / 84.6 % / 100 % | ≥ 80 % | ✔ |
 | Tiempo de consulta sencilla a BD | 0.13–0.26 ms (PostgreSQL), 0.6–0.7 ms (SQLite) | ≤ 200 ms | ✔ |
 | Respuestas exitosas del endpoint | 10/10 y 60/60 | 100 % | ✔ |
 | Operaciones inválidas correctamente rechazadas | Todas las diseñadas, con 2 excepciones: la compra concurrente sin stock se **acepta** (DEF-03) y el id no UUID se rechaza con **500** en vez de 400 (DEF-05) | 100 % | ✘ (2 casos) |
@@ -676,9 +746,11 @@ App (`chaac_xanab_app`): `lib/config/validaciones.dart` (validaciones extraídas
 
 API (`backend-chaac-xanab`): `src/practica11/fake-supabase.ts`, `src/practica11/http.e2e.spec.ts` y la actualización de 5 specs desactualizados (`productos`, `admin-productos`, `admin-usuarios`, `supabase`, `webauthn`).
 
+Sitio web (`chaac-xanab-dg`, rama `practica11-whitebox`): `src/app/practica11/password-policy.spec.ts`, `cart.service.spec.ts`, `comunicacion.spec.ts`; mediciones con `chaac_xanab_app/practica11/scripts/medir_web.ps1`.
+
 ## 12. Anexo — Capturas de evidencia
 
-Las capturas de consola (C1–C13) muestran la **salida real** de cada herramienta, tomada de los archivos de evidencia guardados en `practica11/resultados/` y `backend-chaac-xanab/practica11/` y dibujada con `practica11/scripts/capturas.py`; la barra superior indica el archivo de origen. C14 es una captura de pantalla del SQL Editor de Supabase. El listado completo de pruebas y resultados está en `practica11/PRUEBAS_Y_RESULTADOS.txt`.
+Las capturas de consola (C1–C13 y C15–C17) muestran la **salida real** de cada herramienta, tomada de los archivos de evidencia guardados en `practica11/resultados/` y `backend-chaac-xanab/practica11/` y dibujada con `practica11/scripts/capturas.py`; la barra superior indica el archivo de origen. C14 es una captura de pantalla del SQL Editor de Supabase. El listado completo de pruebas y resultados está en `practica11/PRUEBAS_Y_RESULTADOS.txt`.
 
 ### C1. Aplicación móvil — ejecución de las pruebas
 
@@ -759,3 +831,21 @@ Las capturas de consola (C1–C13) muestran la **salida real** de cada herramien
 ![C14 — captura del SQL Editor de Supabase: 0 filas en bitácora](capturas/cap14_supabase_bitacora_real.png)
 
 **Interpretación:** después de la prueba de carga (60 logins fallidos, todos con 401), la tabla `bitacora` no tiene ninguna fila nueva. Los intentos fallidos no quedaron auditados (DEF-12).
+
+### C15. Sitio web — ejecución de las pruebas
+
+![C15 — ng test del sitio: 42 de 43 (la única falla es la spec de plantilla)](capturas/cap15_web_tests.png)
+
+**Interpretación:** las 41 pruebas nuevas del sitio pasan. Las amarillas (DEFECTO DEF-13) pasan porque demuestran el defecto del carrito. La única falla es la spec que Angular generó por defecto: prueba la clase `App`, que el sitio no usa (OBS-10).
+
+### C16. Sitio web — cobertura
+
+![C16 — 100 % de instrucciones y ramas en los módulos críticos del sitio](capturas/cap16_web_cobertura.png)
+
+**Interpretación:** validación, carrito, `AuthService`, interceptor, guards y `ComprasService` quedan cubiertos al 100 % de instrucciones, ramas y funciones.
+
+### C17. Sitio web — mediciones en producción
+
+![C17 — latencia, descarga, rewrite de /api y cabeceras del sitio](capturas/cap17_web_produccion.png)
+
+**Interpretación:** la página responde 10 de 10 veces con 200 en 296 ms de promedio. La API vía el sitio cuesta unos 15 ms más que la directa, salvo la 1.ª petición, que tardó 3,053 ms por un arranque en frío. Una ruta inexistente responde 200 en lugar de 404 (OBS-11), y el sitio no envía CSP, `X-Frame-Options` ni `X-Content-Type-Options` (DEF-09).

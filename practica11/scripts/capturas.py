@@ -19,10 +19,12 @@ MAXC = 118
 
 def leer(ruta):
     with open(ruta, encoding="utf-8-sig", errors="replace") as f:
-        return f.read().replace("\r", "").split("\n")
+        return f.read().replace("\r", "").replace("⎯", "-").split("\n")
 
 
 def color(linea):
+    if re.search(r"\b[1-9]\d* failed|×|FALLA", linea):
+        return "#F2C14E"
     if re.search(r"(√|\[OK\]|PASS |All tests passed|passed|No issues found|RECHAZADA|Index Scan|0% perdidos|\(0% )", linea):
         return "#7CD67C"
     if re.search(r"(×|FAIL|critical|high|Severity: high|Seq Scan|DEFECTO|HALLAZGO)", linea):
@@ -130,4 +132,29 @@ ex = json.load(open(f"{R}/supabase_explain.json", encoding="utf-8-sig"))
 lin = ["QUERY PLAN (Q3 — historial de compras)"] + ex["Q3_historial"]["plan"] + ["", "Resumen Q1–Q4:"]
 lin += [f"  {k:<26} planning {q['planning_ms']} ms · execution {q['execution_ms']} ms" for k, q in ex.items() if isinstance(q, dict)]
 consola("cap13_supabase_explain", "Supabase SQL Editor: EXPLAIN (ANALYZE, BUFFERS) …", lin, "supabase_explain.json")
+# 15-17. Sitio web (Angular)
+ng = leer(f"{R}/web/ng_test.log")
+lin = []
+for l in ng:
+    m = re.match(r"^\s*([✓×])\s+\|[^|]+\|\s+src/app/(\S+)\s+>\s+(.*?)\s+(\d+ms)\s*$", l)
+    if m:
+        lin.append(f" {m.group(1)} {m.group(2).replace('practica11/', '')} > {m.group(3)}")
+res = [l.strip() for l in ng if re.search(r"(Test Files|Tests)\s+\d", l)]
+consola("cap15_web_tests", "npx ng test --watch=false --reporters=verbose   (chaac-xanab-dg)",
+        lin[:22] + ["   …   (" + str(len(lin) - 22) + " pruebas más)"] + [""] + res, "web/ng_test.log")
+cv = [l for l in leer(f"{R}/web/ng_test_cobertura.log") if "|" in l and not l.startswith(("Initial", "spec-", "styles", "chunk", "init-", "polyfills", "    "))]
+cv += [l.strip() for l in leer(f"{R}/web/ng_test_cobertura.log") if re.search(r"(Test Files|Tests)\s+\d", l)]
+consola("cap16_web_cobertura", 'npx ng test --watch=false --include="src/app/practica11/**" --coverage', cv, "web/ng_test_cobertura.log")
+wj = json.load(open(f"{R}/web/web.json", encoding="utf-8-sig"))
+lin = [f"Sitio: {wj['sitio']}", "", "10 x GET /   (código, total ms, bytes):"]
+lin += ["  " + "  ".join(f"{s['code']}/{s['total']}ms" for s in wj["pagina"]["solicitudes"][:5]),
+        "  " + "  ".join(f"{s['code']}/{s['total']}ms" for s in wj["pagina"]["solicitudes"][5:])]
+p = wj["pagina"]["total_ms"]
+lin += [f"  promedio {p['promedio']} ms · mín {p['min']} · máx {p['max']} · σ {p['desviacion']}", ""]
+lin += [f"Paquete {b['archivo']}: {b['bytes']} B en {b['tiempo_s']} s = {b['mbps']} Mbps" for b in wj["bundle"]] + [""]
+lin += ["API vía el sitio (rewrite): " + ", ".join(str(s["total"]) for s in wj["api_via_sitio"]["solicitudes"]) + " ms",
+        "API directa               : " + ", ".join(str(s["total"]) for s in wj["api_directa"]["solicitudes"]) + " ms", ""]
+lin += [f"{c['code']}  {c['caso']:<34} {c['ruta']}" for c in wj["codigos"]] + [""]
+lin += [f"{k}: {v if v else 'NO ENVIADA'}" for k, v in wj["cabeceras"].items()]
+consola("cap17_web_produccion", "powershell -File practica11/scripts/medir_web.ps1", lin, "web/web.json")
 print("capturas en", OUT, sorted(os.listdir(OUT)))

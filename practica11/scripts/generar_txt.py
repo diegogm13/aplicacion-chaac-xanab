@@ -6,6 +6,7 @@ Uso (desde chaac_xanab_app):  python practica11/scripts/generar_txt.py
 """
 import json
 import os
+import re
 from collections import OrderedDict
 
 R = "practica11/resultados"
@@ -103,6 +104,8 @@ o.append(
     "Equipo cliente     : Lenovo 20L7002CUS · i7-8650U · 16 GB · Windows 11 Pro 10.0.26200 · Wi-Fi\n"
     "App móvil          : chaac_xanab_app 1.0.0+1 · Flutter 3.44.0 / Dart 3.12.0 · commit 2272970\n"
     "API (servicio web) : backend-chaac-xanab commit bbf3f21 (pruebas en c700802, rama practica11-whitebox)\n"
+    "Sitio web          : chaac-xanab-dg (Angular 21) commit 6a03504 (pruebas en a2ae93c, rama practica11-whitebox)\n"
+    "                     https://chaac-xanab-dg.vercel.app\n"
     f"Servidor           : {red['api']} (Vercel, región iad1)\n"
     "Base de datos      : PostgreSQL en Supabase (servidor) · SQLite 3.53.4 (local en la app)\n"
     "Nota               : [OK] = la prueba pasó. Las pruebas cuyo nombre empieza con DEFECTO/HALLAZGO\n"
@@ -129,6 +132,39 @@ for c in red["codigos"]:
     o.append(f"  {c['code']}  {c['caso']:<34} {c['cuerpo'][:60]}\n")
 o.append(subtitulo("Cobertura de módulos críticos (jest --coverage)"))
 o.append("  Instrucciones: 158/160 = 98.8 %    Ramas: 44/52 = 84.6 %\n")
+
+# 2b. SITIO WEB (Angular)
+o.append(titulo("2b. SITIO WEB (frontend Angular) — validación, carrito, sesión, interceptor HTTP y guards"))
+web_t = web_k = 0
+grupos_web = OrderedDict()
+with open(f"{R}/web/ng_test.log", encoding="utf-8-sig", errors="replace") as f:
+    for linea in f:
+        m = re.match(r"^\s*([✓×])\s+\|[^|]+\|\s+src/app/(\S+)\s+>\s+(.*?)\s+\d+ms\s*$", linea.rstrip())
+        if m:
+            grupos_web.setdefault(m.group(2), []).append((m.group(3), m.group(1) == "✓"))
+for archivo, filas in grupos_web.items():
+    o.append(subtitulo(f"src/app/{archivo}"))
+    for nombre, ok in filas:
+        web_t += 1
+        web_k += ok
+        nota = "   <- spec de plantilla sobre código muerto (OBS-10)" if (not ok and archivo == "app.spec.ts") else ""
+        o.append(f"  {'[OK]   ' if ok else '[FALLA]'} {nombre}{nota}\n")
+resumen.append(("Sitio web (Angular, Vitest)", web_t, web_k))
+o.append(subtitulo("Cobertura de módulos críticos del sitio (ng test --coverage)"))
+o.append("  Instrucciones: 100 %    Ramas: 100 %    Funciones: 100 %   (detalle: resultados/web/cobertura_web.json)\n")
+web = cargar(f"{R}/web/web.json")
+o.append(subtitulo("Sitio en producción (" + web["sitio"] + ")"))
+p = web["pagina"]["total_ms"]
+o.append(f"  GET /  x10: {web['pagina']['exitosas']}/10 = 200 · prom {p['promedio']} ms · mín {p['min']} · máx {p['max']} · σ {p['desviacion']}\n")
+for b in web["bundle"]:
+    o.append(f"  Paquete {b['archivo']} intento {b['intento']}: {b['bytes']} B en {b['tiempo_s']} s = {b['mbps']} Mbps\n")
+v, d = web["api_via_sitio"], web["api_directa"]
+o.append("  API vía el sitio (rewrite): " + ", ".join(f"{s['total']}" for s in v["solicitudes"]) + " ms\n")
+o.append("  API directa               : " + ", ".join(f"{s['total']}" for s in d["solicitudes"]) + " ms\n")
+for c in web["codigos"]:
+    o.append(f"  {c['code']}  {c['caso']:<34} {c['ruta']}\n")
+o.append("  Cabeceras: " + ", ".join(f"{k}={'sí' if val else 'NO'}" for k, val in web["cabeceras"].items()
+                                     if k not in ("cache-control", "x-vercel-cache")) + "\n")
 
 # 3. BASE DE DATOS
 o.append(titulo("3. BASE DE DATOS — móvil (SQLite), API (lógica de persistencia) y servidor (Supabase)"))
@@ -191,7 +227,9 @@ for nombre, t, k in resumen:
     tt, tk = tt + t, tk + k
     o.append(f"  {nombre:<32} {k:>4} / {t:<4} aprobadas\n")
 o.append(f"  {'TOTAL':<32} {tk:>4} / {tt:<4} aprobadas\n")
-o.append("  Defectos documentados: DEF-01 … DEF-12 (detalle, pasos y corrección en INFORME.md §6)\n")
+o.append("  La única [FALLA] es la spec de plantilla del sitio que prueba código que no se usa (OBS-10);\n"
+         "  las 41 pruebas nuevas del sitio pasan.\n")
+o.append("  Defectos documentados: DEF-01 … DEF-14 (detalle, pasos y corrección en INFORME.md §6)\n")
 
 with open(SALIDA, "w", encoding="utf-8") as f:
     f.write("".join(o))

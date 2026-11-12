@@ -1,0 +1,407 @@
+{
+    "fecha":  "2026-11-11 19:55:08 -06:00",
+    "sitio":  "https://chaac-xanab-dg.vercel.app",
+    "pagina":  {
+                   "solicitudes":  [
+                                       {
+                                           "code":  200,
+                                           "dns":  13.7,
+                                           "tcp":  74.9,
+                                           "tls":  180.8,
+                                           "ttfb":  283.1,
+                                           "total":  283.1,
+                                           "bytes":  1528,
+                                           "n":  1
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  18.4,
+                                           "tcp":  94.4,
+                                           "tls":  202.9,
+                                           "ttfb":  301.4,
+                                           "total":  301.4,
+                                           "bytes":  1528,
+                                           "n":  2
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  13.4,
+                                           "tcp":  75.6,
+                                           "tls":  194.4,
+                                           "ttfb":  287.9,
+                                           "total":  288.0,
+                                           "bytes":  1528,
+                                           "n":  3
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  19.1,
+                                           "tcp":  81.3,
+                                           "tls":  184.6,
+                                           "ttfb":  281.5,
+                                           "total":  281.6,
+                                           "bytes":  1528,
+                                           "n":  4
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  30.4,
+                                           "tcp":  97.4,
+                                           "tls":  196.3,
+                                           "ttfb":  307.4,
+                                           "total":  307.5,
+                                           "bytes":  1528,
+                                           "n":  5
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  13.5,
+                                           "tcp":  77.9,
+                                           "tls":  167.4,
+                                           "ttfb":  250.1,
+                                           "total":  250.1,
+                                           "bytes":  1528,
+                                           "n":  6
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  20.2,
+                                           "tcp":  83.1,
+                                           "tls":  180.3,
+                                           "ttfb":  274.2,
+                                           "total":  274.3,
+                                           "bytes":  1528,
+                                           "n":  7
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  6.3,
+                                           "tcp":  70.4,
+                                           "tls":  174.9,
+                                           "ttfb":  286.7,
+                                           "total":  286.8,
+                                           "bytes":  1528,
+                                           "n":  8
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  17.3,
+                                           "tcp":  81.0,
+                                           "tls":  184.1,
+                                           "ttfb":  275.9,
+                                           "total":  276.0,
+                                           "bytes":  1528,
+                                           "n":  9
+                                       },
+                                       {
+                                           "code":  200,
+                                           "dns":  9.2,
+                                           "tcp":  53.4,
+                                           "tls":  153.3,
+                                           "ttfb":  411.1,
+                                           "total":  411.1,
+                                           "bytes":  1528,
+                                           "n":  10
+                                       }
+                                   ],
+                   "total_ms":  {
+                                    "min":  250.1,
+                                    "promedio":  296,
+                                    "max":  411.1,
+                                    "desviacion":  43.3
+                                },
+                   "exitosas":  10
+               },
+    "bundle":  [
+                   {
+                       "intento":  1,
+                       "archivo":  "main-4WMHGJZL.js",
+                       "code":  200,
+                       "bytes":  24664,
+                       "tiempo_s":  0.355,
+                       "mbps":  0.556
+                   },
+                   {
+                       "intento":  2,
+                       "archivo":  "main-4WMHGJZL.js",
+                       "code":  200,
+                       "bytes":  24664,
+                       "tiempo_s":  0.313,
+                       "mbps":  0.631
+                   },
+                   {
+                       "intento":  3,
+                       "archivo":  "main-4WMHGJZL.js",
+                       "code":  200,
+                       "bytes":  24664,
+                       "tiempo_s":  0.300,
+                       "mbps":  0.658
+                   }
+               ],
+    "api_via_sitio":  {
+                          "solicitudes":  [
+                                              {
+                                                  "code":  200,
+                                                  "dns":  18.7,
+                                                  "tcp":  82.3,
+                                                  "tls":  190.6,
+                                                  "ttfb":  2917.1,
+                                                  "total":  3053.3,
+                                                  "bytes":  10585,
+                                                  "n":  1
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  8.4,
+                                                  "tcp":  75.6,
+                                                  "tls":  180.6,
+                                                  "ttfb":  326.7,
+                                                  "total":  326.9,
+                                                  "bytes":  10585,
+                                                  "n":  2
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  12.1,
+                                                  "tcp":  73.3,
+                                                  "tls":  174.2,
+                                                  "ttfb":  306.8,
+                                                  "total":  306.9,
+                                                  "bytes":  10585,
+                                                  "n":  3
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  8.7,
+                                                  "tcp":  70.0,
+                                                  "tls":  172.7,
+                                                  "ttfb":  304.8,
+                                                  "total":  307.0,
+                                                  "bytes":  10585,
+                                                  "n":  4
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  14.1,
+                                                  "tcp":  80.8,
+                                                  "tls":  185.9,
+                                                  "ttfb":  315.6,
+                                                  "total":  318.5,
+                                                  "bytes":  10585,
+                                                  "n":  5
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  8.2,
+                                                  "tcp":  69.0,
+                                                  "tls":  173.9,
+                                                  "ttfb":  299.6,
+                                                  "total":  299.7,
+                                                  "bytes":  10585,
+                                                  "n":  6
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  10.8,
+                                                  "tcp":  74.4,
+                                                  "tls":  179.2,
+                                                  "ttfb":  326.4,
+                                                  "total":  326.5,
+                                                  "bytes":  10585,
+                                                  "n":  7
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  19.0,
+                                                  "tcp":  95.3,
+                                                  "tls":  202.8,
+                                                  "ttfb":  323.3,
+                                                  "total":  323.6,
+                                                  "bytes":  10585,
+                                                  "n":  8
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  12.4,
+                                                  "tcp":  68.7,
+                                                  "tls":  165.9,
+                                                  "ttfb":  287.9,
+                                                  "total":  287.9,
+                                                  "bytes":  10585,
+                                                  "n":  9
+                                              },
+                                              {
+                                                  "code":  200,
+                                                  "dns":  12.5,
+                                                  "tcp":  73.3,
+                                                  "tls":  176.4,
+                                                  "ttfb":  306.3,
+                                                  "total":  306.5,
+                                                  "bytes":  10585,
+                                                  "n":  10
+                                              }
+                                          ],
+                          "total_ms":  {
+                                           "min":  287.9,
+                                           "promedio":  585.7,
+                                           "max":  3053.3,
+                                           "desviacion":  867.1
+                                       }
+                      },
+    "api_directa":  {
+                        "solicitudes":  [
+                                            {
+                                                "code":  200,
+                                                "dns":  43.9,
+                                                "tcp":  104.9,
+                                                "tls":  226.2,
+                                                "ttfb":  327.0,
+                                                "total":  327.2,
+                                                "bytes":  10585,
+                                                "n":  1
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  18.5,
+                                                "tcp":  80.2,
+                                                "tls":  187.9,
+                                                "ttfb":  299.0,
+                                                "total":  299.2,
+                                                "bytes":  10585,
+                                                "n":  2
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  17.5,
+                                                "tcp":  77.8,
+                                                "tls":  179.0,
+                                                "ttfb":  299.3,
+                                                "total":  303.5,
+                                                "bytes":  10585,
+                                                "n":  3
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  15.6,
+                                                "tcp":  76.7,
+                                                "tls":  182.4,
+                                                "ttfb":  286.7,
+                                                "total":  288.2,
+                                                "bytes":  10585,
+                                                "n":  4
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  14.8,
+                                                "tcp":  71.4,
+                                                "tls":  173.3,
+                                                "ttfb":  276.1,
+                                                "total":  276.2,
+                                                "bytes":  10585,
+                                                "n":  5
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  11.3,
+                                                "tcp":  69.7,
+                                                "tls":  200.0,
+                                                "ttfb":  309.3,
+                                                "total":  309.4,
+                                                "bytes":  10585,
+                                                "n":  6
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  22.7,
+                                                "tcp":  53.5,
+                                                "tls":  143.7,
+                                                "ttfb":  276.4,
+                                                "total":  276.5,
+                                                "bytes":  10585,
+                                                "n":  7
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  16.0,
+                                                "tcp":  82.9,
+                                                "tls":  183.2,
+                                                "ttfb":  289.7,
+                                                "total":  289.9,
+                                                "bytes":  10585,
+                                                "n":  8
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  16.2,
+                                                "tcp":  77.3,
+                                                "tls":  176.4,
+                                                "ttfb":  286.5,
+                                                "total":  286.6,
+                                                "bytes":  10585,
+                                                "n":  9
+                                            },
+                                            {
+                                                "code":  200,
+                                                "dns":  16.7,
+                                                "tcp":  77.7,
+                                                "tls":  189.9,
+                                                "ttfb":  307.2,
+                                                "total":  307.3,
+                                                "bytes":  10585,
+                                                "n":  10
+                                            }
+                                        ],
+                        "total_ms":  {
+                                         "min":  276.2,
+                                         "promedio":  296.4,
+                                         "max":  327.2,
+                                         "desviacion":  16
+                                     }
+                    },
+    "codigos":  [
+                    {
+                        "caso":  "200 inicio",
+                        "ruta":  "/",
+                        "code":  200,
+                        "bytes":  1528,
+                        "ms":  306.7
+                    },
+                    {
+                        "caso":  "200 ruta SPA /login",
+                        "ruta":  "/login",
+                        "code":  200,
+                        "bytes":  1528,
+                        "ms":  285.5
+                    },
+                    {
+                        "caso":  "200 ruta SPA inexistente (SPA)",
+                        "ruta":  "/no-existe",
+                        "code":  200,
+                        "bytes":  1528,
+                        "ms":  275.0
+                    },
+                    {
+                        "caso":  "404 por rewrite /api/no-existe",
+                        "ruta":  "/api/no-existe",
+                        "code":  404,
+                        "bytes":  76,
+                        "ms":  429.7
+                    },
+                    {
+                        "caso":  "401 /api/auth/me sin token",
+                        "ruta":  "/api/auth/me",
+                        "code":  401,
+                        "bytes":  43,
+                        "ms":  305.9
+                    }
+                ],
+    "cabeceras":  {
+                      "strict-transport-security":  "max-age=63072000; includeSubDomains; preload",
+                      "content-security-policy":  null,
+                      "x-frame-options":  null,
+                      "x-content-type-options":  null,
+                      "referrer-policy":  null,
+                      "cache-control":  "public, max-age=0, must-revalidate",
+                      "x-vercel-cache":  "HIT"
+                  }
+}

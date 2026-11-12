@@ -6,6 +6,8 @@ Fecha de ejecución : 2026-11-11 (UTC-6)
 Equipo cliente     : Lenovo 20L7002CUS · i7-8650U · 16 GB · Windows 11 Pro 10.0.26200 · Wi-Fi
 App móvil          : chaac_xanab_app 1.0.0+1 · Flutter 3.44.0 / Dart 3.12.0 · commit 2272970
 API (servicio web) : backend-chaac-xanab commit bbf3f21 (pruebas en c700802, rama practica11-whitebox)
+Sitio web          : chaac-xanab-dg (Angular 21) commit 6a03504 (pruebas en a2ae93c, rama practica11-whitebox)
+                     https://chaac-xanab-dg.vercel.app
 Servidor           : https://backend-chaac-xanab.vercel.app/api (Vercel, región iad1)
 Base de datos      : PostgreSQL en Supabase (servidor) · SQLite 3.53.4 (local en la app)
 Nota               : [OK] = la prueba pasó. Las pruebas cuyo nombre empieza con DEFECTO/HALLAZGO
@@ -246,6 +248,78 @@ Nota               : [OK] = la prueba pasó. Las pruebas cuyo nombre empieza con
   Instrucciones: 158/160 = 98.8 %    Ramas: 44/52 = 84.6 %
 
 ====================================================================================================
+2b. SITIO WEB (frontend Angular) — validación, carrito, sesión, interceptor HTTP y guards
+====================================================================================================
+
+--- src/app/practica11/password-policy.spec.ts -----------------------------------------------------
+  [OK]    passwordPolicyError() — caminos independientes > P1 D1=V  "" (vacía) → error de longitud
+  [OK]    passwordPolicyError() — caminos independientes > P1 D1=V  7 caracteres (límite − 1) → error de longitud
+  [OK]    passwordPolicyError() — caminos independientes > D1=F  8 caracteres (límite) → pasa la longitud
+  [OK]    passwordPolicyError() — caminos independientes > P2 D2=V  sin minúscula
+  [OK]    passwordPolicyError() — caminos independientes > P3 D3=V  sin mayúscula
+  [OK]    passwordPolicyError() — caminos independientes > P4 D4=V  sin número
+  [OK]    passwordPolicyError() — caminos independientes > P5 D5=V  sin símbolo
+  [OK]    passwordPolicyError() — caminos independientes > P6 todas F → null
+  [OK]    passwordPolicyError() — caminos independientes > el orden de las decisiones define qué error se informa primero
+  [OK]    passwordPolicyError() — caminos independientes > espacio y acentos cuentan como símbolo (igual que IsStrongPassword y la app móvil)
+  [OK]    passwordPolicyError() — caminos independientes > el texto de ayuda menciona las 5 reglas
+
+--- src/app/practica11/cart.service.spec.ts --------------------------------------------------------
+  [OK]    CartService — caminos y valores límite > addToCart D1=F producto nuevo → cantidad 1
+  [OK]    CartService — caminos y valores límite > addToCart D1=V mismo producto y talla → incrementa
+  [OK]    CartService — caminos y valores límite > addToCart misma talla distinta → renglón separado
+  [OK]    CartService — caminos y valores límite > updateQuantity +1 / −1 y límite inferior: no baja de 1
+  [OK]    CartService — caminos y valores límite > removeFromCart y clearCart
+  [OK]    CartService — caminos y valores límite > persistencia: el carrito sobrevive a una nueva instancia (localStorage)
+  [OK]    CartService — caminos y valores límite > loadCart D1=V JSON corrupto → carrito vacío (sin excepción)
+  [OK]    CartService — caminos y valores límite > DEFECTO DEF-13: dos productos DISTINTOS con el mismo nombre se fusionan
+  [OK]    CartService — caminos y valores límite > DEFECTO DEF-13: sin tope de stock en el cliente (100 clics → 100 piezas)
+  [OK]    CartService — caminos y valores límite > DEFECTO DEF-13: localStorage con JSON válido pero no-lista rompe getTotal()
+  [OK]    CartService — caminos y valores límite > updateQuantity con índice inexistente lanza TypeError (no hay validación)
+
+--- src/app/practica11/comunicacion.spec.ts --------------------------------------------------------
+  [OK]    authInterceptor > D1=F sin token → no envía Authorization
+  [OK]    authInterceptor > D1=V con token → Authorization: Bearer <token>
+  [OK]    authInterceptor > D2 C1=V C2=V 401 con sesión → borra token y redirige a /login?sessionExpired=1
+  [OK]    authInterceptor > D2 C1=V C2=F 401 sin sesión (login fallido) → NO redirige
+  [OK]    authInterceptor > D2 C1=F 403 → conserva la sesión (autorización ≠ autenticación)
+  [OK]    authInterceptor > error de red (status 0) se propaga sin cerrar sesión
+  [OK]    AuthService > login() guarda el token sólo si responde 2xx
+  [OK]    AuthService > logout() borra el token aunque el servidor falle
+  [OK]    AuthService > getCurrentUser: D1 sin token → null; D2 token mal formado → null; válido → payload
+  [OK]    AuthService > isLoggedIn: expirado → false y borra token; sin exp → true; vigente → true
+  [OK]    AuthService > contrato: cada método llama a la ruta y verbo que existen en AuthController del backend
+  [OK]    AuthService > isAdmin según el rol del JWT
+  [OK]    AuthService > DEFECTO DEF-14: nombre con acentos sale corrupto (atob no decodifica UTF-8)
+  [OK]    AuthService > DEFECTO DEF-14: payload base64url con "-" o "_" → sesión válida tratada como cerrada
+  [OK]    Guards > authGuard: sin sesión → /login; con sesión → true
+  [OK]    Guards > adminGuard: sin sesión → /login; cliente → /; admin → true
+  [OK]    Guards > HALLAZGO: el rol se lee del JWT sin verificar firma → un token editado abre /admin en el cliente
+  [OK]    ComprasService > crearCompra → POST /api/compras con el DTO; errores 400 se propagan
+  [OK]    ComprasService > getMisCompras y getCompra usan las rutas correctas
+
+--- src/app/app.spec.ts ----------------------------------------------------------------------------
+  [OK]    App > should create the app
+  [FALLA] App > should render title   <- spec de plantilla sobre código muerto (OBS-10)
+
+--- Cobertura de módulos críticos del sitio (ng test --coverage) -----------------------------------
+  Instrucciones: 100 %    Ramas: 100 %    Funciones: 100 %   (detalle: resultados/web/cobertura_web.json)
+
+--- Sitio en producción (https://chaac-xanab-dg.vercel.app) ----------------------------------------
+  GET /  x10: 10/10 = 200 · prom 296 ms · mín 250.1 · máx 411.1 · σ 43.3
+  Paquete main-4WMHGJZL.js intento 1: 24664 B en 0.355 s = 0.556 Mbps
+  Paquete main-4WMHGJZL.js intento 2: 24664 B en 0.313 s = 0.631 Mbps
+  Paquete main-4WMHGJZL.js intento 3: 24664 B en 0.3 s = 0.658 Mbps
+  API vía el sitio (rewrite): 3053.3, 326.9, 306.9, 307.0, 318.5, 299.7, 326.5, 323.6, 287.9, 306.5 ms
+  API directa               : 327.2, 299.2, 303.5, 288.2, 276.2, 309.4, 276.5, 289.9, 286.6, 307.3 ms
+  200  200 inicio                         /
+  200  200 ruta SPA /login                /login
+  200  200 ruta SPA inexistente (SPA)     /no-existe
+  404  404 por rewrite /api/no-existe     /api/no-existe
+  401  401 /api/auth/me sin token         /api/auth/me
+  Cabeceras: strict-transport-security=sí, content-security-policy=NO, x-frame-options=NO, x-content-type-options=NO, referrer-policy=NO
+
+====================================================================================================
 3. BASE DE DATOS — móvil (SQLite), API (lógica de persistencia) y servidor (Supabase)
 ====================================================================================================
 
@@ -367,8 +441,11 @@ RESUMEN
 ====================================================================================================
   Móvil (Flutter)                    86 / 86   aprobadas
   Web / API (Jest)                   85 / 85   aprobadas
+  Sitio web (Angular, Vitest)        42 / 43   aprobadas
   Base de datos móvil (SQLite)       23 / 23   aprobadas
   Base de datos vía API              15 / 15   aprobadas
   Integridad Supabase                 7 / 7    aprobadas
-  TOTAL                             216 / 216  aprobadas
-  Defectos documentados: DEF-01 … DEF-12 (detalle, pasos y corrección en INFORME.md §6)
+  TOTAL                             258 / 259  aprobadas
+  La única [FALLA] es la spec de plantilla del sitio que prueba código que no se usa (OBS-10);
+  las 41 pruebas nuevas del sitio pasan.
+  Defectos documentados: DEF-01 … DEF-14 (detalle, pasos y corrección en INFORME.md §6)

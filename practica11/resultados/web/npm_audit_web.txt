@@ -1,0 +1,97 @@
+﻿# npm audit report
+
+@angular/common  21.0.0-next.0 - 21.2.19
+Severity: high
+Depends on vulnerable versions of @angular/core
+@angular/common: Denial of Service (DoS) via OOM in Date Formatting (formatDate) - https://github.com/advisories/GHSA-48r7-hpm6-gfxm
+@angular/common: Weak 32-Bit Cache Key Hashing in `HttpTransferCache` Leading to Cross-Request Data Leakage and State Poisoning - https://github.com/advisories/GHSA-39pv-4j6c-2g6v
+@angular/common: Denial of Service (DoS) via OOM in Number Formatting (digitsInfo) - https://github.com/advisories/GHSA-p3vc-36g9-x9gr
+@angular/common: Information Leak via Default Caching of Credentialed Requests in HttpTransferCache - https://github.com/advisories/GHSA-q6f4-qqrg-jv6x
+Angular: Cache-Key Ambiguity in HttpTransferCache Leading to Cross-Request Response Reuse and State Poisoning - https://github.com/advisories/GHSA-jhpw-976m-542j
+Angular: Information Leak via `HttpTransferCache` Bypass When Using `withRequestsMadeViaParent` - https://github.com/advisories/GHSA-p297-fm68-3q8c
+fix available via `npm audit fix`
+node_modules/@angular/common
+  @angular/forms  4.4.0-RC.0 - 4.4.0 || 21.0.0-next.0 - 21.2.19
+  Depends on vulnerable versions of @angular/common
+  Depends on vulnerable versions of @angular/core
+  Depends on vulnerable versions of @angular/platform-browser
+  node_modules/@angular/forms
+  @angular/platform-browser  21.0.0-next.0 - 21.2.19
+  Depends on vulnerable versions of @angular/animations
+  Depends on vulnerable versions of @angular/common
+  Depends on vulnerable versions of @angular/core
+  node_modules/@angular/platform-browser
+  @angular/platform-server  21.0.0-next.0 - 21.2.24
+  Depends on vulnerable versions of @angular/common
+  Depends on vulnerable versions of @angular/compiler
+  Depends on vulnerable versions of @angular/core
+  Depends on vulnerable versions of @angular/platform-browser
+  node_modules/@angular/platform-server
+  @angular/router  10.0.0-next.0 - 10.0.0-rc.1 || 21.0.0-next.0 - 21.2.24
+  Depends on vulnerable versions of @angular/common
+  Depends on vulnerable versions of @angular/core
+  Depends on vulnerable versions of @angular/platform-browser
+  node_modules/@angular/router
+
+@angular/compiler  21.0.0-next.0 - 21.2.19
+Severity: high
+Angular vulnerable to XSS in i18n attribute bindings - https://github.com/advisories/GHSA-g93w-mfhg-p222
+@angular/compiler: Two-Way Property Binding Sanitization Bypass (XSS) - https://github.com/advisories/GHSA-58w9-8g37-x9v5
+Angular: Template and Attribute Namespace Sanitization Bypass (XSS) - https://github.com/advisories/GHSA-f3m7-gqxr-g87x
+Angular i18n: Cross-Site Scripting (XSS) via event-handler attributes - https://github.com/advisories/GHSA-jj27-h5hq-8x99
+Angular: Sanitization bypass via directive host bindings on concrete host elements in @angular/core and @angular/compiler - https://github.com/advisories/GHSA-hh8m-fm6v-7cvg
+fix available via `npm audit fix`
+node_modules/@angular/compiler
+  @angular/core  21.0.0-next.0 - 21.2.19
+  Depends on vulnerable versions of @angular/compiler
+  node_modules/@angular/core
+    @angular/animations  21.0.0-next.0 - 21.1.5
+    Depends on vulnerable versions of @angular/core
+    node_modules/@angular/animations
+
+
+
+
+@angular/ssr  21.0.0-next.0 - 21.2.22
+Severity: critical
+Angular SSR is vulnerable to SSRF and Header Injection via request handling pipeline - https://github.com/advisories/GHSA-x288-3778-4hhx
+Angular SSR has an Open Redirect via X-Forwarded-Prefix - https://github.com/advisories/GHSA-xh43-g2fq-wjrj
+Protocol-Relative URL Injection via Single Backslash Bypass in Angular SSR - https://github.com/advisories/GHSA-vfx2-hv2g-xj5f
+Angular SSR has Open Redirect and Request Steering via Encoded X-Forwarded-Prefix - https://github.com/advisories/GHSA-69xr-m8h6-h664
+Angular SSR: Path Traversal to Sibling Directories in CommonEngine on Windows - https://github.com/advisories/GHSA-7g7c-h8rr-7p6q
+fix available via `npm audit fix`
+node_modules/@angular/ssr
+
+body-parser  2.0.0 - 2.3.0
+Severity: high
+body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement - https://github.com/advisories/GHSA-v422-hmwv-36x6
+body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body - https://github.com/advisories/GHSA-27r3-jxmh-p828
+fix available via `npm audit fix`
+node_modules/body-parser
+
+path-to-regexp  8.0.0 - 8.3.0
+Severity: high
+path-to-regexp vulnerable to Denial of Service via sequential optional groups - https://github.com/advisories/GHSA-j3q9-mxjg-w52f
+path-to-regexp vulnerable to Regular Expression Denial of Service via multiple wildcards - https://github.com/advisories/GHSA-27v5-c462-wpq7
+fix available via `npm audit fix`
+node_modules/path-to-regexp
+
+proxy-addr  1.1.0 - 2.0.7
+Severity: critical
+proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet - https://github.com/advisories/GHSA-jqcg-44mw-7w3h
+fix available via `npm audit fix`
+node_modules/proxy-addr
+
+qs  2.2.5 - 6.16.0
+Severity: moderate
+qs's arrayLimit bypass in comma parsing allows denial of service - https://github.com/advisories/GHSA-w7fw-mjwx-w883
+qs has a remotely triggerable DoS: qs.stringify crashes with TypeError on null/undefined entries in comma-format arrays when encodeValuesOnly is set - https://github.com/advisories/GHSA-q8mj-m7cp-5q26
+qs: Denial of Service via Attacker Controlled isBuffer - https://github.com/advisories/GHSA-4mjr-xmp4-gh2g
+qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS) - https://github.com/advisories/GHSA-6pq8-jhm2-2vcw
+fix available via `npm audit fix`
+node_modules/qs
+
+13 vulnerabilities (1 moderate, 10 high, 2 critical)
+
+To address all issues, run:
+  npm audit fix
