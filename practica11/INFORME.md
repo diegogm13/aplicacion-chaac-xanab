@@ -10,8 +10,8 @@ Auditoría técnica de la solución CHAAC XANAB (app móvil Flutter + API NestJS
 | Equipo cliente | Lenovo 20L7002CUS · Intel Core i7-8650U · 16 GB RAM |
 | Sistema operativo | Windows 11 Pro 10.0.26200 |
 | Red del cliente | Wi-Fi Intel Dual Band AC 8265 (enlace 300 Mbps) |
-| App móvil | `chaac_xanab_app` versión **1.0.0+1** · Flutter 3.44.0 / Dart 3.12.0 · huella SHA-256 de `lib/`: `891028365E2473C8` (la carpeta de la app no está en Git, ver OBS-06) |
-| API | `backend-chaac-xanab` commit **`bbf3f21`** (“Release 1.0.0”) · NestJS 10.4 · Node 24.15 (local) |
+| App móvil | `chaac_xanab_app` versión **1.0.0+1** · Flutter 3.44.0 / Dart 3.12.0 · huella SHA-256 de `lib/`: `891028365E2473C8`. Código evaluado = primer commit del repositorio de la app, **`2272970`** (rama `main`; antes no estaba en Git, ver OBS-06) |
+| API | `backend-chaac-xanab` commit evaluado **`bbf3f21`** (“Release 1.0.0”); pruebas de la práctica en el commit **`c700802`**, rama `practica11-whitebox` · NestJS 10.4 · Node 24.15 (local) |
 | Sitio web | `chaac-xanab-dg` (Angular) commit **`6a03504`**; consume la misma API |
 | Servidor | Vercel serverless, región **iad1** (Washington D.C.); con 10 usuarios concurrentes también **cle1** · `https://backend-chaac-xanab.vercel.app/api` (IPs 216.198.79.131 / 64.29.17.131) |
 | BD servidor | PostgreSQL administrado por Supabase (acceso vía service role desde la API) |
@@ -530,7 +530,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 - **OBS-03** `UsuarioDao.actualizar(u)` con `u.id == null` envía `whereArgs: [null]` (sqflite: “This will throw an exception in the future”). Validar `id`.
 - **OBS-04** Stock insuficiente → 400; semánticamente 409 Conflict o 422. `POST /auth/login` responde 201 (convención de Nest) cuando sería 200.
 - **OBS-05** Catálogo de producción con datos de prueba (“PRUEBA EDIT OK mvmuvnqq”, `image_url: null`) y categoría “Runing”.
-- **OBS-06** La carpeta de la app Flutter no está bajo Git: no hay forma de identificar la versión evaluada salvo la huella SHA-256 de §0.
+- **OBS-06** La carpeta de la app Flutter no estaba bajo Git, así que no había forma de identificar la versión evaluada. **Corregido durante la práctica:** se inicializó el repositorio (commit `2272970`); la huella SHA-256 de §0 sigue como respaldo.
 - **OBS-07** Caché en memoria por instancia serverless: tras editar un producto, otras instancias (se observaron `iad1` y `cle1`) pueden servir datos viejos hasta 60 s.
 - **OBS-08** Sin límite de peticiones para correos inexistentes en `/auth/login` (el bloqueo sólo aplica a cuentas existentes): los 60 intentos de la prueba de carga se procesaron sin ninguna limitación.
 
