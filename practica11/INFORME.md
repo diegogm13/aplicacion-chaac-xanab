@@ -331,13 +331,24 @@ Consultas que traen más de lo necesario: `getDireccion` usa `select('*')`; `GET
 
 Todas muy por debajo del objetivo de 200 ms; la mayor parte del tiempo es el paso de mensajes al isolate de sqflite, no la consulta.
 
-**PostgreSQL (Supabase):** no se pudo ejecutar `EXPLAIN ANALYZE` desde este equipo porque las credenciales de Supabase sólo existen en las variables de entorno de Vercel. **Alternativa:** (1) el script listo para el SQL Editor de Supabase [`practica11/sql/explain_supabase.sql`] con 4 consultas, índices, restricciones, RLS y pruebas de integridad con `ROLLBACK`; (2) estimación del costo de BD desde HTTP: con conexión reutilizada, la lectura cacheada responde en **114 ms** y la escritura (`SELECT usuarios` + `INSERT bitacora`) en **212 ms** → ≈ **49 ms por viaje Vercel→Supabase** (dos viajes ≈ 98 ms) [carga.json].
+**PostgreSQL (Supabase)** — `EXPLAIN (ANALYZE, BUFFERS)` ejecutado en el SQL Editor de Supabase [supabase_explain.json, script `sql/explain_supabase.sql`]:
+
+| Consulta (endpoint) | Plan | Filas | Planning | **Execution** |
+|---|---|---|---|---|
+| Q1 Catálogo (`GET /productos`): `productos ⟕ categorias WHERE activo ORDER BY created_at` | `Seq Scan productos` (6 inactivas descartadas) + `Hash Left Join` + `Sort` quicksort 31 kB | 27 | 0.762 ms | **0.256 ms** |
+| Q2 Login: `usuarios WHERE email = ?` | `Seq Scan usuarios` (37 filas, 1 página) | 0 | 0.411 ms | **0.126 ms** |
+| Q3 Historial (`/compras/mis-compras`) | `Bitmap Index Scan on idx_compras_user` + `Index Scan using idx_compras_items_compra` | 0 | 1.028 ms | **0.192 ms** |
+| Q4 Bitácora por correo | `Seq Scan bitacora` (215 filas, sin índice en `usuario_email`) | 0 | 0.387 ms | **0.237 ms** |
+
+Todas las lecturas salieron de la caché de PostgreSQL (`shared hit`, sin lecturas de disco). Q2 no usa `usuarios_email_key` porque la tabla cabe en una sola página y un recorrido secuencial es más barato; con miles de usuarios el planificador cambiaría a `Index Scan`. Q3 confirma que los índices de `migration.sql` sí se usan.
+
+**Interpretación:** ejecutar la consulta en PostgreSQL cuesta **0.13–0.26 ms**, pero la escritura por la API (`SELECT usuarios` + `INSERT bitacora`) tarda **212 ms** y la lectura cacheada **114 ms** [carga.json]. Esa diferencia de ≈ 98 ms la explican los dos viajes de red Vercel→Supabase (≈ 49 ms cada uno), no el trabajo de la base de datos.
 
 ### 4.4 Directo en BD vs. desde la app
 
 | Aspecto | Directo (SQLite / SQL Editor) | Desde la app |
 |---|---|---|
-| Tiempo | 1–5 ms (SQLite) | 106–150 ms con conexión reutilizada; 266–397 ms con conexión nueva |
+| Tiempo | 1–5 ms (SQLite, incluye el paso de mensajes al isolate); **0.13–0.26 ms** de ejecución en PostgreSQL | 106–150 ms con conexión reutilizada; 266–397 ms con conexión nueva |
 | Validación | Sólo restricciones de la tabla (SQLite acepta `edad='abc'`) | DTO + ValidationPipe + validadores de Flutter |
 | Seguridad | Service role ignora RLS | JWT + guards |
 | Datos devueltos | Lo que pida el `SELECT` | Proyección del servicio + caché de 60 s (puede servir datos de hasta 60 s de antigüedad, distinta por instancia) |
@@ -367,7 +378,7 @@ Muestras: 26, 28, 30, 29, 30, 30, 27, 27, 27, 31, 26, 25, 28, 26, 29, 27, 27, 26
 | Descarga de 10.6 KB | < 1 ms |
 | **Total** | **316.5 ms** |
 
-Con conexión reutilizada (keep-alive, solicitudes 2–10): **118 ms** promedio (108–151 ms). Es decir, **≈ 48 % del tiempo con conexión nueva se va en DNS+TCP+TLS**.
+Con conexión reutilizada (keep-alive, solicitudes 2–10): **118 ms** promedio (108–151 ms). Es decir, **≈ 54 % del tiempo con conexión nueva (169.5 de 316.5 ms) se va en DNS+TCP+TLS**.
 
 ### 5.C Tasa de transferencia — Tasa (Mbps) = bytes × 8 / tiempo(s) / 1,000,000
 
@@ -410,7 +421,7 @@ No se puede apagar la red de un teléfono físico desde el entorno de pruebas, a
 
 ### 5.F Carga controlada (`practica11/scripts/carga.mjs`, 20 solicitudes por escenario, calentamiento previo)
 
-Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo ficticio (SELECT `usuarios` + **INSERT en `bitacora`** → 401 esperado; 60 filas de prueba, limpieza en `explain_supabase.sql`).
+Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo ficticio (según el código: SELECT `usuarios` + INSERT `LOGIN_FALLIDO` en `bitacora` → 401 esperado). Al revisar la BD después, **no se guardó ninguna de las 60 filas** (DEF-12).
 
 | Endpoint | Usuarios | Éxito | Fallo | Promedio | P50 | **P95** | Máx. | Req/s | Transferencia | Regiones |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -442,6 +453,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | DEF-07 | API (pruebas, `admin-usuarios.service.ts:228`, `migration-borrado-usuario.sql`) | Media | Suite desactualizada (13 fallas) y borrado físico que elimina historial de compras |
 | DEF-09 | API (`api/index.ts`) | Media | `helmet()` no se aplica en Vercel (confirmado en producción) |
 | DEF-10 | App (`tienda_screen.dart:49-59`) | Media | `TypeError` no controlado al recibir JSON inesperado |
+| DEF-12 | API (`bitacora.service.ts:18-31`, `auth.service.ts` login) | Media | Los logins fallidos con correo inexistente no quedan en la bitácora (falla silenciosa) |
 | DEF-02 | App (`carrito_service.dart:57,61,71`) | Baja | `clamp(1, 0)` lanza `ArgumentError` con stock 0 |
 | DEF-04 | App (`app_database.dart:20-28`) | Baja | `usuarios` sin `CHECK`: acepta edad no numérica |
 
@@ -510,6 +522,14 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 - **Evidencia:** `test/rendimiento_test.dart` “DEFECTO DEF-10” (en prueba de widget el framework lo reporta como excepción no capturada).
 - **Corrección:** en `ApiClient`/servicios convertir errores de forma (`TypeError`, `FormatException`) en `ApiException('Respuesta inesperada del servidor')`, y en `_cargar()` agregar `catch (_)` genérico + `if (!mounted) return`.
 
+### DEF-12 — La bitácora no registra los logins fallidos de producción
+- **Pasos:** 1) `node practica11/scripts/carga.mjs` envía 60 `POST /api/auth/login` con `practica11-carga@example.invalid` (todas responden 401, como se esperaba). 2) En el SQL Editor de Supabase: `SELECT count(*) FROM bitacora WHERE usuario_email = 'practica11-carga@example.invalid'` y `SELECT … FROM bitacora WHERE created_at >= '2026-11-12 00:30:00+00'`.
+- **Esperado:** 60 filas `LOGIN_FALLIDO` (lo que hace `AuthService.login` cuando el correo no existe).
+- **Observado:** **0 filas** en ambas consultas (Q4: `Rows Removed by Filter: 215`, ninguna coincide). Las respuestas 401 llegaron, pero ningún registro de auditoría se guardó. No se ejecutó el `DELETE` de limpieza.
+- **Causa probable:** `BitacoraService.registrar()` atrapa cualquier error y sólo hace `console.error`, así que un `INSERT` rechazado (columna o tipo distinto en producción, p. ej. `ip_address`, una restricción `CHECK accion` desactualizada, o un despliegue que no corresponde al commit `bbf3f21`) pasa en silencio. Para confirmarla hay que revisar en los logs de Vercel los mensajes `[Bitacora] Error al registrar acción`.
+- **Evidencia:** `supabase_explain.json › Q4_bitacora_por_correo`, `carga.json` (60/60 respuestas 401).
+- **Corrección:** revisar los logs de Vercel y alinear el esquema de `bitacora` con `migration-practicas-11-12.sql`; agregar una prueba de integración que verifique que tras un login fallido existe la fila; y, sin romper el flujo principal, contar las fallas de auditoría (métrica o alerta) en lugar de sólo escribirlas en consola.
+
 ### DEF-02 — `clamp` con stock 0
 - **Pasos:** `CarritoService.agregar(producto con stock 0, '26', 1)` (posible si el stock bajó a 0 con la pantalla abierta).
 - **Esperado:** rechazo controlado.
@@ -563,7 +583,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 |---|---|---|---|
 | DB-01 | Inserción válida | **Aprobado** | `db_test.dart`, e2e 201 |
 | DB-02 | Integridad | **Aprobado con defecto** — Supabase: 7/7 restricciones (FK, CHECK, NOT NULL, UNIQUE) rechazan datos inválidos; SQLite: NOT NULL/UNIQUE/rollback OK, pero sin `CHECK` (DEF-04) | `supabase_integridad.json`, `db_test.dart` |
-| DB-03 | Consulta | **Aprobado** — existente / inexistente; tiempos 1.1–5.0 ms | `db_metricas.json` |
+| DB-03 | Consulta | **Aprobado** — existente / inexistente; SQLite 1.1–5.0 ms; PostgreSQL 0.13–0.26 ms con índices usados en el historial | `db_metricas.json`, `supabase_explain.json` |
 | DB-04 | Actualización | **Aprobado** — persistencia verificada desde otra conexión | `db_test.dart` |
 | DB-05 | Eliminación | **Aprobado** | `db_test.dart` |
 | DB-06 | Concurrencia | **Fallido** — DEF-03 (sobreventa / UNIQUE) | `db_metricas.json`, e2e |
@@ -577,7 +597,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | NET-04 | Tasa de subida | **Medido** — 1.508 Mbps (90 KB) | `red.json › subida` |
 | NET-05 | Pérdida de conexión | **Aprobado** — detecta, no muestra éxito falso, conserva carrito | `conectividad_test.dart` |
 | NET-06 | Recuperación | **Aprobado con defecto** — reintento manual funciona; DEF-01 | `conectividad_test.dart` |
-| NET-07 | Carga controlada | **Aprobado** — 120/120; P95 ≤ 807 ms; máx. 1,945 ms (arranque en frío) | `carga.json` |
+| NET-07 | Carga controlada | **Aprobado con defecto** — 120/120 respuestas correctas; P95 ≤ 807 ms; máx. 1,945 ms (arranque en frío). La escritura en bitácora no persistió (DEF-12) | `carga.json`, `supabase_explain.json` |
 
 ---
 
@@ -595,7 +615,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | Tasa de descarga | Mbps | 3 | 1.161 / 3.003 / 3.015 (prom. 2.393) |
 | Tasa de subida | Mbps | 3 | 1.283 / 1.535 / 1.707 (prom. 1.508) |
 | Tamaño de respuesta | bytes | 10 solicitudes | 10,585 (2,634 con gzip) |
-| Tiempo de consulta DB | ms | 4 consultas | 1.286 / 1.449 / 1.139 / 4.970 (SQLite); ≈49 por viaje a Supabase (estimado por HTTP) |
+| Tiempo de consulta DB | ms | 4 + 4 consultas | PostgreSQL (`EXPLAIN ANALYZE`): 0.256 / 0.126 / 0.192 / 0.237 · SQLite: 1.286 / 1.449 / 1.139 / 4.970 |
 
 ### B. Resultados por solicitud
 Ver §5.D.
@@ -608,7 +628,7 @@ Ver §5.D.
 | Tasa de transferencia (descarga / subida) | 2.393 / 1.508 Mbps | — | — |
 | Cobertura de instrucciones (app / API, críticos) | 99.6 % / 98.8 % | ≥ 85 % | ✔ |
 | Cobertura de ramas (app / API, críticos) | 96.6 % / 84.6 % | ≥ 80 % | ✔ |
-| Tiempo de consulta sencilla a BD | 1.1–1.4 ms (SQLite) | ≤ 200 ms | ✔ |
+| Tiempo de consulta sencilla a BD | 0.13–0.26 ms (PostgreSQL), 1.1–1.4 ms (SQLite) | ≤ 200 ms | ✔ |
 | Respuestas exitosas del endpoint | 10/10 y 60/60 | 100 % | ✔ |
 | Operaciones inválidas correctamente rechazadas | Todas las diseñadas, con 2 excepciones: la compra concurrente sin stock se **acepta** (DEF-03) y el id no UUID se rechaza con **500** en vez de 400 (DEF-05) | 100 % | ✘ (2 casos) |
 
@@ -632,9 +652,9 @@ Ver §5.D.
 
 **8. Ventajas de una transacción.** Atomicidad (todo o nada: no habría quedado la compra huérfana de DEF-08), consistencia (el stock se descuenta en el mismo paso que se valida, con bloqueo de fila, evitando la sobreventa de DEF-03), aislamiento frente a peticiones concurrentes y un único punto de rollback ante cualquier error. Se comprobó en SQLite: una transacción con un INSERT inválido revirtió también el INSERT válido previo.
 
-**9. Consulta directa vs. desde la app.** Directa en SQLite: 1.1–5 ms; desde la app contra la API: 106–150 ms con conexión reutilizada y 266–397 ms con conexión nueva, porque se suman red, TLS, NestJS y el viaje Vercel→Supabase. Además, desde la app los datos pasan por validación (DTO), autorización (JWT) y caché de 60 s, mientras que directo sólo aplican las restricciones de la tabla (SQLite aceptó `edad = 'abc'`; la service role de Supabase ignora RLS).
+**9. Consulta directa vs. desde la app.** Directa en PostgreSQL (`EXPLAIN ANALYZE` en Supabase): 0.13–0.26 ms; en SQLite: 1.1–5 ms; desde la app contra la API: 106–150 ms con conexión reutilizada y 266–397 ms con conexión nueva, porque se suman red, TLS, NestJS y el viaje Vercel→Supabase. Además, desde la app los datos pasan por validación (DTO), autorización (JWT) y caché de 60 s, mientras que directo sólo aplican las restricciones de la tabla (SQLite aceptó `edad = 'abc'`; la service role de Supabase ignora RLS).
 
-**10. Principal cuello de botella.** La **red y el establecimiento de conexión entre el cliente y la función de Vercel**, seguido de los viajes Vercel→Supabase. Evidencia: con conexión nueva, DNS+TCP+TLS = 169.5 ms de 316.5 ms (54 %), y al reutilizar la conexión la misma petición baja a 118 ms; la transferencia del cuerpo dura < 1 ms; la consulta en sí cuesta 1–5 ms en SQLite; cada viaje a Supabase añade ≈ 49 ms (escritura 212 ms vs. lectura cacheada 114 ms); y bajo concurrencia el peor caso (1,945 ms) viene del arranque en frío de instancias nuevas, no de la BD. Mejoras: mantener la conexión HTTP viva en la app (ya ocurre con el `http.Client` compartido), ubicar la función de Vercel en la misma región que Supabase y reducir viajes por petición con funciones RPC.
+**10. Principal cuello de botella.** La **red y el establecimiento de conexión entre el cliente y la función de Vercel**, seguido de los viajes Vercel→Supabase. Evidencia: con conexión nueva, DNS+TCP+TLS = 169.5 ms de 316.5 ms (54 %), y al reutilizar la conexión la misma petición baja a 118 ms; la transferencia del cuerpo dura < 1 ms; la consulta en sí cuesta 0.13–0.26 ms en PostgreSQL (Q1–Q4); cada viaje a Supabase añade ≈ 49 ms (escritura 212 ms vs. lectura cacheada 114 ms); y bajo concurrencia el peor caso (1,945 ms) viene del arranque en frío de instancias nuevas, no de la BD. Mejoras: mantener la conexión HTTP viva en la app (ya ocurre con el `http.Client` compartido), ubicar la función de Vercel en la misma región que Supabase y reducir viajes por petición con funciones RPC.
 
 ---
 
@@ -642,7 +662,7 @@ Ver §5.D.
 
 | Prueba | Motivo | Alternativa aplicada |
 |---|---|---|
-| `EXPLAIN ANALYZE` en PostgreSQL de Supabase | Credenciales sólo en Vercel (las pruebas de integridad DB-02 sí se ejecutaron en el SQL Editor) | Script `sql/explain_supabase.sql` listo para el SQL Editor + estimación por HTTP (§4.3) + `EXPLAIN QUERY PLAN` en SQLite |
+| `EXPLAIN ANALYZE` desde el equipo de pruebas | Las credenciales de Supabase sólo existen en Vercel | Se ejecutó en el SQL Editor de Supabase: Q1–Q4 [supabase_explain.json] e integridad DB-02 [supabase_integridad.json] |
 | Pruebas autenticadas en producción (`POST /compras`, 403) | No había cuenta de prueba verificada; no se quiso alterar stock real | Mismas rutas con guards reales en `http.e2e.spec.ts` |
 | Corte de red en teléfono físico | Sin dispositivo conectado al entorno | Pantalla real `CheckoutScreen` con transporte que lanza `SocketException` (§5.E) |
 | Wireshark | Sin autorización/captura en la red | Desglose DNS/TCP/TLS/TTFB con `curl -w` (§5.B) |

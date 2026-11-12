@@ -1,0 +1,98 @@
+{
+  "fuente": "Supabase Dashboard > SQL Editor, EXPLAIN (ANALYZE, BUFFERS) de practica11/sql/explain_supabase.sql",
+  "fecha": "2026-11-11",
+  "Q1_catalogo": {
+    "consulta": "GET /api/productos -> ProductosService.findAll (productos LEFT JOIN categorias WHERE activo ORDER BY created_at DESC)",
+    "planning_ms": 0.762,
+    "execution_ms": 0.256,
+    "filas": 27,
+    "plan": [
+      "Sort  (cost=39.17..39.54 rows=150 width=301) (actual time=0.144..0.147 rows=27 loops=1)",
+      "  Sort Key: p.created_at DESC",
+      "  Sort Method: quicksort  Memory: 31kB",
+      "  Buffers: shared hit=7",
+      "  ->  Hash Left Join  (cost=20.35..33.74 rows=150 width=301) (actual time=0.069..0.093 rows=27 loops=1)",
+      "        Hash Cond: (p.categoria_id = c.id)",
+      "        Buffers: shared hit=4",
+      "        ->  Seq Scan on productos p  (cost=0.00..13.00 rows=150 width=237) (actual time=0.015..0.030 rows=27 loops=1)",
+      "              Filter: activo",
+      "              Rows Removed by Filter: 6",
+      "              Buffers: shared hit=3",
+      "        ->  Hash  (cost=14.60..14.60 rows=460 width=80) (actual time=0.025..0.025 rows=6 loops=1)",
+      "              Buckets: 1024  Batches: 1  Memory Usage: 9kB",
+      "              Buffers: shared hit=1",
+      "              ->  Seq Scan on categorias c  (cost=0.00..14.60 rows=460 width=80) (actual time=0.015..0.016 rows=6 loops=1)",
+      "                    Buffers: shared hit=1",
+      "Planning:",
+      "  Buffers: shared hit=267",
+      "Planning Time: 0.762 ms",
+      "Execution Time: 0.256 ms"
+    ]
+  },
+  "Q2_login": {
+    "consulta": "AuthService.login -> SELECT ... FROM usuarios WHERE email = ?",
+    "planning_ms": 0.411,
+    "execution_ms": 0.126,
+    "filas": 0,
+    "plan": [
+      "Seq Scan on usuarios  (cost=0.00..1.35 rows=1 width=153) (actual time=0.023..0.024 rows=0 loops=1)",
+      "  Filter: (email = 'cliente@example.com'::text)",
+      "  Rows Removed by Filter: 37",
+      "  Buffers: shared hit=1",
+      "Planning:",
+      "  Buffers: shared hit=108",
+      "Planning Time: 0.411 ms",
+      "Execution Time: 0.126 ms"
+    ]
+  },
+  "Q3_historial": {
+    "consulta": "GET /api/compras/mis-compras -> compras LEFT JOIN compras_items WHERE user_id = ? ORDER BY created_at DESC",
+    "planning_ms": 1.028,
+    "execution_ms": 0.192,
+    "filas": 0,
+    "plan": [
+      "Sort  (cost=12.82..12.83 rows=3 width=204) (actual time=0.087..0.088 rows=0 loops=1)",
+      "  Sort Key: c.created_at DESC",
+      "  Sort Method: quicksort  Memory: 25kB",
+      "  Buffers: shared hit=5",
+      "  InitPlan 1",
+      "    ->  Limit  (cost=0.00..0.05 rows=1 width=16) (actual time=0.042..0.042 rows=1 loops=1)",
+      "          Buffers: shared hit=1",
+      "          ->  Seq Scan on usuarios  (cost=0.00..1.28 rows=28 width=16) (actual time=0.041..0.041 rows=1 loops=1)",
+      "                Buffers: shared hit=1",
+      "  ->  Nested Loop Left Join  (cost=1.42..12.75 rows=3 width=204) (actual time=0.060..0.060 rows=0 loops=1)",
+      "        Buffers: shared hit=2",
+      "        ->  Bitmap Heap Scan on compras c  (cost=1.27..4.45 rows=3 width=72) (actual time=0.059..0.059 rows=0 loops=1)",
+      "              Recheck Cond: (user_id = (InitPlan 1).col1)",
+      "              Buffers: shared hit=2",
+      "              ->  Bitmap Index Scan on idx_compras_user  (cost=0.00..1.27 rows=3 width=0) (actual time=0.054..0.054 rows=0 loops=1)",
+      "                    Index Cond: (user_id = (InitPlan 1).col1)",
+      "                    Buffers: shared hit=2",
+      "        ->  Index Scan using idx_compras_items_compra on compras_items i  (cost=0.15..2.75 rows=2 width=148) (never executed)",
+      "              Index Cond: (compra_id = c.id)",
+      "Planning:",
+      "  Buffers: shared hit=268",
+      "Planning Time: 1.028 ms",
+      "Execution Time: 0.192 ms"
+    ]
+  },
+  "Q4_bitacora_por_correo": {
+    "consulta": "SELECT count(*) FROM bitacora WHERE usuario_email = 'practica11-carga@example.invalid'",
+    "planning_ms": 0.387,
+    "execution_ms": 0.237,
+    "filas_coincidentes": 0,
+    "filas_totales_revisadas": 215,
+    "plan": [
+      "Aggregate  (cost=13.69..13.70 rows=1 width=8) (actual time=0.100..0.100 rows=1 loops=1)",
+      "  Buffers: shared hit=11",
+      "  ->  Seq Scan on bitacora  (cost=0.00..13.69 rows=1 width=0) (actual time=0.097..0.098 rows=0 loops=1)",
+      "        Filter: (usuario_email = 'practica11-carga@example.invalid'::text)",
+      "        Rows Removed by Filter: 215",
+      "        Buffers: shared hit=11",
+      "Planning:",
+      "  Buffers: shared hit=111",
+      "Planning Time: 0.387 ms",
+      "Execution Time: 0.237 ms"
+    ]
+  }
+}
