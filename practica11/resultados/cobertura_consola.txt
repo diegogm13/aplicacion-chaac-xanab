@@ -1,0 +1,13 @@
+﻿
+Archivo                            LH  LF LineasPct BRH BRF RamasPct
+-------                            --  -- --------- --- --- --------
+lib/services/api_client.dart       37  37       100  27  27      100
+lib/services/auth_service.dart     42  42       100  21  21      100
+lib/screens/checkout_screen.dart   93  93       100  28  31     90.3
+lib/services/carrito_service.dart  51  51       100  17  17      100
+lib/config/validaciones.dart       33  34      97.1  15  16     93.8
+lib/db/usuario_dao.dart            13  13       100   4   4      100
+TOTAL mÃ³dulos crÃ­ticos          269 270      99.6 112 116     96.6
+
+
+

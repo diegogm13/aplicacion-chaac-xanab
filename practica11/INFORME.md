@@ -74,7 +74,7 @@ npx jest --coverage
 | Validaciones duplicadas o inexistentes | Antes: reglas repetidas en `login/registro/checkout` → se centralizaron en `Validaciones`. Login exige sólo `@` y el registro un correo completo (OBS-02). SQLite sin `CHECK` en `edad` (DEF-04). `UsuarioDao.actualizar()` acepta `id == null` y manda `whereArgs: [null]` (sqflite lo advierte en ejecución, OBS-03) | `validaciones.dart`, `usuario_dao.dart:20-23` |
 | Código inaccesible o redundante | Constructor privado `Validaciones._()` (intencional). `main.ts` (local) y `api/index.ts` (Vercel) duplican la configuración y **ya divergieron**: sólo `main.ts` aplica `helmet()` (DEF-09) | `api/index.ts:16-29` |
 | Consultas con datos sin validar | App: todo con `?` parametrizado (probado contra `"1 OR 1=1; DROP TABLE..."`). API: PostgREST parametriza; `buscarPorTermino` construye un filtro `.or()` con texto del usuario pero lo sanitiza (quita `, ( ) % _ \` y limita a 100 caracteres) — verificado con prueba | `productos.service.ts:52-80` |
-| Red bloqueando el hilo principal | No hay E/S síncrona en `lib/` (sin `*Sync()`/`sleep`). `jsonDecode` corre en el isolate de UI: 0.22 ms para el catálogo actual, 14.7 ms con 100× los datos (≈1 frame) | [rendimiento_app.json] |
+| Red bloqueando el hilo principal | No hay E/S síncrona en `lib/` (sin `*Sync()`/`sleep`). `jsonDecode` corre en el isolate de UI: 0.30 ms para el catálogo actual, 21.2 ms con 100× los datos (1.27 frames) | [rendimiento_app.json] |
 | Recursos no liberados | Controladores de texto se liberan en `dispose()`. `ApiClient` usa un `http.Client` singleton (correcto, reutiliza conexiones). `setState` tras `await` sin `mounted` en `tienda_screen.dart:51,56` | `tienda_screen.dart` |
 
 ---
@@ -324,10 +324,10 @@ Consultas que traen más de lo necesario: `getDireccion` usa `select('*')`; `GET
 
 | Consulta | Plan (`EXPLAIN QUERY PLAN`) | Tiempo |
 |---|---|---|
-| `SELECT * FROM usuarios WHERE id = ?` | `SEARCH usuarios USING INTEGER PRIMARY KEY (rowid=?)` | **1.286 ms** |
-| `SELECT * FROM usuarios WHERE correo = ?` | `SCAN usuarios` (sin índice) | **1.449 ms** |
-| `SELECT * FROM carrito WHERE producto_id=? AND talla=? LIMIT 1` | `SEARCH carrito USING INDEX sqlite_autoindex_carrito_1` | **1.139 ms** |
-| `SELECT * FROM usuarios ORDER BY id` (1,000 filas) | `SCAN usuarios` | **4.970 ms** |
+| `SELECT * FROM usuarios WHERE id = ?` | `SEARCH usuarios USING INTEGER PRIMARY KEY (rowid=?)` | **0.704 ms** |
+| `SELECT * FROM usuarios WHERE correo = ?` | `SCAN usuarios` (sin índice) | **0.627 ms** |
+| `SELECT * FROM carrito WHERE producto_id=? AND talla=? LIMIT 1` | `SEARCH carrito USING INDEX sqlite_autoindex_carrito_1` | **0.640 ms** |
+| `SELECT * FROM usuarios ORDER BY id` (1,000 filas) | `SCAN usuarios` | **2.671 ms** |
 
 Todas muy por debajo del objetivo de 200 ms; la mayor parte del tiempo es el paso de mensajes al isolate de sqflite, no la consulta.
 
@@ -348,7 +348,7 @@ Todas las lecturas salieron de la caché de PostgreSQL (`shared hit`, sin lectur
 
 | Aspecto | Directo (SQLite / SQL Editor) | Desde la app |
 |---|---|---|
-| Tiempo | 1–5 ms (SQLite, incluye el paso de mensajes al isolate); **0.13–0.26 ms** de ejecución en PostgreSQL | 106–150 ms con conexión reutilizada; 266–397 ms con conexión nueva |
+| Tiempo | 0.6–2.7 ms (SQLite, incluye el paso de mensajes al isolate); **0.13–0.26 ms** de ejecución en PostgreSQL | 106–150 ms con conexión reutilizada; 266–397 ms con conexión nueva |
 | Validación | Sólo restricciones de la tabla (SQLite acepta `edad='abc'`) | DTO + ValidationPipe + validadores de Flutter |
 | Seguridad | Service role ignora RLS | JWT + guards |
 | Datos devueltos | Lo que pida el `SELECT` | Proyección del servicio + caché de 60 s (puede servir datos de hasta 60 s de antigüedad, distinta por instancia) |
@@ -566,7 +566,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | WB-03 | Cobertura de condiciones | **Aprobado** — cada condición atómica V/F: `edadValida` C1–C3, `codigoPostalValido` C1–C2, 5 reglas de contraseña aisladas, `loginEmail` C1–C2, `_enviar` C1–C2 (199/200/299/300), `_mensajeDe` C3–C6 | `validaciones_test.dart`, `api_client_test.dart` |
 | WB-04 | Manejo de excepciones | **Aprobado con defectos** — red/timeout/401/409/JSON inválido controlados; DEF-02 y DEF-10 | `api_client_test.dart`, `db_test.dart`, `rendimiento_test.dart` |
 | WB-05 | Validación de entradas | **Aprobado** — 46 casos con valores límite; el formulario de checkout bloquea el POST con datos inválidos (0 peticiones); OBS-02 | `validaciones_test.dart`, `conectividad_test.dart` |
-| WB-06 | Rendimiento de interfaz | **Aprobado** — parseo del catálogo real 0.22 ms (0.01 frames); 100× = 14.7 ms; primer render de la tienda 141 ms (entorno de prueba); sin E/S síncrona | `rendimiento_app.json` |
+| WB-06 | Rendimiento de interfaz | **Aprobado** — parseo del catálogo real 0.30 ms (0.02 frames); 100× = 21.2 ms (más de un frame: riesgo si el catálogo crece); primer render de la tienda 274 ms (entorno de prueba); sin E/S síncrona | `rendimiento_app.json` |
 
 ### Sitio web / API
 | ID | Prueba | Resultado | Evidencia |
@@ -583,7 +583,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 |---|---|---|---|
 | DB-01 | Inserción válida | **Aprobado** | `db_test.dart`, e2e 201 |
 | DB-02 | Integridad | **Aprobado con defecto** — Supabase: 7/7 restricciones (FK, CHECK, NOT NULL, UNIQUE) rechazan datos inválidos; SQLite: NOT NULL/UNIQUE/rollback OK, pero sin `CHECK` (DEF-04) | `supabase_integridad.json`, `db_test.dart` |
-| DB-03 | Consulta | **Aprobado** — existente / inexistente; SQLite 1.1–5.0 ms; PostgreSQL 0.13–0.26 ms con índices usados en el historial | `db_metricas.json`, `supabase_explain.json` |
+| DB-03 | Consulta | **Aprobado** — existente / inexistente; SQLite 0.6–2.7 ms; PostgreSQL 0.13–0.26 ms con índices usados en el historial | `db_metricas.json`, `supabase_explain.json` |
 | DB-04 | Actualización | **Aprobado** — persistencia verificada desde otra conexión | `db_test.dart` |
 | DB-05 | Eliminación | **Aprobado** | `db_test.dart` |
 | DB-06 | Concurrencia | **Fallido** — DEF-03 (sobreventa / UNIQUE) | `db_metricas.json`, e2e |
@@ -615,7 +615,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | Tasa de descarga | Mbps | 3 | 1.161 / 3.003 / 3.015 (prom. 2.393) |
 | Tasa de subida | Mbps | 3 | 1.283 / 1.535 / 1.707 (prom. 1.508) |
 | Tamaño de respuesta | bytes | 10 solicitudes | 10,585 (2,634 con gzip) |
-| Tiempo de consulta DB | ms | 4 + 4 consultas | PostgreSQL (`EXPLAIN ANALYZE`): 0.256 / 0.126 / 0.192 / 0.237 · SQLite: 1.286 / 1.449 / 1.139 / 4.970 |
+| Tiempo de consulta DB | ms | 4 + 4 consultas | PostgreSQL (`EXPLAIN ANALYZE`): 0.256 / 0.126 / 0.192 / 0.237 · SQLite: 0.704 / 0.627 / 0.640 / 2.671 |
 
 ### B. Resultados por solicitud
 Ver §5.D.
@@ -628,7 +628,7 @@ Ver §5.D.
 | Tasa de transferencia (descarga / subida) | 2.393 / 1.508 Mbps | — | — |
 | Cobertura de instrucciones (app / API, críticos) | 99.6 % / 98.8 % | ≥ 85 % | ✔ |
 | Cobertura de ramas (app / API, críticos) | 96.6 % / 84.6 % | ≥ 80 % | ✔ |
-| Tiempo de consulta sencilla a BD | 0.13–0.26 ms (PostgreSQL), 1.1–1.4 ms (SQLite) | ≤ 200 ms | ✔ |
+| Tiempo de consulta sencilla a BD | 0.13–0.26 ms (PostgreSQL), 0.6–0.7 ms (SQLite) | ≤ 200 ms | ✔ |
 | Respuestas exitosas del endpoint | 10/10 y 60/60 | 100 % | ✔ |
 | Operaciones inválidas correctamente rechazadas | Todas las diseñadas, con 2 excepciones: la compra concurrente sin stock se **acepta** (DEF-03) y el id no UUID se rechaza con **500** en vez de 400 (DEF-05) | 100 % | ✘ (2 casos) |
 
@@ -644,7 +644,7 @@ Ver §5.D.
 
 **4. Ping 30 ms pero HTTP 2,000 ms.** Arranque en frío de la función serverless (observado: 1,945 ms con 5 usuarios); handshake TLS con conexión nueva (≈96 ms medido); varias consultas secuenciales a la BD (≈49 ms cada una; `create` hace 5 + 1 por producto); servidor en otra región que la BD; consultas sin índice o que traen de más; respuesta grande sin compresión; cola de peticiones bajo carga; reintentos de TCP por pérdida en Wi-Fi; y que el ping lo contesta el borde de la CDN, no el servidor que ejecuta el código.
 
-**5. Tamaño del JSON en la app móvil.** Más bytes = más tiempo de radio (batería y datos), más memoria y más trabajo de `jsonDecode` + `fromJson` en el **hilo de UI**. Medido: el catálogo actual (10.6 KB) se procesa en 0.22 ms, pero con 100× (1 MB) toma 14.7 ms ≈ un frame completo a 60 Hz, lo que ya provoca tirones. Mitigaciones: gzip (−75 % medido), paginación, pedir sólo campos necesarios y `compute()` para respuestas grandes.
+**5. Tamaño del JSON en la app móvil.** Más bytes = más tiempo de radio (batería y datos), más memoria y más trabajo de `jsonDecode` + `fromJson` en el **hilo de UI**. Medido: el catálogo actual (10.6 KB) se procesa en 0.30 ms, pero con 100× (1 MB) toma 21.2 ms, más que un frame completo a 60 Hz (16.7 ms), lo que ya provoca tirones. Mitigaciones: gzip (−75 % medido), paginación, pedir sólo campos necesarios y `compute()` para respuestas grandes.
 
 **6. Se pierde la conexión después de enviar y antes de recibir.** El servidor **sí procesa** la compra, pero la app recibe una excepción de red y la reporta como fallo. El carrito no se vacía, así que el usuario reintenta y se crea una **segunda compra** (DEF-01, demostrado en `conectividad_test.dart`). El estado real sólo se descubre consultando “Mis pedidos”.
 
@@ -652,7 +652,7 @@ Ver §5.D.
 
 **8. Ventajas de una transacción.** Atomicidad (todo o nada: no habría quedado la compra huérfana de DEF-08), consistencia (el stock se descuenta en el mismo paso que se valida, con bloqueo de fila, evitando la sobreventa de DEF-03), aislamiento frente a peticiones concurrentes y un único punto de rollback ante cualquier error. Se comprobó en SQLite: una transacción con un INSERT inválido revirtió también el INSERT válido previo.
 
-**9. Consulta directa vs. desde la app.** Directa en PostgreSQL (`EXPLAIN ANALYZE` en Supabase): 0.13–0.26 ms; en SQLite: 1.1–5 ms; desde la app contra la API: 106–150 ms con conexión reutilizada y 266–397 ms con conexión nueva, porque se suman red, TLS, NestJS y el viaje Vercel→Supabase. Además, desde la app los datos pasan por validación (DTO), autorización (JWT) y caché de 60 s, mientras que directo sólo aplican las restricciones de la tabla (SQLite aceptó `edad = 'abc'`; la service role de Supabase ignora RLS).
+**9. Consulta directa vs. desde la app.** Directa en PostgreSQL (`EXPLAIN ANALYZE` en Supabase): 0.13–0.26 ms; en SQLite: 0.6–2.7 ms; desde la app contra la API: 106–150 ms con conexión reutilizada y 266–397 ms con conexión nueva, porque se suman red, TLS, NestJS y el viaje Vercel→Supabase. Además, desde la app los datos pasan por validación (DTO), autorización (JWT) y caché de 60 s, mientras que directo sólo aplican las restricciones de la tabla (SQLite aceptó `edad = 'abc'`; la service role de Supabase ignora RLS).
 
 **10. Principal cuello de botella.** La **red y el establecimiento de conexión entre el cliente y la función de Vercel**, seguido de los viajes Vercel→Supabase. Evidencia: con conexión nueva, DNS+TCP+TLS = 169.5 ms de 316.5 ms (54 %), y al reutilizar la conexión la misma petición baja a 118 ms; la transferencia del cuerpo dura < 1 ms; la consulta en sí cuesta 0.13–0.26 ms en PostgreSQL (Q1–Q4); cada viaje a Supabase añade ≈ 49 ms (escritura 212 ms vs. lectura cacheada 114 ms); y bajo concurrencia el peor caso (1,945 ms) viene del arranque en frío de instancias nuevas, no de la BD. Mejoras: mantener la conexión HTTP viva en la app (ya ocurre con el `http.Client` compartido), ubicar la función de Vercel en la misma región que Supabase y reducir viajes por petición con funciones RPC.
 
@@ -675,3 +675,87 @@ Ver §5.D.
 App (`chaac_xanab_app`): `lib/config/validaciones.dart` (validaciones extraídas), `lib/services/api_client.dart` (transporte inyectable para pruebas, sin cambio de comportamiento), `test/validaciones_test.dart`, `test/api_client_test.dart`, `test/db_test.dart`, `test/conectividad_test.dart`, `test/rendimiento_test.dart`, `practica11/scripts/*`, `practica11/sql/explain_supabase.sql`.
 
 API (`backend-chaac-xanab`): `src/practica11/fake-supabase.ts`, `src/practica11/http.e2e.spec.ts` y la actualización de 5 specs desactualizados (`productos`, `admin-productos`, `admin-usuarios`, `supabase`, `webauthn`).
+
+## 12. Anexo — Capturas de evidencia
+
+Las capturas de consola (C1–C13) muestran la **salida real** de cada herramienta, tomada de los archivos de evidencia guardados en `practica11/resultados/` y `backend-chaac-xanab/practica11/` y dibujada con `practica11/scripts/capturas.py`; la barra superior indica el archivo de origen. C14 es una captura de pantalla del SQL Editor de Supabase. El listado completo de pruebas y resultados está en `practica11/PRUEBAS_Y_RESULTADOS.txt`.
+
+### C1. Aplicación móvil — ejecución de las pruebas
+
+![C1 — flutter test: 109 pruebas, todas aprobadas](capturas/cap01_flutter_test.png)
+
+**Interpretación:** las 109 pruebas de la app pasan. Los nombres indican el camino (P#), la decisión (D#) y la condición (C#) que cada prueba fuerza, por ejemplo los límites 199/200/299/300 de `_enviar()`. Las marcadas como HALLAZGO pasan porque demuestran el defecto.
+
+### C2. Aplicación móvil — cobertura de instrucciones y ramas
+
+![C2 — cobertura de los módulos críticos de la app](capturas/cap02_cobertura_flutter.png)
+
+**Interpretación:** 99.6 % de instrucciones y 96.6 % de ramas en los módulos críticos, por encima de los objetivos (85 % y 80 %). Lo que falta está justificado en §2.4.
+
+### C3. Aplicación móvil — análisis estático
+
+![C3 — flutter analyze sin problemas](capturas/cap03_flutter_analyze.png)
+
+**Interpretación:** `flutter analyze` no reporta advertencias ni errores, ni en el código de la app ni en las pruebas nuevas.
+
+### C4–C5. API — pruebas HTTP de los endpoints
+
+![C4 — pruebas HTTP: respuestas exitosas, validación y 401/403](capturas/cap04_jest_http_a.png)
+
+![C5 — pruebas HTTP: errores 500, caminos de compras y concurrencia](capturas/cap05_jest_http_b.png)
+
+**Interpretación:** cada código HTTP de la tabla de la práctica (200, 201, 400, 401, 403, 404, 409, 500) se comprobó con los guards y el `ValidationPipe` reales. Se distingue 401 (sin sesión) de 403 (sin permiso). Las pruebas DEFECTO demuestran DEF-01, DEF-03, DEF-05, DEF-06 y DEF-08.
+
+### C6. API — resumen y cobertura
+
+![C6 — Jest: 10 suites, 100 pruebas, cobertura](capturas/cap06_jest_resumen.png)
+
+**Interpretación:** 100 de 100 pruebas aprobadas (antes de la práctica fallaban 13). Los módulos críticos (`compras`, `productos`, `roles.guard`, `jwt.strategy`) tienen entre 96 % y 100 % de instrucciones. El total del proyecto (40.7 %) es bajo porque hay módulos fuera del alcance.
+
+### C7. API — vulnerabilidades de dependencias
+
+![C7 — npm audit: 15 vulnerabilidades](capturas/cap07_npm_audit.png)
+
+**Interpretación:** 1 crítica (`proxy-addr`) y 8 altas, que se reportan como DEF-11. Casi todas se corrigen con `npm audit fix` o actualizando NestJS, `multer` y `nodemailer`.
+
+### C8. Conectividad — ping
+
+![C8 — ping de 20 paquetes al servidor](capturas/cap08_ping.png)
+
+**Interpretación:** 20 de 20 paquetes, 0 % de pérdida y 25–31 ms (promedio 27.8). Es la latencia ICMP hasta el borde de Vercel; no incluye el procesamiento de la API.
+
+### C9. Conectividad — códigos HTTP y 10 solicitudes en producción
+
+![C9 — códigos HTTP en producción y 10 solicitudes al catálogo](capturas/cap09_http_produccion.png)
+
+**Interpretación:** el servidor no responde siempre 200: cada caso inválido recibe su código. `GET /productos/abc` devuelve 500 en producción (DEF-05). Las 10 solicitudes responden 200 con el mismo tamaño (10,585 bytes) y tardan 316.5 ms en promedio; más de la mitad de ese tiempo se va en DNS, TCP y TLS.
+
+### C10. Conectividad — prueba de carga
+
+![C10 — carga con 1, 5 y 10 usuarios](capturas/cap10_carga.png)
+
+**Interpretación:** 120 de 120 respuestas correctas. El P95 se mantiene por debajo de 810 ms. El máximo de 1,945 ms con 5 usuarios corresponde al arranque en frío de una instancia nueva. Con 10 usuarios, Vercel atendió desde dos regiones (`iad1` y `cle1`).
+
+### C11. Base de datos móvil — SQLite
+
+![C11 — planes y tiempos en SQLite, y concurrencia](capturas/cap11_sqlite.png)
+
+**Interpretación:** la búsqueda por PK y la del carrito usan índice (`SEARCH`), y la búsqueda por correo recorre toda la tabla (`SCAN`). Todas tardan menos de 3 ms. Dos `agregar()` simultáneos provocan un error UNIQUE y se pierde una pieza (DEF-03).
+
+### C12. Base de datos del servidor — integridad en Supabase
+
+![C12 — 7 de 7 restricciones rechazan datos inválidos](capturas/cap12_supabase_integridad.png)
+
+**Interpretación:** la base real rechaza llaves foráneas inexistentes, valores negativos, nulos, duplicados y estados no válidos, y todo se revierte. La integridad de los datos sí está protegida en el esquema.
+
+### C13. Base de datos del servidor — planes de ejecución
+
+![C13 — EXPLAIN ANALYZE del historial de compras y resumen Q1–Q4](capturas/cap13_supabase_explain.png)
+
+**Interpretación:** el historial de compras usa los índices `idx_compras_user` e `idx_compras_items_compra`. Las cuatro consultas se ejecutan en 0.13–0.26 ms, así que la base de datos no es el cuello de botella.
+
+### C14. Base de datos del servidor — bitácora después de la prueba de carga
+
+![C14 — captura del SQL Editor de Supabase: 0 filas en bitácora](capturas/cap14_supabase_bitacora_real.png)
+
+**Interpretación:** después de la prueba de carga (60 logins fallidos, todos con 401), la tabla `bitacora` no tiene ninguna fila nueva. Los intentos fallidos no quedaron auditados (DEF-12).

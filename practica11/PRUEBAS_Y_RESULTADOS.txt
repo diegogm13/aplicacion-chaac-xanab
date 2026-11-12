@@ -1,0 +1,374 @@
+====================================================================================================
+PRÁCTICA 11 — PRUEBAS WHITE BOX · CHAAC XANAB
+Listado de pruebas ejecutadas y sus resultados (generado desde las ejecuciones reales)
+====================================================================================================
+Fecha de ejecución : 2026-11-11 (UTC-6)
+Equipo cliente     : Lenovo 20L7002CUS · i7-8650U · 16 GB · Windows 11 Pro 10.0.26200 · Wi-Fi
+App móvil          : chaac_xanab_app 1.0.0+1 · Flutter 3.44.0 / Dart 3.12.0 · commit 2272970
+API (servicio web) : backend-chaac-xanab commit bbf3f21 (pruebas en c700802, rama practica11-whitebox)
+Servidor           : https://backend-chaac-xanab.vercel.app/api (Vercel, región iad1)
+Base de datos      : PostgreSQL en Supabase (servidor) · SQLite 3.53.4 (local en la app)
+Nota               : [OK] = la prueba pasó. Las pruebas cuyo nombre empieza con DEFECTO/HALLAZGO
+                     pasan porque DEMUESTRAN el defecto (ver INFORME.md §6).
+
+====================================================================================================
+1. APLICACIÓN MÓVIL (Flutter) — lógica, validación, comunicación, conectividad, rendimiento
+====================================================================================================
+
+--- test/validaciones_test.dart --------------------------------------------------------------------
+  [OK]    requerido()  — D1: valor == null || valor.trim().isEmpty P1  C1=V            null -> mensaje
+  [OK]    requerido()  — D1: valor == null || valor.trim().isEmpty P2  C1=F C2=V       "" -> mensaje
+  [OK]    requerido()  — D1: valor == null || valor.trim().isEmpty P2  C1=F C2=V       solo espacios -> mensaje (límite)
+  [OK]    requerido()  — D1: valor == null || valor.trim().isEmpty P3  C1=F C2=F       "a" (1 carácter, límite) -> null
+  [OK]    requerido()  — D1: valor == null || valor.trim().isEmpty mensaje personalizado se propaga
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C1=F  texto no numérico
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C1=F  null
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C1=F  decimal "20.5"
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C2=F  -1 (límite inferior - 1)
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C2=V   0 (límite inferior)
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C2=V   1 (límite inferior + 1)
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C3=V 119 (límite superior - 1)
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C3=V 120 (límite superior)
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 C3=F 121 (límite superior + 1)
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 trim: " 30 " es válido
+  [OK]    edadValida()  — D1: n != null && n >= 0 && n <= 120 edad() devuelve mensaje / null
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=F  4 dígitos (límite - 1)
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=V C2=V  5 dígitos (límite)
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=F  6 dígitos (límite + 1)
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=V C2=F  5 caracteres con letra
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=V C2=F  5 caracteres con guion
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos null -> inválido
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos espacios alrededor se recortan
+  [OK]    codigoPostalValido()  — D1: t.length == 5 && soloDigitos codigoPostal() mensaje
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes todas las condiciones V -> fuerte
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "8 caracteres o más" = F  ("Ch#2026")
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Una mayúscula" = F  ("chaac#2026")
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Una minúscula" = F  ("CHAAC#2026")
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Un número" = F  ("Chaac#Xan")
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Un símbolo" = F  ("Chaac2026")
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes longitud exactamente 8 (límite) -> cumple
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes cadena vacía -> ninguna regla
+  [OK]    reglasPassword() / passwordFuerte()  — 5 condiciones independientes espacio cuenta como símbolo (igual que IsStrongPassword del backend)
+  [OK]    email() completo vs loginEmail() básico email válido
+  [OK]    email() completo vs loginEmail() básico sin dominio
+  [OK]    email() completo vs loginEmail() básico sin usuario
+  [OK]    email() completo vs loginEmail() básico con espacio interno
+  [OK]    email() completo vs loginEmail() básico null
+  [OK]    email() completo vs loginEmail() básico email() mensaje
+  [OK]    email() completo vs loginEmail() básico login C1=F  null
+  [OK]    email() completo vs loginEmail() básico login C1=V C2=F  sin @
+  [OK]    email() completo vs loginEmail() básico login C1=V C2=V  "a@"
+  [OK]    email() completo vs loginEmail() básico HALLAZGO: login acepta "a@" que el registro rechaza (validación inconsistente)
+
+--- test/api_client_test.dart ----------------------------------------------------------------------
+  [OK]    _enviar(): caminos independientes P1  D1=V  sin red (SocketException) -> ApiException sin status
+  [OK]    _enviar(): caminos independientes P1  D1=V  timeout -> mismo mensaje de conexión
+  [OK]    _enviar(): caminos independientes P2  D2=F D3=ok D4=V  200 con JSON -> devuelve datos
+  [OK]    _enviar(): caminos independientes P3  D2=V D4=V  204 sin cuerpo -> null
+  [OK]    _enviar(): caminos independientes P4  D3=error D4=V  200 con cuerpo no-JSON -> null (no lanza)
+  [OK]    _enviar(): caminos independientes UTF-8: acentos llegan intactos
+  [OK]    D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 199 -> ApiException
+  [OK]    D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 200 -> éxito
+  [OK]    D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 201 -> éxito
+  [OK]    D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 299 -> éxito
+  [OK]    D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 300 -> ApiException
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones D6 C3=V C4=V  message: [lista] -> primer elemento (class-validator)
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones D6 C3=V C4=F  message: [] vacía -> cae a mensaje genérico
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones D7 C5=V C6=V  message: "texto" -> texto
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones D7 C5=V C6=F  message: "" con 401 -> sesión expirada
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones D8=V  401 sin cuerpo -> sesión expirada
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones D5=F  500 con cuerpo HTML -> genérico, cuerpo null
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones D5=F  cuerpo JSON que es lista (no Map) -> genérico
+  [OK]    _mensajeDe(): cobertura de decisiones y condiciones 403 se distingue de 401 (autorización ≠ autenticación)
+  [OK]    Cabeceras sin token no envía Authorization; con token envía Bearer
+  [OK]    Cabeceras query params se codifican en la URL
+  [OK]    AuthService: manejo de excepciones restaurar(): 401 -> borra token guardado
+  [OK]    AuthService: manejo de excepciones restaurar(): sin red -> CONSERVA el token para reintentar
+  [OK]    AuthService: manejo de excepciones restaurar(): sin token guardado -> no hace petición
+  [OK]    AuthService: manejo de excepciones login(): éxito guarda token y usuario
+  [OK]    AuthService: manejo de excepciones login(): traduce "EMAIL_NOT_VERIFIED" (min=null)
+  [OK]    AuthService: manejo de excepciones login(): traduce "ACCOUNT_LOCKED" (min=15)
+  [OK]    AuthService: manejo de excepciones login(): traduce "ACCOUNT_LOCKED" (min=null)
+  [OK]    AuthService: manejo de excepciones login(): traduce "Correo o contraseña incorrectos" (min=null)
+  [OK]    AuthService: manejo de excepciones registrar(): 201 con mensaje / sin mensaje / 409 conflicto
+  [OK]    AuthService: manejo de excepciones logout(): aunque falle la red, la sesión local se cierra
+
+--- test/conectividad_test.dart --------------------------------------------------------------------
+  [OK]    NET-05: sin red al confirmar -> error visible, NO muestra éxito, carrito intacto
+  [OK]    NET-06: recupera la red -> compra 201, diálogo de éxito y carrito vaciado en SQLite
+  [OK]    Token vencido en checkout: 401 -> cierra sesión y avisa
+  [OK]    Validación del formulario: CP inválido bloquea la petición
+  [OK]    DEFECTO DEF-01: respuesta perdida + reintento = compra DUPLICADA en el servidor
+  [OK]    Producto.agotado y enOferta (lógica usada para bloquear la compra)
+
+--- test/rendimiento_test.dart ---------------------------------------------------------------------
+  [OK]    parseo del catálogo real: 1x y escalado a 10x / 100x
+  [OK]    TiendaScreen: primer frame con el catálogo real (servidor simulado)
+  [OK]    DEFECTO DEF-10: 200 con forma inesperada -> TypeError (no ApiException) que TiendaScreen no atrapa
+
+--- test/widget_test.dart --------------------------------------------------------------------------
+  [OK]    Producto.fromJson procesa la respuesta de /api/productos
+  [OK]    ApiService lanza ConsultaException si el servidor falla
+  [OK]    Usuario conserva el correo al pasar por la tabla
+
+--- Cobertura de módulos críticos (flutter test --coverage --branch-coverage) ----------------------
+  Instrucciones: 269/270 = 99.6 %    Ramas: 112/116 = 96.6 %   (detalle: resultados/cobertura_flutter.csv)
+
+====================================================================================================
+2. SERVICIO WEB / API (NestJS) — endpoints, códigos HTTP, autenticación y autorización
+====================================================================================================
+
+--- HTTP e2e › WEB-01 respuestas exitosas ----------------------------------------------------------
+  [OK]    200 GET /api/productos: sólo activos, estructura JSON consistente  (87 ms)
+  [OK]    200 GET /api/productos/:id existente  (10 ms)
+  [OK]    201 POST /api/auth/register: crea usuario, no devuelve la contraseña ni el hash  (375 ms)
+  [OK]    201 POST /api/auth/login devuelve sólo { token } y el JWT trae rol  (15 ms)
+  [OK]    200 GET /api/auth/me no expone password_hash  (7 ms)
+  [OK]    201 POST /api/compras: el servidor calcula el total y descuenta stock  (13 ms)
+
+--- HTTP e2e › WEB-02 / WEB-03 errores y validación del backend ------------------------------------
+  [OK]    400 register: email inválido -> message[] y nada insertado  (8 ms)
+  [OK]    400 register: contraseña débil -> message[] y nada insertado  (6 ms)
+  [OK]    400 register: nombre vacío -> message[] y nada insertado  (6 ms)
+  [OK]    400 register: campo no permitido (forbidNonWhitelisted) -> message[] y nada insertado  (5 ms)
+  [OK]    400 JSON mal formado  (9 ms)
+  [OK]    409 register con correo existente (sin importar mayúsculas)  (4 ms)
+  [OK]    400 POST /api/compras: items vacío  (5 ms)
+  [OK]    400 POST /api/compras: quantity 0 (límite)  (4 ms)
+  [OK]    400 POST /api/compras: producto_id no UUID  (4 ms)
+  [OK]    400 POST /api/compras: size vacío  (6 ms)
+  [OK]    quantity 1 (límite válido) -> 201  (6 ms)
+  [OK]    HALLAZGO: stock insuficiente responde 400 (semánticamente sería 409/422)  (6 ms)
+  [OK]    404 GET /api/productos/:id inexistente y producto inactivo  (7 ms)
+  [OK]    404 GET /api/compras/:id inexistente  (6 ms)
+  [OK]    DEFECTO DEF-05: GET /api/productos/abc (id no UUID) -> 500 en vez de 400/404  (14 ms)
+
+--- HTTP e2e › WEB-04 autenticación (401) vs autorización (403) ------------------------------------
+  [OK]    401 sin token  (3 ms)
+  [OK]    401 token con firma inválida  (5 ms)
+  [OK]    401 token expirado  (9 ms)
+  [OK]    401 login: contraseña errónea y correo inexistente dan el MISMO mensaje  (11 ms)
+  [OK]    401 EMAIL_NOT_VERIFIED  (6 ms)
+  [OK]    401 ACCOUNT_LOCKED al 5.º intento fallido y bloquea aun con la contraseña correcta  (34 ms)
+  [OK]    403 cliente autenticado intentando ver la compra de otro usuario  (6 ms)
+  [OK]    401 vs 403 vs 200 en /api/admin/productos  (7 ms)
+  [OK]    HALLAZGO: DELETE /api/admin/productos/:id responde 200 con cuerpo (no 204) y es borrado lógico  (5 ms)
+
+--- HTTP e2e › 500 y errores de infraestructura ----------------------------------------------------
+  [OK]    500 GET /api/productos con Supabase caído, sin filtrar el detalle  (6 ms)
+  [OK]    DEFECTO DEF-06: con Supabase caído, /api/compras/mis-compras responde 400 y filtra el error interno  (2 ms)
+
+--- Unitarias › productos/productos.service.spec.ts ------------------------------------------------
+  [OK]    lanza NotFoundException si el producto no existe  (196 ms)
+  [OK]    retorna el producto si existe  (15 ms)
+  [OK]    retorna lista vacía si no hay productos  (15 ms)
+
+--- Unitarias › supabase/supabase.service.spec.ts --------------------------------------------------
+  [OK]    should initialize the Supabase client  (173 ms)
+  [OK]    should expose the db client with expected methods  (9 ms)
+
+--- Unitarias › compras/compras.service.spec.ts ----------------------------------------------------
+  [OK]    crea la compra y descuenta el stock correctamente  (117 ms)
+  [OK]    lanza BadRequestException si stock insuficiente  (93 ms)
+  [OK]    lanza BadRequestException si el producto no existe  (13 ms)
+  [OK]    retorna la compra si el usuario es el dueño  (11 ms)
+  [OK]    lanza ForbiddenException si el usuario no es el dueño  (26 ms)
+  [OK]    lanza NotFoundException si la compra no existe  (20 ms)
+
+--- Unitarias › admin/admin-usuarios.service.spec.ts -----------------------------------------------
+  [OK]    crea el usuario cuando el rol existe y registra ALTA_USUARIO  (454 ms)
+  [OK]    lanza ConflictException si el correo ya existe  (59 ms)
+  [OK]    lanza BadRequestException si el rol no existe  (17 ms)
+  [OK]    desactiva un usuario y registra DESACTIVAR_USUARIO  (13 ms)
+  [OK]    lanza NotFoundException si el usuario no existe o está eliminado  (14 ms)
+  [OK]    ejecuta DELETE y registra BAJA_USUARIO  (17 ms)
+  [OK]    registra CAMBIO_ROL cuando el rol cambia  (11 ms)
+  [OK]    lanza BadRequestException si el rol no existe  (12 ms)
+
+--- Unitarias › auth/auth.service.spec.ts ----------------------------------------------------------
+  [OK]    crea el usuario y devuelve un mensaje cuando el email es nuevo  (379 ms)
+  [OK]    lanza ConflictException si el email ya existe  (83 ms)
+  [OK]    devuelve token con credenciales correctas y registra LOGIN en bitácora  (29 ms)
+  [OK]    lanza UnauthorizedException si el usuario no existe  (16 ms)
+  [OK]    rechaza el login de una cuenta desactivada  (18 ms)
+  [OK]    rechaza el login de una cuenta eliminada (soft delete)  (17 ms)
+  [OK]    rechaza el login mientras la cuenta esté bloqueada (locked_until futuro)  (19 ms)
+  [OK]    incrementa failed_login_attempts con contraseña incorrecta (sin llegar al límite)  (22 ms)
+  [OK]    bloquea la cuenta al llegar al máximo de intentos fallidos  (18 ms)
+  [OK]    actualiza la contraseña y registra CAMBIO_PASSWORD  (262 ms)
+  [OK]    lanza UnauthorizedException si la contraseña actual es incorrecta  (18 ms)
+  [OK]    registra LOGOUT en la bitácora  (5 ms)
+
+--- Unitarias › admin/admin-productos.service.spec.ts ----------------------------------------------
+  [OK]    incrementa el stock correctamente  (79 ms)
+  [OK]    lanza BadRequestException si el stock resultante es negativo  (57 ms)
+  [OK]    lanza NotFoundException si el producto no existe  (8 ms)
+  [OK]    hace soft delete correctamente  (9 ms)
+  [OK]    lanza NotFoundException si el producto no existe  (8 ms)
+  [OK]    sube imagen a Cloudinary y guarda la URL en el producto  (13 ms)
+
+--- Unitarias › webauthn/webauthn.service.spec.ts --------------------------------------------------
+  [OK]    retorna opciones de registro si el usuario existe y no tiene credencial  (166 ms)
+  [OK]    lanza NotFoundException si el usuario no existe  (80 ms)
+  [OK]    lanza ConflictException si ya tiene credencial registrada  (11 ms)
+  [OK]    lanza NotFoundException si el usuario no tiene credencial  (13 ms)
+  [OK]    lanza NotFoundException si el usuario no existe  (12 ms)
+  [OK]    lanza BadRequestException si no hay challenge activo  (23 ms)
+
+--- Unitarias › roles/roles.service.spec.ts --------------------------------------------------------
+  [OK]    crea un rol nuevo  (10 ms)
+  [OK]    lanza ConflictException si el rol ya existe  (26 ms)
+  [OK]    lanza NotFoundException si el rol no existe  (5 ms)
+  [OK]    devuelve los permisos asociados al rol  (6 ms)
+  [OK]    reemplaza los permisos del rol (delete + insert)  (7 ms)
+  [OK]    devuelve true si el rol existe  (4 ms)
+  [OK]    devuelve false si el rol no existe  (4 ms)
+
+--- Unitarias › bitacora/bitacora.service.spec.ts --------------------------------------------------
+  [OK]    inserta un registro en la bitácora  (14 ms)
+  [OK]    no lanza si la inserción falla (no debe romper el flujo principal)  (29 ms)
+  [OK]    devuelve resultados paginados aplicando filtros  (7 ms)
+
+--- Códigos HTTP comprobados contra PRODUCCIÓN (curl) ----------------------------------------------
+  200  200 catálogo                       [{"id":"69c7f07b-22f8-4688-940b-f8636ce55f22","name":"PRUEBA
+  200  200 categorías                     [{"id":"b05d93c7-c740-4692-8224-5876558b6428","slug":"runnin
+  404  404 producto UUID inexistente      {"message":"Producto no encontrado","error":"Not Found","sta
+  500  id no UUID (DEF-05)                {"statusCode":500,"message":"Internal server error"}
+  404  404 ruta inexistente               {"message":"Cannot GET /api/no-existe","error":"Not Found","
+  401  401 sin token                      {"message":"Unauthorized","statusCode":401}
+  401  401 token inválido                 {"message":"Unauthorized","statusCode":401}
+  401  401 admin sin token                {"message":"Unauthorized","statusCode":401}
+  400  400 registro inválido              {"message":["name should not be empty","email must be an ema
+  400  400 JSON mal formado               {"statusCode":400,"message":"Invalid JSON"}
+  400  400 badge fuera de catálogo        {"message":["badge must be one of the following values: new,
+
+--- Cobertura de módulos críticos (jest --coverage) ------------------------------------------------
+  Instrucciones: 158/160 = 98.8 %    Ramas: 44/52 = 84.6 %
+
+====================================================================================================
+3. BASE DE DATOS — móvil (SQLite), API (lógica de persistencia) y servidor (Supabase)
+====================================================================================================
+
+>> 3.1 MÓVIL — SQLite local (mismo motor y código que en el teléfono)
+
+--- test/db_test.dart ------------------------------------------------------------------------------
+  [OK]    CarritoService.agregar() — caminos y valores límite P1 D1=V  producto nuevo -> INSERT con cantidad pedida
+  [OK]    CarritoService.agregar() — caminos y valores límite P1 + límite inferior: cantidad 0 -> se ajusta a 1
+  [OK]    CarritoService.agregar() — caminos y valores límite P1 + límite superior: cantidad = stock (3) -> 3
+  [OK]    CarritoService.agregar() — caminos y valores límite P1 + límite superior + 1: cantidad 4 con stock 3 -> 3
+  [OK]    CarritoService.agregar() — caminos y valores límite P2 D1=F  mismo producto y talla -> UPDATE acumulando
+  [OK]    CarritoService.agregar() — caminos y valores límite P2 + límite: acumulado supera stock -> se recorta al stock
+  [OK]    CarritoService.agregar() — caminos y valores límite misma talla distinta / otro producto -> filas separadas y total correcto
+  [OK]    CarritoService.agregar() — caminos y valores límite DEFECTO DEF-02: stock 0 -> ArgumentError no controlado en clamp(1, 0)
+  [OK]    CarritoService.cambiarCantidad() / quitar() cantidad < 1 -> elimina el renglón
+  [OK]    CarritoService.cambiarCantidad() / quitar() cantidad > stock -> se recorta
+  [OK]    CarritoService.cambiarCantidad() / quitar() cantidad válida -> UPDATE
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) DB-01 inserción válida y consulta por id existente
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) DB-02 inserción incompleta: NOT NULL rechaza nombre nulo
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) DB-02 UNIQUE(producto_id, talla) en carrito rechaza duplicado
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) DEFECTO DEF-04: la tabla acepta edad no numérica / fuera de rango (sin CHECK)
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) DB-03 consulta por id inexistente -> lista vacía (no excepción)
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) DB-04 actualización: 1 fila afectada y persistida; id inexistente -> 0
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) DB-05 eliminación: 1 fila, luego consulta vacía; repetir -> 0
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) Transacción: si falla un paso, no queda nada a medias
+  [OK]    UsuarioDao — CRUD (DB-01 … DB-05) Inyección SQL: el valor viaja como parámetro (?), no se concatena
+  [OK]    DB-06 concurrencia sobre el mismo registro DEFECTO DEF-03: dos agregar() simultáneos del mismo producto/talla
+  [OK]    DB-06 concurrencia sobre el mismo registro dos UPDATE simultáneos del mismo renglón -> gana la última escritura
+  [OK]    Medición de consultas + EXPLAIN QUERY PLAN 3 consultas con 1,000 usuarios y 200 renglones de carrito
+
+--- Tiempos y planes de ejecución SQLite (1,000 usuarios / 200 renglones) --------------------------
+    0.704 ms  usuario_por_id (PK)                    plan: SEARCH usuarios USING INTEGER PRIMARY KEY (rowid=?)
+    0.627 ms  usuario_por_correo (sin índice)        plan: SCAN usuarios
+    0.640 ms  carrito_por_producto_talla (UNIQUE)    plan: SEARCH carrito USING INDEX sqlite_autoindex_carrito_1 (producto_id=? AND talla=?)
+    2.671 ms  usuarios_todos (obtenerTodos)          plan: SCAN usuarios
+  Concurrencia agregar(): SqfliteFfiException · filas=1 · cantidad final=1 (esperada 2)
+
+>> 3.2 API — persistencia de compras (transacciones y concurrencia)
+
+--- HTTP e2e › Caminos de ComprasService.create() y ProductosService -------------------------------
+  [OK]    dirección inline: 1.ª compra INSERTA, 2.ª ACTUALIZA la misma dirección principal  (7 ms)
+  [OK]    direccion_id explícito se usa tal cual; sin dirección -> null  (8 ms)
+  [OK]    producto inactivo en la compra -> 400 "no encontrado o inactivo"  (3 ms)
+  [OK]    falla de Supabase en SELECT productos -> 400 con mensaje interno (ver DEF-06)  (3 ms)
+  [OK]    falla de Supabase en INSERT compras -> 400 con mensaje interno (ver DEF-06)  (3 ms)
+  [OK]    findOne con error de Supabase -> 400  (3 ms)
+  [OK]    GET /api/productos usa caché: la 2.ª petición no consulta Supabase  (6 ms)
+  [OK]    401 JWT bien firmado pero sin "sub" (JwtStrategy.validate)  (3 ms)
+  [OK]    RolesGuard sin @Roles() deja pasar (camino requiredRoles = undefined)  (0 ms)
+  [OK]    buscarPorTermino(): sanitiza caracteres que alteran el filtro .or() de PostgREST  (2 ms)
+  [OK]    filtros: ?badge válido -> 200; ?badge inválido -> 400; ?categoria_slug -> 200  (9 ms)
+
+--- HTTP e2e › DB-06 / transacciones en POST /api/compras ------------------------------------------
+  [OK]    DEFECTO DEF-03: dos compras simultáneas del último par -> ambas 201 (sobreventa)  (83 ms)
+  [OK]    DEFECTO DEF-01: el mismo POST repetido (reintento) crea 2 compras  (6 ms)
+  [OK]    DEFECTO DEF-08: si falla el INSERT de compras_items queda una compra huérfana (sin transacción)  (4 ms)
+  [OK]    si falla el UPDATE de stock la compra se confirma igual (error ignorado)  (5 ms)
+
+>> 3.3 SERVIDOR — PostgreSQL real en Supabase (SQL Editor)
+
+--- Integridad (sentencias inválidas, todo revertido) ----------------------------------------------
+  [OK]   FK productos.categoria_id          RECHAZADA 23503: insert or update on table "productos" violates foreign key constraint "productos_categoria_id_fkey"
+  [OK]   CHECK productos.stock >= 0         RECHAZADA 23514: new row for relation "productos" violates check constraint "productos_stock_check"
+  [OK]   CHECK productos.price >= 0         RECHAZADA 23514: new row for relation "productos" violates check constraint "productos_price_check"
+  [OK]   NOT NULL productos.name            RECHAZADA 23502: null value in column "name" of relation "productos" violates not-null constraint
+  [OK]   UNIQUE usuarios.email              RECHAZADA 23505: duplicate key value violates unique constraint "usuarios_email_key"
+  [OK]   CHECK compras_items.quantity > 0   RECHAZADA 23514: new row for relation "compras_items" violates check constraint "compras_items_quantity_check"
+  [OK]   CHECK compras.status IN (...)      RECHAZADA 23514: new row for relation "compras" violates check constraint "compras_status_check"
+
+--- EXPLAIN (ANALYZE, BUFFERS) ---------------------------------------------------------------------
+  Q1_catalogo                planning  0.762 ms · execution  0.256 ms · ->  Seq Scan on productos p  (cost=0.00..13.00 rows=150 width=237) (ac
+  Q2_login                   planning  0.411 ms · execution  0.126 ms · Seq Scan on usuarios  (cost=0.00..1.35 rows=1 width=153) (actual time=
+  Q3_historial               planning  1.028 ms · execution  0.192 ms · ->  Seq Scan on usuarios  (cost=0.00..1.28 rows=28 width=16) (actual t
+  Q4_bitacora_por_correo     planning  0.387 ms · execution  0.237 ms · ->  Seq Scan on bitacora  (cost=0.00..13.69 rows=1 width=0) (actual ti
+  Bitácora: 0 filas de las 60 LOGIN_FALLIDO de la prueba de carga -> DEFECTO DEF-12
+
+====================================================================================================
+4. CONECTIVIDAD Y RENDIMIENTO (mediciones reales contra producción)
+====================================================================================================
+  Ping backend-chaac-xanab.vercel.app: 20/20 · pérdida 0 % · mín 25 · prom 27.8 · máx 31 · σ 1.67 ms
+
+--- 10 solicitudes GET /api/productos (conexión nueva cada vez) ------------------------------------
+  #   código   tiempo(ms)   bytes   dns    tcp    tls    ttfb
+  1   200          397.0    10585   14.0   73.8  172.5   396.9
+  2   200          280.1    10585   19.9   75.9  166.0   279.9
+  3   200          317.0    10585   19.5   80.1  175.3   316.8
+  4   200          265.9    10585   12.4   70.2  159.7   265.8
+  5   200          302.2    10585   16.4   73.0  172.9   301.3
+  6   200          345.8    10585   19.9   77.5  173.2   345.7
+  7   200          287.5    10585   14.5   75.3  172.4   287.3
+  8   200          305.2    10585   10.8   70.3  166.3   305.1
+  9   200          269.6    10585    6.4   69.8  162.2   269.5
+  10  200          395.0    10585   13.6   71.3  174.9   394.9
+  Promedio 316.53 ms · mín 265.9 · máx 397 · σ 48.03 · keep-alive 133.17 ms
+
+--- Tasa de transferencia --------------------------------------------------------------------------
+  Bajada  intento 1   10585 B  0.44 s  0.192 Mbps  https://backend-chaac-xanab.vercel.app/api/productos
+  Bajada  intento 1   72177 B  0.497 s  1.161 Mbps  https://images.unsplash.com/photo-1551107696-a4b0c5a0d9
+  Bajada  intento 2   10585 B  0.301 s  0.281 Mbps  https://backend-chaac-xanab.vercel.app/api/productos
+  Bajada  intento 2   72177 B  0.192 s  3.003 Mbps  https://images.unsplash.com/photo-1551107696-a4b0c5a0d9
+  Bajada  intento 3   10585 B  0.287 s  0.295 Mbps  https://backend-chaac-xanab.vercel.app/api/productos
+  Bajada  intento 3   72177 B  0.192 s  3.015 Mbps  https://images.unsplash.com/photo-1551107696-a4b0c5a0d9
+  Subida  intento 1   90067 B  0.562 s  1.283 Mbps  (HTTP 400)
+  Subida  intento 2   90067 B  0.469 s  1.535 Mbps  (HTTP 400)
+  Subida  intento 3   90067 B  0.422 s  1.707 Mbps  (HTTP 400)
+
+--- Carga controlada (20 solicitudes por escenario) ------------------------------------------------
+  tipo       usuarios  ok/total  prom(ms)  p95(ms)  máx(ms)  req/s
+  lectura           1  20/20       114.25   123.58   124.24   8.75
+  lectura           5  20/20       245.76   315.96  1945.49   8.88
+  lectura          10  20/20       198.53   320.25   441.47  32.39
+  escritura         1  20/20       211.84   229.39   301.08   4.72
+  escritura         5  20/20       352.98   806.74  1025.74  13.26
+  escritura        10  20/20       279.46   411.12   554.82  25.91
+  Pérdida de conexión / recuperación: ver conectividad_test.dart en la sección 1 (NET-05, NET-06, DEF-01).
+
+====================================================================================================
+RESUMEN
+====================================================================================================
+  Móvil (Flutter)                    86 / 86   aprobadas
+  Web / API (Jest)                   85 / 85   aprobadas
+  Base de datos móvil (SQLite)       23 / 23   aprobadas
+  Base de datos vía API              15 / 15   aprobadas
+  Integridad Supabase                 7 / 7    aprobadas
+  TOTAL                             216 / 216  aprobadas
+  Defectos documentados: DEF-01 … DEF-12 (detalle, pasos y corrección en INFORME.md §6)

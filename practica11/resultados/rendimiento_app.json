@@ -2,20 +2,20 @@
   "parseo_x1": {
     "productos": 27,
     "bytes": 10585,
-    "ms_promedio": 0.217,
-    "frames_60hz": 0.01
+    "ms_promedio": 0.295,
+    "frames_60hz": 0.02
   },
   "parseo_x10": {
     "productos": 270,
     "bytes": 105841,
-    "ms_promedio": 1.23,
-    "frames_60hz": 0.07
+    "ms_promedio": 2.001,
+    "frames_60hz": 0.12
   },
   "parseo_x100": {
     "productos": 2700,
     "bytes": 1058401,
-    "ms_promedio": 13.978,
-    "frames_60hz": 0.84
+    "ms_promedio": 21.223,
+    "frames_60hz": 1.27
   },
-  "tienda_pump_and_settle_ms": 133
+  "tienda_pump_and_settle_ms": 274
 }
