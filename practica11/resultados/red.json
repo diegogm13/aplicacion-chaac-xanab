@@ -1,0 +1,540 @@
+{
+    "fecha":  "2026-11-11 19:00:44 -06:00",
+    "api":  "https://backend-chaac-xanab.vercel.app/api",
+    "ping":  {
+                 "host":  "backend-chaac-xanab.vercel.app",
+                 "enviados":  20,
+                 "recibidos":  20,
+                 "perdida_pct":  0,
+                 "ms":  {
+                            "n":  20,
+                            "min":  25,
+                            "max":  31,
+                            "promedio":  27.8,
+                            "desviacion":  1.67,
+                            "p95":  30
+                        },
+                 "muestras":  [
+                                  26,
+                                  28,
+                                  30,
+                                  29,
+                                  30,
+                                  30,
+                                  27,
+                                  27,
+                                  27,
+                                  31,
+                                  26,
+                                  25,
+                                  28,
+                                  26,
+                                  29,
+                                  27,
+                                  27,
+                                  26,
+                                  28,
+                                  29
+                              ]
+             },
+    "http_10":  {
+                    "endpoint":  "GET https://backend-chaac-xanab.vercel.app/api/productos",
+                    "solicitudes":  [
+                                        {
+                                            "code":  200,
+                                            "dns":  14.0,
+                                            "tcp":  73.8,
+                                            "tls":  172.5,
+                                            "ttfb":  396.9,
+                                            "total":  397.0,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  26660,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  1
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  19.9,
+                                            "tcp":  75.9,
+                                            "tls":  166.0,
+                                            "ttfb":  279.9,
+                                            "total":  280.1,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  37787,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  2
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  19.5,
+                                            "tcp":  80.1,
+                                            "tls":  175.3,
+                                            "ttfb":  316.8,
+                                            "total":  317.0,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  33396,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  3
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  12.4,
+                                            "tcp":  70.2,
+                                            "tls":  159.7,
+                                            "ttfb":  265.8,
+                                            "total":  265.9,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  39802,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  4
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  16.4,
+                                            "tcp":  73.0,
+                                            "tls":  172.9,
+                                            "ttfb":  301.3,
+                                            "total":  302.2,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  35030,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  5
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  19.9,
+                                            "tcp":  77.5,
+                                            "tls":  173.2,
+                                            "ttfb":  345.7,
+                                            "total":  345.8,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  30606,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  6
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  14.5,
+                                            "tcp":  75.3,
+                                            "tls":  172.4,
+                                            "ttfb":  287.3,
+                                            "total":  287.5,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  36818,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  7
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  10.8,
+                                            "tcp":  70.3,
+                                            "tls":  166.3,
+                                            "ttfb":  305.1,
+                                            "total":  305.2,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  34682,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  8
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  6.4,
+                                            "tcp":  69.8,
+                                            "tls":  162.2,
+                                            "ttfb":  269.5,
+                                            "total":  269.6,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  39263,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  9
+                                        },
+                                        {
+                                            "code":  200,
+                                            "dns":  13.6,
+                                            "tcp":  71.3,
+                                            "tls":  174.9,
+                                            "ttfb":  394.9,
+                                            "total":  395.0,
+                                            "bajada":  10585,
+                                            "subida":  0,
+                                            "vel_bajada":  26797,
+                                            "vel_subida":  0,
+                                            "ip":  "216.198.79.131",
+                                            "http":  "1.1",
+                                            "n":  10
+                                        }
+                                    ],
+                    "total_ms":  {
+                                     "n":  10,
+                                     "min":  265.9,
+                                     "max":  397,
+                                     "promedio":  316.53,
+                                     "desviacion":  48.03,
+                                     "p95":  397
+                                 },
+                    "ttfb_ms":  {
+                                    "n":  10,
+                                    "min":  265.8,
+                                    "max":  396.9,
+                                    "promedio":  316.32,
+                                    "desviacion":  48.07,
+                                    "p95":  396.9
+                                },
+                    "bytes":  {
+                                  "n":  10,
+                                  "min":  10585,
+                                  "max":  10585,
+                                  "promedio":  10585,
+                                  "desviacion":  0,
+                                  "p95":  10585
+                              },
+                    "exitosas":  10
+                },
+    "http_keepalive":  {
+                           "total_ms":  {
+                                            "n":  10,
+                                            "min":  108.3,
+                                            "max":  269.5,
+                                            "promedio":  133.17,
+                                            "desviacion":  49.6,
+                                            "p95":  269.5
+                                        },
+                           "ttfb_ms":  {
+                                           "n":  10,
+                                           "min":  106,
+                                           "max":  269.4,
+                                           "promedio":  132.71,
+                                           "desviacion":  49.79,
+                                           "p95":  269.4
+                                       },
+                           "solicitudes":  [
+                                               {
+                                                   "code":  200,
+                                                   "dns":  6.3,
+                                                   "tcp":  64.6,
+                                                   "tls":  157.3,
+                                                   "ttfb":  269.4,
+                                                   "total":  269.5,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  39277,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  115.4,
+                                                   "total":  115.5,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  91668,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  108.1,
+                                                   "total":  108.3,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  97768,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  116.1,
+                                                   "total":  116.2,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  91102,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  150.6,
+                                                   "total":  150.8,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  70199,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  110.3,
+                                                   "total":  110.5,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  95778,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  106.0,
+                                                   "total":  109.3,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  96819,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  111.6,
+                                                   "total":  111.7,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  94790,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  111.8,
+                                                   "total":  111.9,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  94599,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               },
+                                               {
+                                                   "code":  200,
+                                                   "dns":  0.0,
+                                                   "tcp":  0.0,
+                                                   "tls":  0.0,
+                                                   "ttfb":  127.8,
+                                                   "total":  128.0,
+                                                   "bajada":  10585,
+                                                   "subida":  0,
+                                                   "vel_bajada":  82706,
+                                                   "vel_subida":  0,
+                                                   "ip":  "216.198.79.131",
+                                                   "http":  "1.1"
+                                               }
+                                           ]
+                       },
+    "descarga":  [
+                     {
+                         "recurso":  "https://backend-chaac-xanab.vercel.app/api/productos",
+                         "intento":  1,
+                         "code":  200,
+                         "bytes":  10585,
+                         "tiempo_s":  0.440,
+                         "transferencia_s":  0.002,
+                         "mbps_total":  0.192,
+                         "mbps_curl":  0.192
+                     },
+                     {
+                         "recurso":  "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=800\u0026q=80",
+                         "intento":  1,
+                         "code":  200,
+                         "bytes":  72177,
+                         "tiempo_s":  0.497,
+                         "transferencia_s":  0.042,
+                         "mbps_total":  1.161,
+                         "mbps_curl":  1.161
+                     },
+                     {
+                         "recurso":  "https://backend-chaac-xanab.vercel.app/api/productos",
+                         "intento":  2,
+                         "code":  200,
+                         "bytes":  10585,
+                         "tiempo_s":  0.301,
+                         "transferencia_s":  0.000,
+                         "mbps_total":  0.281,
+                         "mbps_curl":  0.281
+                     },
+                     {
+                         "recurso":  "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=800\u0026q=80",
+                         "intento":  2,
+                         "code":  200,
+                         "bytes":  72177,
+                         "tiempo_s":  0.192,
+                         "transferencia_s":  0.038,
+                         "mbps_total":  3.003,
+                         "mbps_curl":  3.003
+                     },
+                     {
+                         "recurso":  "https://backend-chaac-xanab.vercel.app/api/productos",
+                         "intento":  3,
+                         "code":  200,
+                         "bytes":  10585,
+                         "tiempo_s":  0.287,
+                         "transferencia_s":  0.000,
+                         "mbps_total":  0.295,
+                         "mbps_curl":  0.295
+                     },
+                     {
+                         "recurso":  "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=800\u0026q=80",
+                         "intento":  3,
+                         "code":  200,
+                         "bytes":  72177,
+                         "tiempo_s":  0.192,
+                         "transferencia_s":  0.039,
+                         "mbps_total":  3.015,
+                         "mbps_curl":  3.015
+                     }
+                 ],
+    "subida":  [
+                   {
+                       "intento":  1,
+                       "code":  400,
+                       "bytes":  90067,
+                       "tiempo_s":  0.562,
+                       "mbps_total":  1.283,
+                       "mbps_curl":  1.283
+                   },
+                   {
+                       "intento":  2,
+                       "code":  400,
+                       "bytes":  90067,
+                       "tiempo_s":  0.469,
+                       "mbps_total":  1.535,
+                       "mbps_curl":  1.535
+                   },
+                   {
+                       "intento":  3,
+                       "code":  400,
+                       "bytes":  90067,
+                       "tiempo_s":  0.422,
+                       "mbps_total":  1.707,
+                       "mbps_curl":  1.707
+                   }
+               ],
+    "codigos":  [
+                    {
+                        "caso":  "200 catálogo",
+                        "code":  200,
+                        "cuerpo":  "[{\"id\":\"69c7f07b-22f8-4688-940b-f8636ce55f22\",\"name\":\"PRUEBA EDIT OK mvmuvnqq\",\"description\":null,\"price\":1350,\"original_price\":null,\"stock\":3,\"image_url\":null,"
+                    },
+                    {
+                        "caso":  "200 categorías",
+                        "code":  200,
+                        "cuerpo":  "[{\"id\":\"b05d93c7-c740-4692-8224-5876558b6428\",\"slug\":\"running\",\"name\":\"Runing\",\"subtitle\":\"Conquista el kilometro\",\"image_url\":\"https://res.cloudinary.com/dtyqt"
+                    },
+                    {
+                        "caso":  "404 producto UUID inexistente",
+                        "code":  404,
+                        "cuerpo":  "{\"message\":\"Producto no encontrado\",\"error\":\"Not Found\",\"statusCode\":404}"
+                    },
+                    {
+                        "caso":  "id no UUID (DEF-05)",
+                        "code":  500,
+                        "cuerpo":  "{\"statusCode\":500,\"message\":\"Internal server error\"}"
+                    },
+                    {
+                        "caso":  "404 ruta inexistente",
+                        "code":  404,
+                        "cuerpo":  "{\"message\":\"Cannot GET /api/no-existe\",\"error\":\"Not Found\",\"statusCode\":404}"
+                    },
+                    {
+                        "caso":  "401 sin token",
+                        "code":  401,
+                        "cuerpo":  "{\"message\":\"Unauthorized\",\"statusCode\":401}"
+                    },
+                    {
+                        "caso":  "401 token inválido",
+                        "code":  401,
+                        "cuerpo":  "{\"message\":\"Unauthorized\",\"statusCode\":401}"
+                    },
+                    {
+                        "caso":  "401 admin sin token",
+                        "code":  401,
+                        "cuerpo":  "{\"message\":\"Unauthorized\",\"statusCode\":401}"
+                    },
+                    {
+                        "caso":  "400 registro inválido",
+                        "code":  400,
+                        "cuerpo":  "{\"message\":[\"name should not be empty\",\"email must be an email\",\"password is not strong enough\"],\"error\":\"Bad Request\",\"statusCode\":400}"
+                    },
+                    {
+                        "caso":  "400 JSON mal formado",
+                        "code":  400,
+                        "cuerpo":  "{\"statusCode\":400,\"message\":\"Invalid JSON\"}"
+                    },
+                    {
+                        "caso":  "400 badge fuera de catálogo",
+                        "code":  400,
+                        "cuerpo":  "{\"message\":[\"badge must be one of the following values: new, popular, sale\"],\"error\":\"Bad Request\",\"statusCode\":400}"
+                    }
+                ],
+    "cabeceras":  {
+                      "strict-transport-security":  "max-age=63072000; includeSubDomains; preload",
+                      "x-content-type-options":  null,
+                      "x-frame-options":  null,
+                      "content-security-policy":  null,
+                      "x-powered-by":  "Express",
+                      "x-vercel-cache":  "MISS",
+                      "cache-control":  "public, max-age=0, must-revalidate",
+                      "content-encoding":  null,
+                      "content-type":  "application/json; charset=utf-8"
+                  },
+    "gzip":  {
+                 "bytes_con_gzip":  2634,
+                 "bytes_sin_gzip":  10585
+             }
+}

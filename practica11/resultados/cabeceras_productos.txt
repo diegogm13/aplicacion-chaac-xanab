@@ -1,0 +1,16 @@
+﻿HTTP/1.1 200 OK
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Origin: https://chaac-xanab-dg.vercel.app
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 10585
+Content-Type: application/json; charset=utf-8
+Date: Thu, 12 Nov 2026 01:01:18 GMT
+Etag: W/"2959-nyMx7ZLYVpFBV/vAhAtWZVYunh4"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: iad1::iad1::9x2bd-1794445278120-b1b14117f675
+

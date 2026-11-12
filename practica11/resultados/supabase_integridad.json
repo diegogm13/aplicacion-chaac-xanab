@@ -1,0 +1,13 @@
+{
+  "fuente": "Supabase Dashboard > SQL Editor, bloque DB-02 de practica11/sql/explain_supabase.sql (pg_temp.intentar, sin cambios persistentes)",
+  "fecha": "2026-11-11",
+  "resultados": [
+    { "prueba": "FK productos.categoria_id", "resultado": "RECHAZADA 23503: insert or update on table \"productos\" violates foreign key constraint \"productos_categoria_id_fkey\"" },
+    { "prueba": "CHECK productos.stock >= 0", "resultado": "RECHAZADA 23514: new row for relation \"productos\" violates check constraint \"productos_stock_check\"" },
+    { "prueba": "CHECK productos.price >= 0", "resultado": "RECHAZADA 23514: new row for relation \"productos\" violates check constraint \"productos_price_check\"" },
+    { "prueba": "NOT NULL productos.name", "resultado": "RECHAZADA 23502: null value in column \"name\" of relation \"productos\" violates not-null constraint" },
+    { "prueba": "UNIQUE usuarios.email", "resultado": "RECHAZADA 23505: duplicate key value violates unique constraint \"usuarios_email_key\"" },
+    { "prueba": "CHECK compras_items.quantity > 0", "resultado": "RECHAZADA 23514: new row for relation \"compras_items\" violates check constraint \"compras_items_quantity_check\"" },
+    { "prueba": "CHECK compras.status IN (...)", "resultado": "RECHAZADA 23514: new row for relation \"compras\" violates check constraint \"compras_status_check\"" }
+  ]
+}

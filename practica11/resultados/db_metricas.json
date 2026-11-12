@@ -1,0 +1,43 @@
+{
+  "concurrencia_agregar": {
+    "excepcion": "SqfliteFfiException",
+    "detalle": "SqfliteFfiException(sqlite_error: 2067, , SqliteException(2067): while executing statement, UNIQUE constraint failed: carrito.producto_id, carrito.talla, constraint failed (code 2067)",
+    "filas_resultantes": 1,
+    "cantidad_final": 1,
+    "cantidad_esperada": 2
+  },
+  "concurrencia_update": {
+    "cantidad_final": 7
+  },
+  "consultas": {
+    "usuario_por_id (PK)": {
+      "sql": "SELECT * FROM usuarios WHERE id = ?",
+      "plan": [
+        "SEARCH usuarios USING INTEGER PRIMARY KEY (rowid=?)"
+      ],
+      "promedio_ms_50_ejecuciones": 0.453
+    },
+    "usuario_por_correo (sin índice)": {
+      "sql": "SELECT * FROM usuarios WHERE correo = ?",
+      "plan": [
+        "SCAN usuarios"
+      ],
+      "promedio_ms_50_ejecuciones": 0.522
+    },
+    "carrito_por_producto_talla (UNIQUE)": {
+      "sql": "SELECT * FROM carrito WHERE producto_id = ? AND talla = ? LIMIT 1",
+      "plan": [
+        "SEARCH carrito USING INDEX sqlite_autoindex_carrito_1 (producto_id=? AND talla=?)"
+      ],
+      "promedio_ms_50_ejecuciones": 0.581
+    },
+    "usuarios_todos (obtenerTodos)": {
+      "sql": "SELECT * FROM usuarios ORDER BY id",
+      "plan": [
+        "SCAN usuarios"
+      ],
+      "promedio_ms_50_ejecuciones": 1.961
+    }
+  },
+  "motor": "3.53.4"
+}

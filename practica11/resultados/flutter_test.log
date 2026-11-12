@@ -1,0 +1,142 @@
+﻿00:00 +0: loading C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart
+00:00 +0: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _enviar(): caminos independientes P1  D1=V  sin red (SocketException) -> ApiException sin status
+00:00 +1: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _enviar(): caminos independientes P1  D1=V  timeout -> mismo mensaje de conexión
+00:00 +2: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _enviar(): caminos independientes P2  D2=F D3=ok D4=V  200 con JSON -> devuelve datos
+00:00 +3: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _enviar(): caminos independientes P3  D2=V D4=V  204 sin cuerpo -> null
+00:00 +4: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _enviar(): caminos independientes P4  D3=error D4=V  200 con cuerpo no-JSON -> null (no lanza)
+00:00 +5: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _enviar(): caminos independientes UTF-8: acentos llegan intactos
+00:00 +6: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 199 -> ApiException
+00:00 +7: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 200 -> éxito
+00:00 +8: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 201 -> éxito
+00:00 +9: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 299 -> éxito
+00:00 +10: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: D4 = status >= 200 (C1) && status < 300 (C2) — valores límite status 300 -> ApiException
+00:00 +11: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones D6 C3=V C4=V  message: [lista] -> primer elemento (class-validator)
+00:00 +12: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones D6 C3=V C4=F  message: [] vacía -> cae a mensaje genérico
+00:00 +13: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones D7 C5=V C6=V  message: "texto" -> texto
+00:00 +14: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones D7 C5=V C6=F  message: "" con 401 -> sesión expirada
+00:00 +15: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones D8=V  401 sin cuerpo -> sesión expirada
+00:00 +16: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones D5=F  500 con cuerpo HTML -> genérico, cuerpo null
+00:00 +17: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones D5=F  cuerpo JSON que es lista (no Map) -> genérico
+00:00 +18: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: _mensajeDe(): cobertura de decisiones y condiciones 403 se distingue de 401 (autorización ≠ autenticación)
+00:00 +19: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: Cabeceras sin token no envía Authorization; con token envía Bearer
+00:00 +20: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: Cabeceras query params se codifican en la URL
+00:00 +21: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones restaurar(): 401 -> borra token guardado
+00:00 +22: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones restaurar(): sin red -> CONSERVA el token para reintentar
+00:00 +23: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones restaurar(): sin token guardado -> no hace petición
+00:00 +24: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones login(): éxito guarda token y usuario
+00:00 +25: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones login(): traduce "EMAIL_NOT_VERIFIED" (min=null)
+00:00 +26: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones login(): traduce "ACCOUNT_LOCKED" (min=15)
+00:00 +27: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones login(): traduce "ACCOUNT_LOCKED" (min=null)
+00:00 +28: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones login(): traduce "Correo o contraseña incorrectos" (min=null)
+00:00 +29: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones registrar(): 201 con mensaje / sin mensaje / 409 conflicto
+00:00 +30: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/api_client_test.dart: AuthService: manejo de excepciones logout(): aunque falle la red, la sesión local se cierra
+00:00 +31: loading C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/conectividad_test.dart
+00:01 +31: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/conectividad_test.dart: NET-05: sin red al confirmar -> error visible, NO muestra éxito, carrito intacto
+00:02 +32: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/conectividad_test.dart: NET-06: recupera la red -> compra 201, diálogo de éxito y carrito vaciado en SQLite
+00:03 +33: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/conectividad_test.dart: Token vencido en checkout: 401 -> cierra sesión y avisa
+00:04 +34: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/conectividad_test.dart: Validación del formulario: CP inválido bloquea la petición
+00:04 +35: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/conectividad_test.dart: DEFECTO DEF-01: respuesta perdida + reintento = compra DUPLICADA en el servidor
+00:04 +36: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/conectividad_test.dart: Producto.agotado y enOferta (lógica usada para bloquear la compra)
+00:04 +37: loading C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart
+00:05 +37: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: (setUpAll)
+00:05 +37: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite P1 D1=V  producto nuevo -> INSERT con cantidad pedida
+00:05 +38: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite P1 + límite inferior: cantidad 0 -> se ajusta a 1
+00:05 +39: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite P1 + límite superior: cantidad = stock (3) -> 3
+00:05 +40: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite P1 + límite superior + 1: cantidad 4 con stock 3 -> 3
+00:05 +41: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite P2 D1=F  mismo producto y talla -> UPDATE acumulando
+00:05 +42: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite P2 + límite: acumulado supera stock -> se recorta al stock
+00:05 +43: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite misma talla distinta / otro producto -> filas separadas y total correcto
+00:05 +44: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.agregar() — caminos y valores límite DEFECTO DEF-02: stock 0 -> ArgumentError no controlado en clamp(1, 0)
+00:05 +45: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.cambiarCantidad() / quitar() cantidad < 1 -> elimina el renglón
+00:05 +46: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.cambiarCantidad() / quitar() cantidad > stock -> se recorta
+00:05 +47: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: CarritoService.cambiarCantidad() / quitar() cantidad válida -> UPDATE
+00:05 +48: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) DB-01 inserción válida y consulta por id existente
+00:05 +49: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) DB-02 inserción incompleta: NOT NULL rechaza nombre nulo
+00:05 +50: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) DB-02 UNIQUE(producto_id, talla) en carrito rechaza duplicado
+00:05 +51: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) DEFECTO DEF-04: la tabla acepta edad no numérica / fuera de rango (sin CHECK)
+00:05 +52: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) DB-03 consulta por id inexistente -> lista vacía (no excepción)
+00:05 +53: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) DB-04 actualización: 1 fila afectada y persistida; id inexistente -> 0
+*** WARNING ***
+
+Invalid argument null with type Null.
+Only num, String and Uint8List are supported. See https://github.com/tekartik/sqflite/blob/master/sqflite/doc/supported_types.md for details
+
+This will throw an exception in the future. For now it is displayed once per type.
+
+    
+#0      _checkArg (package:sqflite_common/src/value_utils.dart:31:7)
+#1      checkWhereArgs (package:sqflite_common/src/value_utils.dart:71:7)
+#2      new SqlBuilder.update (package:sqflite_common/src/sql_builder.dart:227:5)
+#3      SqfliteDatabaseExecutorMixin.update (package:sqflite_common/src/database_mixin.dart:240:32)
+#4      UsuarioDao.actualizar (package:chaac_xanab_app/db/usuario_dao.dart:22:15)
+<asynchronous suspension>
+#5      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart:184:14)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:05 +54: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) DB-05 eliminación: 1 fila, luego consulta vacía; repetir -> 0
+00:05 +55: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) Transacción: si falla un paso, no queda nada a medias
+00:06 +56: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: UsuarioDao — CRUD (DB-01 … DB-05) Inyección SQL: el valor viaja como parámetro (?), no se concatena
+00:06 +57: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: DB-06 concurrencia sobre el mismo registro DEFECTO DEF-03: dos agregar() simultáneos del mismo producto/talla
+00:06 +58: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: DB-06 concurrencia sobre el mismo registro dos UPDATE simultáneos del mismo renglón -> gana la última escritura
+00:06 +59: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: Medición de consultas + EXPLAIN QUERY PLAN 3 consultas con 1,000 usuarios y 200 renglones de carrito
+00:06 +60: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/db_test.dart: (tearDownAll)
+00:06 +60: loading C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/rendimiento_test.dart
+00:07 +60: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/rendimiento_test.dart: parseo del catálogo real: 1x y escalado a 10x / 100x
+00:08 +61: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/rendimiento_test.dart: TiendaScreen: primer frame con el catálogo real (servidor simulado)
+00:09 +62: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/rendimiento_test.dart: DEFECTO DEF-10: 200 con forma inesperada -> TypeError (no ApiException) que TiendaScreen no atrapa
+00:09 +63: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/rendimiento_test.dart: (tearDownAll)
+00:09 +63: loading C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart
+00:10 +63: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: requerido()  — D1: valor == null || valor.trim().isEmpty P1  C1=V            null -> mensaje
+00:10 +64: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: requerido()  — D1: valor == null || valor.trim().isEmpty P2  C1=F C2=V       "" -> mensaje
+00:10 +65: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: requerido()  — D1: valor == null || valor.trim().isEmpty P2  C1=F C2=V       solo espacios -> mensaje (límite)
+00:10 +66: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: requerido()  — D1: valor == null || valor.trim().isEmpty P3  C1=F C2=F       "a" (1 carácter, límite) -> null
+00:10 +67: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: requerido()  — D1: valor == null || valor.trim().isEmpty mensaje personalizado se propaga
+00:10 +68: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C1=F  texto no numérico
+00:10 +69: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C1=F  null
+00:10 +70: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C1=F  decimal "20.5"
+00:10 +71: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C2=F  -1 (límite inferior - 1)
+00:10 +72: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C2=V   0 (límite inferior)
+00:10 +73: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C2=V   1 (límite inferior + 1)
+00:10 +74: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C3=V 119 (límite superior - 1)
+00:10 +75: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C3=V 120 (límite superior)
+00:10 +76: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 C3=F 121 (límite superior + 1)
+00:10 +77: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 trim: " 30 " es válido
+00:10 +78: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: edadValida()  — D1: n != null && n >= 0 && n <= 120 edad() devuelve mensaje / null
+00:10 +79: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=F  4 dígitos (límite - 1)
+00:10 +80: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=V C2=V  5 dígitos (límite)
+00:10 +81: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=F  6 dígitos (límite + 1)
+00:10 +82: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=V C2=F  5 caracteres con letra
+00:10 +83: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos C1=V C2=F  5 caracteres con guion
+00:10 +84: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos null -> inválido
+00:10 +85: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos espacios alrededor se recortan
+00:10 +86: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: codigoPostalValido()  — D1: t.length == 5 && soloDigitos codigoPostal() mensaje
+00:10 +87: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes todas las condiciones V -> fuerte
+00:10 +88: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "8 caracteres o más" = F  ("Ch#2026")
+00:10 +89: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Una mayúscula" = F  ("chaac#2026")
+00:10 +90: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Una minúscula" = F  ("CHAAC#2026")
+00:10 +91: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Un número" = F  ("Chaac#Xan")
+00:10 +92: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes solo "Un símbolo" = F  ("Chaac2026")
+00:10 +93: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes longitud exactamente 8 (límite) -> cumple
+00:10 +94: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes cadena vacía -> ninguna regla
+00:10 +95: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: reglasPassword() / passwordFuerte()  — 5 condiciones independientes espacio cuenta como símbolo (igual que IsStrongPassword del backend)
+00:10 +96: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico email válido
+00:10 +97: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico sin dominio
+00:10 +98: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico sin usuario
+00:10 +99: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico con espacio interno
+00:10 +100: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico null
+00:10 +101: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico email() mensaje
+00:10 +102: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico login C1=F  null
+00:10 +103: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico login C1=V C2=F  sin @
+00:10 +104: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico login C1=V C2=V  "a@"
+00:10 +105: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/validaciones_test.dart: email() completo vs loginEmail() básico HALLAZGO: login acepta "a@" que el registro rechaza (validación inconsistente)
+00:11 +106: loading C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/widget_test.dart
+00:11 +106: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/widget_test.dart: Producto.fromJson procesa la respuesta de /api/productos
+00:11 +107: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/widget_test.dart: ApiService lanza ConsultaException si el servidor falla
+00:11 +108: C:/Users/dg660/Documents/chaac-xanab/chaac_xanab_app/test/widget_test.dart: Usuario conserva el correo al pasar por la tabla
+00:12 +109: All tests passed!

@@ -1,0 +1,171 @@
+{
+  "fecha": "2026-11-12T01:02:21.993Z",
+  "base": "https://backend-chaac-xanab.vercel.app/api",
+  "solicitudes_por_escenario": 20,
+  "cliente": {
+    "so": "Windows_NT 10.0.26200",
+    "cpu": "Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz",
+    "nucleos": 8,
+    "node": "v24.15.0"
+  },
+  "nota": "fetch (undici) reutiliza conexiones keep-alive; la primera solicitud de cada escenario puede incluir TLS.",
+  "escenarios": [
+    {
+      "tipo": "lectura",
+      "endpoint": "GET /productos",
+      "usuarios": 1,
+      "solicitudes": 20,
+      "exitosas": 20,
+      "fallidas": 0,
+      "codigos": {
+        "200": 20
+      },
+      "promedio_ms": 114.25,
+      "p50_ms": 114.09,
+      "p95_ms": 123.58,
+      "min_ms": 103.91,
+      "max_ms": 124.24,
+      "duracion_s": 2.29,
+      "solicitudes_por_s": 8.75,
+      "bytes_totales": 211700,
+      "tasa_kbps": 741.01,
+      "regiones": [
+        "iad1"
+      ],
+      "cliente_cpu_ms": 94,
+      "cliente_mem_mb": 61.93,
+      "errores": []
+    },
+    {
+      "tipo": "lectura",
+      "endpoint": "GET /productos",
+      "usuarios": 5,
+      "solicitudes": 20,
+      "exitosas": 20,
+      "fallidas": 0,
+      "codigos": {
+        "200": 20
+      },
+      "promedio_ms": 245.76,
+      "p50_ms": 120.91,
+      "p95_ms": 315.96,
+      "min_ms": 101.07,
+      "max_ms": 1945.49,
+      "duracion_s": 2.25,
+      "solicitudes_por_s": 8.88,
+      "bytes_totales": 211700,
+      "tasa_kbps": 752.09,
+      "regiones": [
+        "iad1"
+      ],
+      "cliente_cpu_ms": 79,
+      "cliente_mem_mb": 63.82,
+      "errores": []
+    },
+    {
+      "tipo": "lectura",
+      "endpoint": "GET /productos",
+      "usuarios": 10,
+      "solicitudes": 20,
+      "exitosas": 20,
+      "fallidas": 0,
+      "codigos": {
+        "200": 20
+      },
+      "promedio_ms": 198.53,
+      "p50_ms": 163.9,
+      "p95_ms": 320.25,
+      "min_ms": 103.7,
+      "max_ms": 441.47,
+      "duracion_s": 0.62,
+      "solicitudes_por_s": 32.39,
+      "bytes_totales": 211700,
+      "tasa_kbps": 2742.9,
+      "regiones": [
+        "iad1",
+        "cle1"
+      ],
+      "cliente_cpu_ms": 62,
+      "cliente_mem_mb": 63.32,
+      "errores": []
+    },
+    {
+      "tipo": "escritura",
+      "endpoint": "POST /auth/login",
+      "usuarios": 1,
+      "solicitudes": 20,
+      "exitosas": 20,
+      "fallidas": 0,
+      "codigos": {
+        "401": 20
+      },
+      "promedio_ms": 211.84,
+      "p50_ms": 211.65,
+      "p95_ms": 229.39,
+      "min_ms": 156.54,
+      "max_ms": 301.08,
+      "duracion_s": 4.24,
+      "solicitudes_por_s": 4.72,
+      "bytes_totales": 1720,
+      "tasa_kbps": 3.25,
+      "regiones": [
+        "iad1"
+      ],
+      "cliente_cpu_ms": 78,
+      "cliente_mem_mb": 61.98,
+      "errores": []
+    },
+    {
+      "tipo": "escritura",
+      "endpoint": "POST /auth/login",
+      "usuarios": 5,
+      "solicitudes": 20,
+      "exitosas": 20,
+      "fallidas": 0,
+      "codigos": {
+        "401": 20
+      },
+      "promedio_ms": 352.98,
+      "p50_ms": 242.69,
+      "p95_ms": 806.74,
+      "min_ms": 192.6,
+      "max_ms": 1025.74,
+      "duracion_s": 1.51,
+      "solicitudes_por_s": 13.26,
+      "bytes_totales": 1720,
+      "tasa_kbps": 9.12,
+      "regiones": [
+        "iad1"
+      ],
+      "cliente_cpu_ms": 47,
+      "cliente_mem_mb": 62.89,
+      "errores": []
+    },
+    {
+      "tipo": "escritura",
+      "endpoint": "POST /auth/login",
+      "usuarios": 10,
+      "solicitudes": 20,
+      "exitosas": 20,
+      "fallidas": 0,
+      "codigos": {
+        "401": 20
+      },
+      "promedio_ms": 279.46,
+      "p50_ms": 235.44,
+      "p95_ms": 411.12,
+      "min_ms": 178.86,
+      "max_ms": 554.82,
+      "duracion_s": 0.77,
+      "solicitudes_por_s": 25.91,
+      "bytes_totales": 1720,
+      "tasa_kbps": 17.83,
+      "regiones": [
+        "iad1"
+      ],
+      "cliente_cpu_ms": 62,
+      "cliente_mem_mb": 64.51,
+      "errores": []
+    }
+  ]
+}
