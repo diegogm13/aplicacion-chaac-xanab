@@ -15,28 +15,28 @@
       "plan": [
         "SEARCH usuarios USING INTEGER PRIMARY KEY (rowid=?)"
       ],
-      "promedio_ms_50_ejecuciones": 0.704
+      "promedio_ms_50_ejecuciones": 0.445
     },
     "usuario_por_correo (sin índice)": {
       "sql": "SELECT * FROM usuarios WHERE correo = ?",
       "plan": [
         "SCAN usuarios"
       ],
-      "promedio_ms_50_ejecuciones": 0.627
+      "promedio_ms_50_ejecuciones": 0.467
     },
     "carrito_por_producto_talla (UNIQUE)": {
       "sql": "SELECT * FROM carrito WHERE producto_id = ? AND talla = ? LIMIT 1",
       "plan": [
         "SEARCH carrito USING INDEX sqlite_autoindex_carrito_1 (producto_id=? AND talla=?)"
       ],
-      "promedio_ms_50_ejecuciones": 0.64
+      "promedio_ms_50_ejecuciones": 0.466
     },
     "usuarios_todos (obtenerTodos)": {
       "sql": "SELECT * FROM usuarios ORDER BY id",
       "plan": [
         "SCAN usuarios"
       ],
-      "promedio_ms_50_ejecuciones": 2.671
+      "promedio_ms_50_ejecuciones": 1.721
     }
   },
   "motor": "3.53.4"

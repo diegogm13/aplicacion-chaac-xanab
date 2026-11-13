@@ -34,9 +34,12 @@ void main() {
   testWidgets('NET-05: sin red al confirmar -> error visible, NO muestra éxito, carrito intacto',
       (tester) async {
     var postsCompra = 0;
+    final llaves = <String?>{};
+    api.esperaBase = Duration.zero;
     api.cliente = MockClient((req) async {
       if (req.method == 'GET') return _json('{"calle":"Calle 60","numero_ext":"123","colonia":"Centro","ciudad":"Merida","estado":"Yucatan","codigo_postal":"97000"}', 200);
       postsCompra++;
+      llaves.add(req.headers['Idempotency-Key']);
       throw const SocketException('Network is unreachable'); // modo avión
     });
     carrito.items = [
@@ -55,7 +58,10 @@ void main() {
     await tester.tap(find.textContaining('CONFIRMAR COMPRA'));
     await tester.pumpAndSettle();
 
-    expect(postsCompra, 1);
+    // Práctica 12: 1 intento + 2 reintentos automáticos, todos con la MISMA llave.
+    expect(postsCompra, 1 + ApiClient.maxReintentos);
+    expect(llaves, hasLength(1));
+    expect(llaves.single, matches(RegExp(r'^[0-9a-f]{32}$')));
     expect(find.textContaining('No fue posible conectar'), findsOneWidget, reason: 'detecta el error');
     expect(find.text('¡Compra realizada!'), findsNothing, reason: 'no reporta éxito falso');
     expect(carrito.items.length, 1, reason: 'el carrito se conserva para reintentar');
@@ -165,6 +171,38 @@ void main() {
     expect(compra.id, 'c-2');
     expect(registradas.length, 2, reason: 'no hay Idempotency-Key: el backend no puede detectar el reintento');
     expect(registradas[0], registradas[1], reason: 'mismo cuerpo, misma intención -> 2 registros');
+  });
+
+  test('P12 RES-06/07: corte transitorio -> reintento automático con la misma llave y una sola compra', () async {
+    final porLlave = <String, int>{};
+    var fallas = 1; // la primera petición se pierde, la segunda llega
+    api.esperaBase = Duration.zero;
+    api.cliente = MockClient((req) async {
+      final llave = req.headers['Idempotency-Key']!;
+      if (fallas-- > 0) throw const SocketException('Connection reset by peer');
+      porLlave[llave] = (porLlave[llave] ?? 0) + 1; // el "servidor" registra por llave
+      return _json('{"id":"c-1","total":3000,"status":"pendiente","created_at":"2026-11-12T00:00:00Z","items":[]}', 201);
+    });
+    final antes = api.reintentosRealizados;
+    final compra = await TiendaService().comprar(
+        items: [{'producto_id': 'p1', 'size': '26', 'quantity': 2}],
+        direccion: Direccion.fromJson(_direccion),
+        idempotencyKey: nuevaLlaveIdempotencia());
+    expect(compra.id, 'c-1', reason: 'el usuario no ve error: se recuperó solo');
+    expect(api.reintentosRealizados - antes, 1);
+    expect(porLlave.values.single, 1, reason: 'una sola compra registrada');
+  });
+
+  test('P12: sin llave (POST no idempotente) NO se reintenta automáticamente', () async {
+    var envios = 0;
+    api.cliente = MockClient((req) async {
+      envios++;
+      throw const SocketException('Connection reset by peer');
+    });
+    await expectLater(
+        TiendaService().comprar(items: [{'producto_id': 'p1', 'size': '26', 'quantity': 1}], direccion: Direccion.fromJson(_direccion)),
+        throwsA(isA<ApiException>()));
+    expect(envios, 1);
   });
 
   test('Producto.agotado y enOferta (lógica usada para bloquear la compra)', () {
