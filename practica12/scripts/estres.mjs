@@ -31,13 +31,17 @@ const r2 = (n) => Math.round(n * 100) / 100;
 const pct = (orden, p) => orden[Math.min(Math.ceil(p * orden.length) - 1, orden.length - 1)];
 
 async function preparar() {
-  if (TIPO !== 'escritura') return { metodo: 'GET', ruta: '/productos', headers: {} };
+  if (TIPO === 'lectura') return { metodo: 'GET', ruta: '/productos', headers: {} };
   const login = await fetch(`${BASE}/auth/login`, {
     method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ email: CORREO, password: PASSWORD }),
   });
   if (!login.ok) throw new Error(`login ${login.status}: ${await login.text()}`);
   const { token } = await login.json();
+  // --tipo historial [--consulta "limite=20"] : GET /compras/mis-compras del usuario P12
+  if (TIPO === 'historial') {
+    return { metodo: 'GET', ruta: `/compras/mis-compras${args.consulta ? `?${args.consulta}` : ''}`, headers: { authorization: `Bearer ${token}` } };
+  }
   const productos = await (await fetch(`${BASE}/productos`)).json();
   const p = productos.find((x) => x.name === PRODUCTO);
   if (!p) throw new Error('No existe el producto de prueba P12 (correr datos_prueba.js crear)');

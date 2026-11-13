@@ -32,7 +32,7 @@ Future<void> esperar(WidgetTester t, Finder f, {int segundos = 40}) async {
     await t.pump(const Duration(milliseconds: 30));
     if (f.evaluate().isNotEmpty) return;
   }
-  final visibles = find.byType(Text).evaluate().map((e) => (e.widget as Text).data).whereType<String>().take(40).toList();
+  final visibles = find.byType(Text).evaluate().map((e) => (e.widget as Text).data).whereType<String>().toList();
   throw TestFailure('No apareció: $f\nTextos en pantalla: $visibles');
 }
 

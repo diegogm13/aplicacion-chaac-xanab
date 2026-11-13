@@ -1,0 +1,985 @@
+{
+  "estres": {
+    "escritura": {
+      "antes": {
+        "1": {
+          "rps": 1.77,
+          "promedio_ms": 564.61,
+          "p90_ms": 614.34,
+          "p95_ms": 645.35,
+          "max_ms": 962.43,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "5": {
+          "rps": 8.53,
+          "promedio_ms": 579.5,
+          "p90_ms": 672.77,
+          "p95_ms": 776.29,
+          "max_ms": 931.75,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "10": {
+          "rps": 16.22,
+          "promedio_ms": 591.49,
+          "p90_ms": 646.19,
+          "p95_ms": 694.47,
+          "max_ms": 820.2,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "25": {
+          "rps": 35.53,
+          "promedio_ms": 650.92,
+          "p90_ms": 804.99,
+          "p95_ms": 826.38,
+          "max_ms": 958.18,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "50": {
+          "rps": 45.63,
+          "promedio_ms": 969.92,
+          "p90_ms": 1149.43,
+          "p95_ms": 1201.1,
+          "max_ms": 1352.68,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        }
+      },
+      "despues": {
+        "1": {
+          "rps": 9.43,
+          "promedio_ms": 106.07,
+          "p90_ms": 122.2,
+          "p95_ms": 129.81,
+          "max_ms": 196.65,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "5": {
+          "rps": 39.37,
+          "promedio_ms": 125.01,
+          "p90_ms": 190.51,
+          "p95_ms": 226.32,
+          "max_ms": 322.38,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "10": {
+          "rps": 79.74,
+          "promedio_ms": 120.23,
+          "p90_ms": 164.58,
+          "p95_ms": 199.08,
+          "max_ms": 311.15,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "25": {
+          "rps": 133.48,
+          "promedio_ms": 167.51,
+          "p90_ms": 278.59,
+          "p95_ms": 348.58,
+          "max_ms": 472.34,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        },
+        "50": {
+          "rps": 90.92,
+          "promedio_ms": 438.49,
+          "p90_ms": 750.46,
+          "p95_ms": 1028.85,
+          "max_ms": 1077.68,
+          "errores_pct": 0,
+          "codigos": {
+            "201": 100
+          }
+        }
+      }
+    },
+    "lectura": {
+      "antes": {
+        "1": {
+          "rps": 428.19,
+          "promedio_ms": 2.33,
+          "p90_ms": 3.48,
+          "p95_ms": 4.03,
+          "max_ms": 9.14,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "5": {
+          "rps": 1438.17,
+          "promedio_ms": 3.41,
+          "p90_ms": 5.4,
+          "p95_ms": 6.01,
+          "max_ms": 11.25,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "10": {
+          "rps": 1456.05,
+          "promedio_ms": 6.64,
+          "p90_ms": 9.98,
+          "p95_ms": 13.96,
+          "max_ms": 20.02,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "25": {
+          "rps": 1507.34,
+          "promedio_ms": 15.13,
+          "p90_ms": 28.15,
+          "p95_ms": 31.34,
+          "max_ms": 32.3,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "50": {
+          "rps": 1118.52,
+          "promedio_ms": 35.28,
+          "p90_ms": 61.98,
+          "p95_ms": 62.56,
+          "max_ms": 63.26,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "100": {
+          "rps": 1467.27,
+          "promedio_ms": 40.76,
+          "p90_ms": 49.21,
+          "p95_ms": 50.29,
+          "max_ms": 51.74,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        }
+      },
+      "despues": {
+        "1": {
+          "rps": 705.33,
+          "promedio_ms": 1.41,
+          "p90_ms": 2.07,
+          "p95_ms": 2.58,
+          "max_ms": 4.54,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "5": {
+          "rps": 1124.73,
+          "promedio_ms": 4.33,
+          "p90_ms": 5.57,
+          "p95_ms": 9.14,
+          "max_ms": 11.4,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "10": {
+          "rps": 1232.45,
+          "promedio_ms": 7.59,
+          "p90_ms": 11.38,
+          "p95_ms": 14.55,
+          "max_ms": 23.23,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "25": {
+          "rps": 1048.24,
+          "promedio_ms": 22.14,
+          "p90_ms": 40.77,
+          "p95_ms": 41.42,
+          "max_ms": 47.2,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "50": {
+          "rps": 1389.97,
+          "promedio_ms": 29.48,
+          "p90_ms": 50.42,
+          "p95_ms": 52.41,
+          "max_ms": 52.66,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "100": {
+          "rps": 1559.07,
+          "promedio_ms": 36.42,
+          "p90_ms": 45.07,
+          "p95_ms": 45.67,
+          "max_ms": 45.75,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        }
+      },
+      "produccion": {
+        "1": {
+          "rps": 9.29,
+          "promedio_ms": 107.7,
+          "p90_ms": 127.79,
+          "p95_ms": 141.59,
+          "max_ms": 527.39,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "5": {
+          "rps": 30.92,
+          "promedio_ms": 160.8,
+          "p90_ms": 179.86,
+          "p95_ms": 252.61,
+          "max_ms": 1903.79,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "10": {
+          "rps": 77.09,
+          "promedio_ms": 117.95,
+          "p90_ms": 151.03,
+          "p95_ms": 237.54,
+          "max_ms": 305.48,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "25": {
+          "rps": 46.88,
+          "promedio_ms": 212.45,
+          "p90_ms": 228.09,
+          "p95_ms": 438.72,
+          "max_ms": 2089.88,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        },
+        "50": {
+          "rps": 47.78,
+          "promedio_ms": 297.08,
+          "p90_ms": 305.42,
+          "p95_ms": 1743.7,
+          "max_ms": 2082.8,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 100
+          }
+        }
+      }
+    },
+    "historial": {
+      "antes": {
+        "1": {
+          "rps": 4.88,
+          "promedio_ms": 205.03,
+          "p90_ms": 236.65,
+          "p95_ms": 256.41,
+          "max_ms": 300.11,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        },
+        "5": {
+          "rps": 21.82,
+          "promedio_ms": 217.28,
+          "p90_ms": 261.62,
+          "p95_ms": 292.69,
+          "max_ms": 331.26,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        },
+        "10": {
+          "rps": 36.43,
+          "promedio_ms": 242.19,
+          "p90_ms": 360.31,
+          "p95_ms": 374.24,
+          "max_ms": 513.62,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        },
+        "25": {
+          "rps": 47.26,
+          "promedio_ms": 407.6,
+          "p90_ms": 573.33,
+          "p95_ms": 594.57,
+          "max_ms": 727.17,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        }
+      },
+      "despues": {
+        "1": {
+          "rps": 10.34,
+          "promedio_ms": 96.67,
+          "p90_ms": 115.44,
+          "p95_ms": 118.89,
+          "max_ms": 135.31,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        },
+        "5": {
+          "rps": 42.43,
+          "promedio_ms": 109.46,
+          "p90_ms": 145.18,
+          "p95_ms": 172.8,
+          "max_ms": 192.86,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        },
+        "10": {
+          "rps": 70.92,
+          "promedio_ms": 121.39,
+          "p90_ms": 195.44,
+          "p95_ms": 199.72,
+          "max_ms": 235.64,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        },
+        "25": {
+          "rps": 98.04,
+          "promedio_ms": 214.98,
+          "p90_ms": 360.8,
+          "p95_ms": 363.16,
+          "max_ms": 381.43,
+          "errores_pct": 0,
+          "codigos": {
+            "200": 40
+          }
+        }
+      }
+    }
+  },
+  "servidor": {
+    "escritura_antes": {
+      "cpu_prom": 1.69,
+      "cpu_max": 7.3,
+      "ram_max": 190.8
+    },
+    "escritura_despues": {
+      "cpu_prom": 2.48,
+      "cpu_max": 11.21,
+      "ram_max": 154.5
+    },
+    "lectura_antes": {
+      "cpu_prom": 1.22,
+      "cpu_max": 3.03,
+      "ram_max": 116.0
+    },
+    "lectura_despues": {
+      "cpu_prom": 1.52,
+      "cpu_max": 2.66,
+      "ram_max": 151.8
+    }
+  },
+  "integridad": {
+    "antes": {
+      "fecha": "2026-11-13T03:51:40.928Z",
+      "stock_inicial": 100000,
+      "piezas_vendidas": 501,
+      "stock_esperado": 99499,
+      "stock_real": 99847,
+      "diferencia": 348,
+      "compras_usuario_p12": 501,
+      "compras_con_renglones": 501,
+      "compras_huerfanas": 0
+    },
+    "despues": {
+      "fecha": "2026-11-13T18:16:42.390Z",
+      "stock_inicial": 100000,
+      "piezas_vendidas": 1009,
+      "stock_esperado": 98991,
+      "stock_real": 98991,
+      "diferencia": 0,
+      "compras_usuario_p12": 1009,
+      "compras_con_renglones": 1009,
+      "compras_huerfanas": 0
+    }
+  },
+  "db": {
+    "antes": {
+      "modo": "antes",
+      "fecha": "2026-11-13T04:29:02.122Z",
+      "consultas": [
+        {
+          "prueba": "1. por identificador (productos.id)",
+          "repeticiones": 30,
+          "filas": 1,
+          "bytes": 113,
+          "promedio_ms": 117.17,
+          "min_ms": 78.21,
+          "p95_ms": 189.76,
+          "max_ms": 269.09
+        },
+        {
+          "prueba": "2. conjunto pequeño (10 productos recientes)",
+          "repeticiones": 30,
+          "filas": 10,
+          "bytes": 915,
+          "promedio_ms": 192.06,
+          "min_ms": 77.35,
+          "p95_ms": 468.6,
+          "max_ms": 950.61
+        },
+        {
+          "prueba": "3. conjunto grande: historial completo P12",
+          "repeticiones": 10,
+          "filas": 503,
+          "bytes": 144307,
+          "promedio_ms": 166.48,
+          "min_ms": 112.71,
+          "p95_ms": 426.95,
+          "max_ms": 426.95
+        },
+        {
+          "prueba": "3b. historial P12 paginado (20, índice)",
+          "repeticiones": 10,
+          "filas": 20,
+          "bytes": 5739,
+          "promedio_ms": 129.84,
+          "min_ms": 91.65,
+          "p95_ms": 227.4,
+          "max_ms": 227.4
+        },
+        {
+          "prueba": "4. con filtros (activo, precio, nombre, orden)",
+          "repeticiones": 30,
+          "filas": 17,
+          "bytes": 1530,
+          "promedio_ms": 100.75,
+          "min_ms": 78.63,
+          "p95_ms": 180.84,
+          "max_ms": 230.74
+        }
+      ],
+      "concurrencia": {
+        "prueba": "5. 50 descuentos de stock simultáneos sobre el mismo producto",
+        "metodo": "SELECT + UPDATE stock = valor_leído − 1",
+        "stock_inicial": 99845,
+        "stock_final": 99843,
+        "descuentos_esperados": 50,
+        "descuentos_aplicados": 2,
+        "actualizaciones_perdidas": 48,
+        "errores": 0,
+        "duracion_ms": 1375.87
+      },
+      "escrituras_simultaneas": {
+        "prueba": "6. dos UPDATE simultáneos del estado de la misma compra",
+        "resultado_final": "confirmado",
+        "valido": true,
+        "nota": "PostgreSQL bloquea la fila: la segunda escritura espera a la primera y gana la última (sin corrupción)."
+      }
+    },
+    "despues": {
+      "modo": "despues",
+      "fecha": "2026-11-13T18:18:55.914Z",
+      "consultas": [
+        {
+          "prueba": "1. por identificador (productos.id)",
+          "repeticiones": 30,
+          "filas": 1,
+          "bytes": 113,
+          "promedio_ms": 103.08,
+          "min_ms": 82.38,
+          "p95_ms": 124.4,
+          "max_ms": 146.82
+        },
+        {
+          "prueba": "2. conjunto pequeño (10 productos recientes)",
+          "repeticiones": 30,
+          "filas": 10,
+          "bytes": 915,
+          "promedio_ms": 100.57,
+          "min_ms": 82.96,
+          "p95_ms": 155.93,
+          "max_ms": 173.46
+        },
+        {
+          "prueba": "3. conjunto grande: historial completo P12",
+          "repeticiones": 10,
+          "filas": 1000,
+          "bytes": 286880,
+          "promedio_ms": 201.2,
+          "min_ms": 175.73,
+          "p95_ms": 237.54,
+          "max_ms": 237.54
+        },
+        {
+          "prueba": "3b. historial P12 paginado (20, índice)",
+          "repeticiones": 10,
+          "filas": 20,
+          "bytes": 5737,
+          "promedio_ms": 183.19,
+          "min_ms": 85.78,
+          "p95_ms": 609.79,
+          "max_ms": 609.79
+        },
+        {
+          "prueba": "4. con filtros (activo, precio, nombre, orden)",
+          "repeticiones": 30,
+          "filas": 17,
+          "bytes": 1530,
+          "promedio_ms": 97.17,
+          "min_ms": 81.27,
+          "p95_ms": 114.41,
+          "max_ms": 116.29
+        }
+      ],
+      "concurrencia": {
+        "prueba": "5. 50 descuentos de stock simultáneos sobre el mismo producto",
+        "metodo": "UPDATE … SET stock = stock − 1 WHERE stock >= 1 (atómico)",
+        "stock_inicial": 98991,
+        "stock_final": 98941,
+        "descuentos_esperados": 50,
+        "descuentos_aplicados": 50,
+        "actualizaciones_perdidas": 0,
+        "errores": 0,
+        "duracion_ms": 503.97
+      },
+      "escrituras_simultaneas": {
+        "prueba": "6. dos UPDATE simultáneos del estado de la misma compra",
+        "resultado_final": "enviado",
+        "valido": true,
+        "nota": "PostgreSQL bloquea la fila: la segunda escritura espera a la primera y gana la última (sin corrupción)."
+      }
+    }
+  },
+  "app": {
+    "antes": {
+      "operaciones": {
+        "login": {
+          "n": 1,
+          "prom": 2383,
+          "min": 2383,
+          "max": 2383
+        },
+        "consulta_catalogo": {
+          "n": 10,
+          "prom": 83.3,
+          "min": 65,
+          "max": 238
+        },
+        "filtro_busqueda": {
+          "n": 27,
+          "prom": 32.7,
+          "min": 27,
+          "max": 36
+        },
+        "ir_carrito": {
+          "n": 3,
+          "prom": 45,
+          "min": 36,
+          "max": 50
+        },
+        "abrir_pedidos_1ra": {
+          "n": 1,
+          "prom": 1052,
+          "min": 1052,
+          "max": 1052
+        },
+        "scroll_pedidos": {
+          "n": 3,
+          "prom": 3537.7,
+          "min": 3529,
+          "max": 3550
+        },
+        "ir_perfil": {
+          "n": 3,
+          "prom": 48.7,
+          "min": 48,
+          "max": 49
+        },
+        "ir_tienda": {
+          "n": 3,
+          "prom": 34,
+          "min": 34,
+          "max": 34
+        },
+        "abrir_pedidos": {
+          "n": 2,
+          "prom": 41.5,
+          "min": 33,
+          "max": 50
+        },
+        "agregar_carrito": {
+          "n": 2,
+          "prom": 42,
+          "min": 33,
+          "max": 51
+        },
+        "confirmar_compra": {
+          "n": 2,
+          "prom": 1135,
+          "min": 673,
+          "max": 1597
+        }
+      },
+      "frames": {
+        "frames_consulta": {
+          "frames": 49,
+          "build_prom": 0.71,
+          "build_p90": 1.79,
+          "build_p99": 3.36,
+          "raster_prom": 1.28,
+          "raster_p99": 7.09,
+          "frames_lentos": 0
+        },
+        "frames_procesamiento": {
+          "frames": 98,
+          "build_prom": 1.03,
+          "build_p90": 2.75,
+          "build_p99": 3.95,
+          "raster_prom": 1.38,
+          "raster_p99": 6.77,
+          "frames_lentos": 1
+        },
+        "frames_navegacion": {
+          "frames": 731,
+          "build_prom": 3.3,
+          "build_p90": 7.04,
+          "build_p99": 8.72,
+          "raster_prom": 1.36,
+          "raster_p99": 2.83,
+          "frames_lentos": 2
+        },
+        "frames_escritura": {
+          "frames": 418,
+          "build_prom": 0.72,
+          "build_p90": 0.91,
+          "build_p99": 5.78,
+          "raster_prom": 1.27,
+          "raster_p99": 3.8,
+          "frames_lentos": 0
+        }
+      },
+      "proceso": {
+        "muestras": 72,
+        "cpu_prom": 3.86,
+        "cpu_prom_activo": 4.21,
+        "cpu_max": 10.26,
+        "ram_inicial": 75.3,
+        "ram_max": 225.7,
+        "ram_final": 225.7
+      }
+    },
+    "despues": {
+      "operaciones": {
+        "login": {
+          "n": 1,
+          "prom": 986,
+          "min": 986,
+          "max": 986
+        },
+        "consulta_catalogo": {
+          "n": 10,
+          "prom": 86.4,
+          "min": 61,
+          "max": 240
+        },
+        "filtro_busqueda": {
+          "n": 27,
+          "prom": 31.1,
+          "min": 20,
+          "max": 37
+        },
+        "ir_carrito": {
+          "n": 3,
+          "prom": 46.3,
+          "min": 44,
+          "max": 49
+        },
+        "abrir_pedidos_1ra": {
+          "n": 1,
+          "prom": 289,
+          "min": 289,
+          "max": 289
+        },
+        "scroll_pedidos": {
+          "n": 3,
+          "prom": 2682.7,
+          "min": 2083,
+          "max": 3862
+        },
+        "ir_perfil": {
+          "n": 3,
+          "prom": 38.7,
+          "min": 33,
+          "max": 50
+        },
+        "ir_tienda": {
+          "n": 3,
+          "prom": 33.3,
+          "min": 33,
+          "max": 34
+        },
+        "abrir_pedidos": {
+          "n": 2,
+          "prom": 39.5,
+          "min": 33,
+          "max": 46
+        },
+        "agregar_carrito": {
+          "n": 2,
+          "prom": 41,
+          "min": 33,
+          "max": 49
+        },
+        "confirmar_compra": {
+          "n": 2,
+          "prom": 158,
+          "min": 149,
+          "max": 167
+        }
+      },
+      "frames": {
+        "frames_consulta": {
+          "frames": 60,
+          "build_prom": 0.68,
+          "build_p90": 1.74,
+          "build_p99": 3.3,
+          "raster_prom": 1.27,
+          "raster_p99": 5.78,
+          "frames_lentos": 0
+        },
+        "frames_procesamiento": {
+          "frames": 101,
+          "build_prom": 0.85,
+          "build_p90": 2.52,
+          "build_p99": 3.23,
+          "raster_prom": 1.31,
+          "raster_p99": 7.76,
+          "frames_lentos": 1
+        },
+        "frames_navegacion": {
+          "frames": 574,
+          "build_prom": 0.56,
+          "build_p90": 1.03,
+          "build_p99": 1.6,
+          "raster_prom": 1.06,
+          "raster_p99": 2.21,
+          "frames_lentos": 2
+        },
+        "frames_escritura": {
+          "frames": 323,
+          "build_prom": 0.59,
+          "build_p90": 1.04,
+          "build_p99": 4.0,
+          "raster_prom": 0.88,
+          "raster_p99": 2.06,
+          "frames_lentos": 0
+        }
+      },
+      "proceso": {
+        "muestras": 56,
+        "cpu_prom": 2.57,
+        "cpu_prom_activo": 2.71,
+        "cpu_max": 6.96,
+        "ram_inicial": 75.1,
+        "ram_max": 222.7,
+        "ram_final": 222.0
+      }
+    }
+  },
+  "resiliencia": {
+    "antes": [
+      {
+        "id": "RES-01",
+        "escenario": "Pérdida de Internet durante una consulta",
+        "esperado": "Error controlado",
+        "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet.",
+        "tiempo_ms": 99,
+        "cumple": true
+      },
+      {
+        "id": "RES-02",
+        "escenario": "Pérdida de Internet durante una escritura",
+        "esperado": "No confirmar falsamente el registro",
+        "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · compras nuevas en servidor: 0",
+        "tiempo_ms": 8,
+        "cumple": true,
+        "compras_nuevas": 0
+      },
+      {
+        "id": "RES-03",
+        "escenario": "Servidor sin respuesta",
+        "esperado": "Timeout controlado",
+        "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet.",
+        "tiempo_ms": 20002,
+        "cumple": true
+      },
+      {
+        "id": "RES-04",
+        "escenario": "Respuesta HTTP 500",
+        "esperado": "Mostrar error y conservar estabilidad",
+        "observado": "ApiException(500): Internal server error · siguiente consulta: OK (42 ms)",
+        "tiempo_ms": 7,
+        "cumple": true
+      },
+      {
+        "id": "RES-05",
+        "escenario": "Respuesta HTTP 401 o 403",
+        "esperado": "Gestionar autenticación o permisos",
+        "observado": "401 → noAutorizado=true (cierra sesión) · 403 → noAutorizado=false (3 ms)",
+        "tiempo_ms": 2,
+        "cumple": true
+      },
+      {
+        "id": "RES-06",
+        "escenario": "Recuperación de conexión",
+        "esperado": "Restablecer comunicación",
+        "observado": "primer intento: ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. (2024 ms) · sin reintento automático; recuperó con 1 reintento(s) MANUAL(es) a los 1007 ms",
+        "tiempo_ms": 1007,
+        "cumple": true,
+        "reintento_automatico": false,
+        "intentos_manuales": 1
+      },
+      {
+        "id": "RES-07",
+        "escenario": "Reintento de una escritura",
+        "esperado": "Evitar duplicados inesperados",
+        "observado": "1.er intento: ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · reintento: sin error · compras creadas: 2",
+        "tiempo_ms": 796,
+        "cumple": false,
+        "compras_nuevas": 2
+      },
+      {
+        "id": "RES-08",
+        "escenario": "Respuesta tardía",
+        "esperado": "Evitar operaciones duplicadas o inconsistentes",
+        "observado": "dos envíos durante la espera → compras creadas: 2 (sin error / sin error). En la UI, CheckoutScreen deshabilita el botón mientras espera (_pagando).",
+        "tiempo_ms": 3666,
+        "cumple": false,
+        "compras_nuevas": 2
+      }
+    ],
+    "despues": [
+      {
+        "id": "RES-01",
+        "escenario": "Pérdida de Internet durante una consulta",
+        "esperado": "Error controlado",
+        "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · reintentos automáticos: 2",
+        "tiempo_ms": 1790,
+        "cumple": true,
+        "reintentos": 2
+      },
+      {
+        "id": "RES-02",
+        "escenario": "Pérdida de Internet durante una escritura",
+        "esperado": "No confirmar falsamente el registro",
+        "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · compras nuevas en servidor: 0",
+        "tiempo_ms": 1961,
+        "cumple": true,
+        "compras_nuevas": 0
+      },
+      {
+        "id": "RES-03",
+        "escenario": "Servidor sin respuesta",
+        "esperado": "Timeout controlado",
+        "observado": "ApiException(sin status): El servidor tardó demasiado en responder. Revisa tu conexión e intenta de nuevo. · porTimeout=true (no se reintenta un timeout)",
+        "tiempo_ms": 10002,
+        "cumple": true
+      },
+      {
+        "id": "RES-04",
+        "escenario": "Respuesta HTTP 500",
+        "esperado": "Mostrar error y conservar estabilidad",
+        "observado": "ApiException(500): Internal server error · siguiente consulta: OK (8 ms)",
+        "tiempo_ms": 5,
+        "cumple": true
+      },
+      {
+        "id": "RES-05",
+        "escenario": "Respuesta HTTP 401 o 403",
+        "esperado": "Gestionar autenticación o permisos",
+        "observado": "401 → noAutorizado=true (cierra sesión) · 403 → noAutorizado=false (2 ms)",
+        "tiempo_ms": 2,
+        "cumple": true
+      },
+      {
+        "id": "RES-06",
+        "escenario": "Recuperación de conexión",
+        "esperado": "Restablecer comunicación",
+        "observado": "recuperación AUTOMÁTICA en 3157 ms con 1 reintento(s) con backoff, sin intervención del usuario",
+        "tiempo_ms": 3157,
+        "cumple": true,
+        "reintento_automatico": true,
+        "reintentos_automaticos": 1,
+        "intentos_manuales": 0
+      },
+      {
+        "id": "RES-07",
+        "escenario": "Reintento de una escritura",
+        "esperado": "Evitar duplicados inesperados",
+        "observado": "1.er envío: sin error (reintentos automáticos: 1) · 2.º envío manual: sin error · compras creadas: 1",
+        "tiempo_ms": 1167,
+        "cumple": true,
+        "compras_nuevas": 1
+      },
+      {
+        "id": "RES-08",
+        "escenario": "Respuesta tardía",
+        "esperado": "Evitar operaciones duplicadas o inconsistentes",
+        "observado": "dos envíos con la misma llave durante la espera → compras creadas: 1 (sin error / sin error). Además la UI deshabilita el botón mientras espera (_pagando).",
+        "tiempo_ms": 2808,
+        "cumple": true,
+        "compras_nuevas": 1
+      }
+    ]
+  }
+}

@@ -461,7 +461,7 @@ No se puede apagar la red de un teléfono físico desde el entorno de pruebas, a
 
 ### 5.F Carga controlada (`practica11/scripts/carga.mjs`, 20 solicitudes por escenario, calentamiento previo)
 
-Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo ficticio (según el código: SELECT `usuarios` + INSERT `LOGIN_FALLIDO` en `bitacora` → 401 esperado). Al revisar la BD después, **no se guardó ninguna de las 60 filas** (DEF-12).
+Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo ficticio (según el código: SELECT `usuarios` + INSERT `LOGIN_FALLIDO` en `bitacora` → 401 esperado). Al revisar la BD después, **no apareció ninguna de las 60 filas** (DEF-12; en la Práctica 12 producción sí registró un login fallido nuevo, así que quedó como no reproducible).
 
 | Endpoint | Usuarios | Éxito | Fallo | Promedio | P50 | **P95** | Máx. | Req/s | Transferencia | Regiones |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -495,7 +495,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | DEF-10 | App (`tienda_screen.dart:49-59`) | Media | `TypeError` no controlado al recibir JSON inesperado |
 | DEF-14 | Sitio web (`Services/auth.service.ts:52-61`) | Media | El JWT se decodifica con `atob`: un nombre con acento sale corrupto y una sesión válida puede tratarse como cerrada |
 | DEF-13 | Sitio web (`Services/cart.service.ts:43-58`) | Media | El carrito identifica productos por nombre, no tiene tope de stock y se rompe con datos alterados |
-| DEF-12 | API (`bitacora.service.ts:18-31`, `auth.service.ts` login) | Media | Los logins fallidos con correo inexistente no quedan en la bitácora (falla silenciosa) |
+| DEF-12 | API (`bitacora.service.ts:18-31`, `auth.service.ts` login) | ~~Media~~ **No reproducible** | Las 60 filas de la prueba de carga no aparecieron en la bitácora; al re-verificarlo en la Práctica 12, producción sí registró el login fallido |
 | DEF-02 | App (`carrito_service.dart:57,61,71`) | Baja | `clamp(1, 0)` lanza `ArgumentError` con stock 0 |
 | DEF-04 | App (`app_database.dart:20-28`) | Baja | `usuarios` sin `CHECK`: acepta edad no numérica |
 
@@ -581,7 +581,11 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 - **Evidencia:** `cart.service.spec.ts` → 3 pruebas “DEFECTO DEF-13” y la prueba de índice inexistente.
 - **Corrección:** comparar por `product.id`; guardar el `stock` en `CartProduct` y limitar la cantidad con `Math.min`; en `loadCart()` validar `Array.isArray(...)`; validar el índice en `updateQuantity`/`removeFromCart`.
 
-### DEF-12 — La bitácora no registra los logins fallidos de producción
+### DEF-12 — La bitácora no registra los logins fallidos de producción · **RECLASIFICADO: no reproducible**
+
+> **Re-verificación (Práctica 12, 2026-11-12/13).** Se repitió el caso con acceso directo a la base. Un login fallido contra el backend local **y otro contra producción** (`https://backend-chaac-xanab.vercel.app`) quedaron registrados: `LOGIN_FALLIDO`, `ip_address = 187.243.208.226`, 2026-11-13 03:46:47 UTC. Hoy la bitácora funciona. Las 60 filas de la prueba de carga no aparecen, pero tampoco hay ninguna fila entre el 6 y el 13 de noviembre, así que no se puede saber si nunca se guardaron o si se borraron después. Por eso el hallazgo queda como **no reproducible** y no como defecto confirmado. Se conserva el riesgo de diseño: `registrar()` traga los errores en silencio. Evidencia: `practica12/INFORME.md` §1.
+
+
 - **Pasos:** 1) `node practica11/scripts/carga.mjs` envía 60 `POST /api/auth/login` con `practica11-carga@example.invalid` (todas responden 401, como se esperaba). 2) En el SQL Editor de Supabase: `SELECT count(*) FROM bitacora WHERE usuario_email = 'practica11-carga@example.invalid'` y `SELECT … FROM bitacora WHERE created_at >= '2026-11-12 00:30:00+00'`.
 - **Esperado:** 60 filas `LOGIN_FALLIDO` (lo que hace `AuthService.login` cuando el correo no existe).
 - **Observado:** **0 filas** en ambas consultas (Q4: `Rows Removed by Filter: 215`, ninguna coincide). Las respuestas 401 llegaron, pero ningún registro de auditoría se guardó. No se ejecutó el `DELETE` de limpieza.
@@ -664,7 +668,7 @@ Lectura: `GET /api/productos`. Escritura: `POST /api/auth/login` con un correo f
 | NET-04 | Tasa de subida | **Medido** — 1.508 Mbps (90 KB) | `red.json › subida` |
 | NET-05 | Pérdida de conexión | **Aprobado** — detecta, no muestra éxito falso, conserva carrito | `conectividad_test.dart` |
 | NET-06 | Recuperación | **Aprobado con defecto** — reintento manual funciona; DEF-01 | `conectividad_test.dart` |
-| NET-07 | Carga controlada | **Aprobado con defecto** — 120/120 respuestas correctas; P95 ≤ 807 ms; máx. 1,945 ms (arranque en frío). La escritura en bitácora no persistió (DEF-12) | `carga.json`, `supabase_explain.json` |
+| NET-07 | Carga controlada | **Aprobado con defecto** — 120/120 respuestas correctas; P95 ≤ 807 ms; máx. 1,945 ms (arranque en frío). Las filas de la bitácora de esta corrida no aparecieron (DEF-12, no reproducible en la Práctica 12) | `carga.json`, `supabase_explain.json` |
 
 ---
 
@@ -830,7 +834,7 @@ Las capturas de consola (C1–C13 y C15–C17) muestran la **salida real** de ca
 
 ![C14 — captura del SQL Editor de Supabase: 0 filas en bitácora](capturas/cap14_supabase_bitacora_real.png)
 
-**Interpretación:** después de la prueba de carga (60 logins fallidos, todos con 401), la tabla `bitacora` no tiene ninguna fila nueva. Los intentos fallidos no quedaron auditados (DEF-12).
+**Interpretación:** después de la prueba de carga (60 logins fallidos, todos con 401), la tabla `bitacora` no tiene ninguna fila nueva. En la Práctica 12 un login fallido nuevo contra producción sí quedó registrado, por lo que DEF-12 se reclasificó como no reproducible.
 
 ### C15. Sitio web — ejecución de las pruebas
 

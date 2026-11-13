@@ -351,10 +351,10 @@ Nota               : [OK] = la prueba pasó. Las pruebas cuyo nombre empieza con
   [OK]    Medición de consultas + EXPLAIN QUERY PLAN 3 consultas con 1,000 usuarios y 200 renglones de carrito
 
 --- Tiempos y planes de ejecución SQLite (1,000 usuarios / 200 renglones) --------------------------
-    0.704 ms  usuario_por_id (PK)                    plan: SEARCH usuarios USING INTEGER PRIMARY KEY (rowid=?)
-    0.627 ms  usuario_por_correo (sin índice)        plan: SCAN usuarios
-    0.640 ms  carrito_por_producto_talla (UNIQUE)    plan: SEARCH carrito USING INDEX sqlite_autoindex_carrito_1 (producto_id=? AND talla=?)
-    2.671 ms  usuarios_todos (obtenerTodos)          plan: SCAN usuarios
+    0.445 ms  usuario_por_id (PK)                    plan: SEARCH usuarios USING INTEGER PRIMARY KEY (rowid=?)
+    0.467 ms  usuario_por_correo (sin índice)        plan: SCAN usuarios
+    0.466 ms  carrito_por_producto_talla (UNIQUE)    plan: SEARCH carrito USING INDEX sqlite_autoindex_carrito_1 (producto_id=? AND talla=?)
+    1.721 ms  usuarios_todos (obtenerTodos)          plan: SCAN usuarios
   Concurrencia agregar(): SqfliteFfiException · filas=1 · cantidad final=1 (esperada 2)
 
 >> 3.2 API — persistencia de compras (transacciones y concurrencia)
@@ -394,7 +394,8 @@ Nota               : [OK] = la prueba pasó. Las pruebas cuyo nombre empieza con
   Q2_login                   planning  0.411 ms · execution  0.126 ms · Seq Scan on usuarios  (cost=0.00..1.35 rows=1 width=153) (actual time=
   Q3_historial               planning  1.028 ms · execution  0.192 ms · ->  Seq Scan on usuarios  (cost=0.00..1.28 rows=28 width=16) (actual t
   Q4_bitacora_por_correo     planning  0.387 ms · execution  0.237 ms · ->  Seq Scan on bitacora  (cost=0.00..13.69 rows=1 width=0) (actual ti
-  Bitácora: 0 filas de las 60 LOGIN_FALLIDO de la prueba de carga -> DEFECTO DEF-12
+  Bitácora: 0 filas de las 60 LOGIN_FALLIDO de la prueba de carga -> DEF-12 (NO REPRODUCIBLE: en la
+            Práctica 12 producción sí registró un login fallido nuevo)
 
 ====================================================================================================
 4. CONECTIVIDAD Y RENDIMIENTO (mediciones reales contra producción)

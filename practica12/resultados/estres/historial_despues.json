@@ -1,0 +1,104 @@
+{
+  "fecha": "2026-11-13T18:18:32.404Z",
+  "base": "http://localhost:3000/api",
+  "tipo": "historial",
+  "etiqueta": "despues",
+  "endpoint": "GET /compras/mis-compras?limite=20",
+  "solicitudes_por_etapa": 40,
+  "idempotencia": false,
+  "timeout_ms": 30000,
+  "etapas": [
+    {
+      "usuarios": 1,
+      "solicitudes": 40,
+      "inicio": 1794593912405,
+      "fin": 1794593916272,
+      "duracion_s": 3.87,
+      "rps": 10.34,
+      "exitosas": 40,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 40
+      },
+      "promedio_ms": 96.67,
+      "p50_ms": 91.87,
+      "p90_ms": 115.44,
+      "p95_ms": 118.89,
+      "p99_ms": 135.31,
+      "min_ms": 80.95,
+      "max_ms": 135.31,
+      "kbps": 474.74,
+      "errores_red": []
+    },
+    {
+      "usuarios": 5,
+      "solicitudes": 40,
+      "inicio": 1794593918286,
+      "fin": 1794593919229,
+      "duracion_s": 0.94,
+      "rps": 42.43,
+      "exitosas": 40,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 40
+      },
+      "promedio_ms": 109.46,
+      "p50_ms": 98.38,
+      "p90_ms": 145.18,
+      "p95_ms": 172.8,
+      "p99_ms": 192.86,
+      "min_ms": 82.01,
+      "max_ms": 192.86,
+      "kbps": 1947.29,
+      "errores_red": []
+    },
+    {
+      "usuarios": 10,
+      "solicitudes": 40,
+      "inicio": 1794593921236,
+      "fin": 1794593921800,
+      "duracion_s": 0.56,
+      "rps": 70.92,
+      "exitosas": 40,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 40
+      },
+      "promedio_ms": 121.39,
+      "p50_ms": 106.74,
+      "p90_ms": 195.44,
+      "p95_ms": 199.72,
+      "p99_ms": 235.64,
+      "min_ms": 83.23,
+      "max_ms": 235.64,
+      "kbps": 3254.95,
+      "errores_red": []
+    },
+    {
+      "usuarios": 25,
+      "solicitudes": 40,
+      "inicio": 1794593923806,
+      "fin": 1794593924214,
+      "duracion_s": 0.41,
+      "rps": 98.04,
+      "exitosas": 40,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 40
+      },
+      "promedio_ms": 214.98,
+      "p50_ms": 185.53,
+      "p90_ms": 360.8,
+      "p95_ms": 363.16,
+      "p99_ms": 381.43,
+      "min_ms": 92.06,
+      "max_ms": 381.43,
+      "kbps": 4499.61,
+      "errores_red": []
+    }
+  ]
+}

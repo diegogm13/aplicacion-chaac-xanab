@@ -36,10 +36,10 @@ void main() {
     final (ms, e) = await cronometrar(
         () => tienda.comprar(items: items(), direccion: direccion, idempotencyKey: nuevaLlaveIdempotencia()));
     await modo('normal');
-    final despues = await comprasEnServidor();
+    final nuevasRes02 = await comprasNuevas(antes);
     registrar('RES-02', 'Pérdida de Internet durante una escritura', 'No confirmar falsamente el registro',
-        '${describir(e)} · compras nuevas en servidor: ${despues - antes}', ms, e is ApiException && despues == antes,
-        {'compras_nuevas': despues - antes});
+        '${describir(e)} · compras nuevas en servidor: $nuevasRes02', ms, e is ApiException && nuevasRes02 == 0,
+        {'compras_nuevas': nuevasRes02});
   });
 
   test('RES-03 servidor sin respuesta', () async {
@@ -103,7 +103,7 @@ void main() {
     await cambio;
     // Y si además el usuario pulsa otra vez CONFIRMAR (misma pantalla = misma llave):
     final (_, e2) = await cronometrar(() => tienda.comprar(items: items(), direccion: direccion, idempotencyKey: llave));
-    final nuevas = await comprasEnServidor() - antes;
+    final nuevas = await comprasNuevas(antes);
     registrar('RES-07', 'Reintento de una escritura', 'Evitar duplicados inesperados',
         '1.er envío: ${describir(e)} (reintentos automáticos: ${api.reintentosRealizados - a}) · 2.º envío manual: ${describir(e2)} · compras creadas: $nuevas',
         ms, nuevas == 1, {'compras_nuevas': nuevas});
@@ -119,7 +119,7 @@ void main() {
       cronometrar(() => tienda.comprar(items: items(), direccion: direccion, idempotencyKey: llave)),
     ]);
     await modo('normal');
-    final nuevas = await comprasEnServidor() - antes;
+    final nuevas = await comprasNuevas(antes);
     registrar('RES-08', 'Respuesta tardía', 'Evitar operaciones duplicadas o inconsistentes',
         'dos envíos con la misma llave durante la espera → compras creadas: $nuevas (${r.map((x) => describir(x.$2)).join(' / ')}). '
         'Además la UI deshabilita el botón mientras espera (_pagando).',

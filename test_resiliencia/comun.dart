@@ -36,11 +36,16 @@ Future<void> preparar() async {
   await modo('normal');
 }
 
-/// Compras registradas en el servidor para el usuario P12 (consultado directo al backend, sin proxy).
-Future<int> comprasEnServidor() async {
-  final r = await http.get(Uri.parse('$backend/compras/mis-compras'), headers: {'authorization': 'Bearer $token'});
-  return (jsonDecode(r.body) as List).length;
+/// Ids de las compras más recientes del usuario P12 (directo al backend, sin proxy).
+/// No se cuenta el total: PostgREST corta las respuestas en 1,000 filas y el
+/// usuario de prueba ya tiene más; se comparan los ids recientes antes y después.
+Future<Set<String>> comprasEnServidor() async {
+  final r = await http.get(Uri.parse('$backend/compras/mis-compras?limite=100'), headers: {'authorization': 'Bearer $token'});
+  return (jsonDecode(r.body) as List).map((c) => c['id'] as String).take(100).toSet();
 }
+
+/// Compras nuevas respecto a una foto previa de [comprasEnServidor].
+Future<int> comprasNuevas(Set<String> antes) async => (await comprasEnServidor()).difference(antes).length;
 
 /// Ejecuta una operación y devuelve (ms, error o null).
 Future<(int, Object?)> cronometrar(Future<Object?> Function() f) async {

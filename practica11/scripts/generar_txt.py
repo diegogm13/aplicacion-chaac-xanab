@@ -194,7 +194,7 @@ for clave, q in expl.items():
         continue
     plan = next((p.strip() for p in q["plan"] if "Scan" in p), "")
     o.append(f"  {clave:<26} planning {q['planning_ms']:>6.3f} ms · execution {q['execution_ms']:>6.3f} ms · {plan[:70]}\n")
-o.append("  Bitácora: 0 filas de las 60 LOGIN_FALLIDO de la prueba de carga -> DEFECTO DEF-12\n")
+o.append("  Bitácora: 0 filas de las 60 LOGIN_FALLIDO de la prueba de carga -> DEF-12 (NO REPRODUCIBLE: en la\n            Práctica 12 producción sí registró un login fallido nuevo)\n")
 
 # 4. CONECTIVIDAD
 o.append(titulo("4. CONECTIVIDAD Y RENDIMIENTO (mediciones reales contra producción)"))

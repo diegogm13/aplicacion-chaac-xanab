@@ -1,0 +1,76 @@
+{
+  "fecha": "2026-11-13T12:22:18.584176",
+  "resultados": [
+    {
+      "id": "RES-01",
+      "escenario": "Pérdida de Internet durante una consulta",
+      "esperado": "Error controlado",
+      "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · reintentos automáticos: 2",
+      "tiempo_ms": 1790,
+      "cumple": true,
+      "reintentos": 2
+    },
+    {
+      "id": "RES-02",
+      "escenario": "Pérdida de Internet durante una escritura",
+      "esperado": "No confirmar falsamente el registro",
+      "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · compras nuevas en servidor: 0",
+      "tiempo_ms": 1961,
+      "cumple": true,
+      "compras_nuevas": 0
+    },
+    {
+      "id": "RES-03",
+      "escenario": "Servidor sin respuesta",
+      "esperado": "Timeout controlado",
+      "observado": "ApiException(sin status): El servidor tardó demasiado en responder. Revisa tu conexión e intenta de nuevo. · porTimeout=true (no se reintenta un timeout)",
+      "tiempo_ms": 10002,
+      "cumple": true
+    },
+    {
+      "id": "RES-04",
+      "escenario": "Respuesta HTTP 500",
+      "esperado": "Mostrar error y conservar estabilidad",
+      "observado": "ApiException(500): Internal server error · siguiente consulta: OK (8 ms)",
+      "tiempo_ms": 5,
+      "cumple": true
+    },
+    {
+      "id": "RES-05",
+      "escenario": "Respuesta HTTP 401 o 403",
+      "esperado": "Gestionar autenticación o permisos",
+      "observado": "401 → noAutorizado=true (cierra sesión) · 403 → noAutorizado=false (2 ms)",
+      "tiempo_ms": 2,
+      "cumple": true
+    },
+    {
+      "id": "RES-06",
+      "escenario": "Recuperación de conexión",
+      "esperado": "Restablecer comunicación",
+      "observado": "recuperación AUTOMÁTICA en 3157 ms con 1 reintento(s) con backoff, sin intervención del usuario",
+      "tiempo_ms": 3157,
+      "cumple": true,
+      "reintento_automatico": true,
+      "reintentos_automaticos": 1,
+      "intentos_manuales": 0
+    },
+    {
+      "id": "RES-07",
+      "escenario": "Reintento de una escritura",
+      "esperado": "Evitar duplicados inesperados",
+      "observado": "1.er envío: sin error (reintentos automáticos: 1) · 2.º envío manual: sin error · compras creadas: 1",
+      "tiempo_ms": 1167,
+      "cumple": true,
+      "compras_nuevas": 1
+    },
+    {
+      "id": "RES-08",
+      "escenario": "Respuesta tardía",
+      "esperado": "Evitar operaciones duplicadas o inconsistentes",
+      "observado": "dos envíos con la misma llave durante la espera → compras creadas: 1 (sin error / sin error). Además la UI deshabilita el botón mientras espera (_pagando).",
+      "tiempo_ms": 2808,
+      "cumple": true,
+      "compras_nuevas": 1
+    }
+  ]
+}
