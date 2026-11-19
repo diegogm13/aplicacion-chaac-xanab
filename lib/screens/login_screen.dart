@@ -83,7 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     autofillHints: const [AutofillHints.email],
                     textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(hintText: 'Correo electrónico', prefixIcon: Icon(Icons.mail_outline)),
-                    validator: Validaciones.loginEmail,
+                    // OBS-02 (P11): antes bastaba con una "@" ("a@" pasaba); ahora es la misma regla del registro.
+                    validator: Validaciones.email,
                   ),
                   const SizedBox(height: 12),
                   TextFormField(

@@ -48,12 +48,16 @@ class _TiendaScreenState extends State<TiendaScreen> {
     });
     try {
       final r = await Future.wait([_servicio.categorias(), _servicio.productos()]);
+      if (!mounted) return;
       setState(() {
         _categorias = r[0] as List<Categoria>;
         _productos = r[1] as List<Producto>;
       });
     } on ApiException catch (e) {
-      setState(() => _error = e.mensaje);
+      if (mounted) setState(() => _error = e.mensaje);
+    } catch (_) {
+      // DEF-10: cualquier otro error también se muestra con "Reintentar" (antes la tienda quedaba vacía).
+      if (mounted) setState(() => _error = 'No pudimos cargar la tienda. Intenta de nuevo.');
     } finally {
       if (mounted) setState(() => _cargando = false);
     }

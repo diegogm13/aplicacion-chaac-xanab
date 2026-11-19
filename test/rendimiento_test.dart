@@ -75,14 +75,21 @@ void main() {
     expect(find.byType(TarjetaProducto), findsWidgets);
   });
 
-  test('DEFECTO DEF-10: 200 con forma inesperada -> TypeError (no ApiException) que TiendaScreen no atrapa', () async {
-    // TiendaScreen._cargar() sólo tiene `on ApiException catch`. Al ejecutarlo
-    // como widget, este mismo TypeError se reporta como excepción NO capturada
-    // y la pantalla queda sin productos y sin botón "Reintentar".
+  test('CORREGIDO (DEF-10): 200 con forma inesperada -> ApiException controlada (ya no TypeError)', () async {
     ApiClient.instancia.cliente = MockClient((_) async =>
         http.Response('{"message":"mantenimiento"}', 200, headers: {'content-type': 'application/json'}));
     final error = await TiendaService().productos().then<Object?>((_) => null, onError: (Object e) => e);
-    expect(error, isA<TypeError>());
-    expect(error, isNot(isA<ApiException>()));
+    expect(error, isA<ApiException>());
+    expect((error as ApiException).mensaje, contains('respuesta inesperada'));
+  });
+
+  testWidgets('CORREGIDO (DEF-10): la tienda muestra el error y el botón Reintentar', (tester) async {
+    ApiClient.instancia.cliente = MockClient((_) async =>
+        http.Response('{"message":"mantenimiento"}', 200, headers: {'content-type': 'application/json'}));
+    await tester.pumpWidget(MaterialApp(theme: chaacTheme(), home: const Scaffold(body: TiendaScreen())));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.textContaining('respuesta inesperada'), findsOneWidget);
+    expect(find.text('Reintentar'), findsOneWidget);
   });
 }

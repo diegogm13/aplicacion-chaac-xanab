@@ -166,13 +166,37 @@ void main() {
       );
     });
 
-    test('DEFECTO DEF-04: la tabla acepta edad no numérica / fuera de rango (sin CHECK)', () async {
-      final id = await db.insert('usuarios', {'nombre': 'X', 'edad': 'abc', 'profesion': 'Y'});
-      await db.insert('usuarios', {'nombre': 'Z', 'edad': -5, 'profesion': 'Y'});
-      final fila = (await db.query('usuarios', where: 'id = ?', whereArgs: [id])).single;
-      // SQLite guarda el texto por afinidad de tipo; al leerlo, el modelo truena.
-      expect(fila['edad'], 'abc');
-      expect(() => Usuario.fromMap(fila), throwsA(isA<TypeError>()));
+    test('CORREGIDO (DEF-04): el CHECK de v4 rechaza edad no numérica, fuera de rango y nombre vacío', () async {
+      for (final fila in [
+        {'nombre': 'X', 'edad': 'abc', 'profesion': 'Y'},
+        {'nombre': 'Z', 'edad': -5, 'profesion': 'Y'},
+        {'nombre': 'Z', 'edad': 121, 'profesion': 'Y'},
+        {'nombre': '   ', 'edad': 20, 'profesion': 'Y'},
+      ]) {
+        await expectLater(db.insert('usuarios', fila),
+            throwsA(isA<DatabaseException>().having((e) => e.toString(), 'error', contains('CHECK'))), reason: '$fila');
+      }
+      expect(await db.query('usuarios'), isEmpty);
+      // Y el DAO lo rechaza antes de llegar a la base:
+      expect(() => dao.insertar(const Usuario(nombre: 'Ana', edad: 200, profesion: 'ISC')), throwsArgumentError);
+    });
+
+    test('CORREGIDO (DEF-04): migración v3 → v4 conserva filas válidas y descarta las inválidas', () async {
+      final ruta = p.join(await getDatabasesPath(), 'migracion_v3_p13.db');
+      await databaseFactory.deleteDatabase(ruta);
+      final v3 = await databaseFactory.openDatabase(ruta, options: OpenDatabaseOptions(version: 3, onCreate: (d, _) async {
+        await d.execute("CREATE TABLE usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT NOT NULL, edad INTEGER NOT NULL, profesion TEXT NOT NULL, correo TEXT NOT NULL DEFAULT '')");
+      }));
+      await v3.insert('usuarios', {'nombre': 'Válida', 'edad': 30, 'profesion': 'ISC'});
+      await v3.insert('usuarios', {'nombre': 'Texto', 'edad': 'abc', 'profesion': 'ISC'});
+      await v3.insert('usuarios', {'nombre': 'Negativa', 'edad': -5, 'profesion': 'ISC'});
+      await v3.close();
+      // Se aplica exactamente la misma migración que AppDatabase (onUpgrade, oldVersion 3).
+      final v4 = await databaseFactory.openDatabase(ruta, options: OpenDatabaseOptions(version: 4, onUpgrade: AppDatabase.migrar));
+      final filas = await v4.query('usuarios');
+      await expectLater(v4.insert('usuarios', {'nombre': 'X', 'edad': 'abc', 'profesion': 'Y'}), throwsA(isA<DatabaseException>()));
+      await v4.close();
+      expect(filas.map((f) => f['nombre']), ['Válida']);
     });
 
     test('DB-03 consulta por id inexistente -> lista vacía (no excepción)', () async {
@@ -183,7 +207,9 @@ void main() {
       final id = await dao.insertar(const Usuario(nombre: 'Ana', edad: 21, profesion: 'ISC'));
       final u = (await dao.obtenerTodos()).single;
       expect(await dao.actualizar(u.copyWith(edad: 22, correo: 'nuevo@chaac.mx')), 1);
-      expect(await dao.actualizar(const Usuario(nombre: 'N', edad: 1, profesion: 'N').copyWith()), 0);
+      // OBS-03 corregido: un usuario sin id ya no se manda como whereArgs [null].
+      expect(() => dao.actualizar(const Usuario(nombre: 'N', edad: 1, profesion: 'N')), throwsArgumentError);
+      expect(await dao.actualizar(const Usuario(id: 999999, nombre: 'N', edad: 1, profesion: 'N')), 0);
 
       // Persistencia: se lee desde una SEGUNDA conexión independiente.
       final otra = await databaseFactory.openDatabase(db.path, options: OpenDatabaseOptions(singleInstance: false));
