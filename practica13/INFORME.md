@@ -73,6 +73,64 @@ El proceso también reveló un error que nadie buscaba: las pruebas alteraban la
 
 Por último, el CI del backend permite modificar el servicio que comparten la app y el sitio web con una red de seguridad: corre la compilación de producción y las 103 pruebas sin credenciales y sin desplegar, de modo que **un cambio que rompa el backend se detecta en la rama**, antes de llegar a `master` y a los usuarios.
 
+## 7. Corrección de todos los defectos abiertos (rama `correcciones`)
+
+Después de las prácticas 11-14 se corrigieron **todos los defectos que seguían abiertos** en los tres proyectos, en ramas `correcciones` (sin tocar `master` ni producción). Cada corrección convirtió la prueba que *demostraba* el defecto en una **prueba de regresión**, y los tres CI corrieron en verde.
+
+| Defecto | Proyecto | Corrección | Verificación |
+|---|---|---|---|
+| DEF-02 carrito con stock 0 | App | `CarritoException` controlada | CI app #2 (práctica 13) |
+| DEF-04 SQLite sin `CHECK` | App | BD v4 con `CHECK` en `edad`/`nombre` y migración v3→v4 que conserva sólo filas válidas | 2 pruebas nuevas (inserción y migración) |
+| DEF-10 respuesta inesperada → `TypeError` | App | `TiendaService` la convierte en `ApiException`; la tienda muestra “Reintentar” | prueba de servicio + prueba de pantalla |
+| OBS-02 login acepta “a@” | App | Misma validación de correo que el registro | `flutter analyze` + suite |
+| OBS-03 `actualizar()` sin id | App | Exige id y valida los datos | `db_test` |
+| DEF-05 `/productos/abc` → 500 | API | `ParseUUIDPipe` en las 14 rutas con `:id` → **400** | e2e + verificado en vivo (400) |
+| DEF-09 sin `helmet` en Vercel | API | `api/index.ts` aplica `helmet()` y quita `X-Powered-By` | verificado en vivo: `nosniff`, `X-Frame-Options`, HSTS, CSP |
+| DEF-11 dependencias vulnerables | API | `npm audit fix` sin `--force`: 15 → 11, **0 críticas** | `tsc`, `nest build`, 103/103 |
+| DEF-13 carrito web | Web | Compara por id, limita al stock, rechaza agotados, valida `localStorage` e índices | 4 pruebas de regresión |
+| DEF-14 JWT mal decodificado | Web | base64url + UTF-8 | 2 pruebas de regresión |
+| DEF-09 cabeceras del sitio | Web | `vercel.json`: `nosniff`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy` | `vercel.json` válido |
+| P12-D2 historial sin paginar | Web | “Mis compras” de 20 en 20 con “Ver compras anteriores” | `ng build` |
+| OBS-10 plantilla `App` | Web | Se eliminó; `main.server.ts` usaba esa plantilla y ahora arranca `AppComponent` | 41/41 (antes 42/43) |
+| DEF-11 dependencias web | Web | `npm audit fix`: 13 → 8, **0 críticas** | `ng test` + `ng build` |
+| A1 aviso Node 20 en CI | Los 3 | Acciones `@v7` | las corridas ya no muestran el aviso |
+
+| CI de la rama `correcciones` | Resultado |
+|---|---|
+| App `44435435304` | ✅ 132/132, `flutter analyze` sin problemas |
+| Backend `44435439858` | ✅ 103/103, compilación de producción OK |
+| Sitio web `44435453362` (CI nuevo) | ✅ 41/41, `ng build` OK |
+
+**Pendientes por decisión, no por omisión:** las 11 vulnerabilidades restantes del backend y las 8 del sitio exigen saltos de versión mayor (NestJS 11, multer 2, nodemailer ≥ 7, Angular), que podrían romper el backend que comparten la app y la web. P12-D6 (bloqueo de fila con 50 compras simultáneas del mismo producto) es el costo correcto de la consistencia. DEF-07 (borrar un usuario borra sus compras) fue una decisión de diseño documentada en `migration-borrado-usuario.sql`. Nada de esto llega a producción hasta que se fusionen las ramas y Vercel despliegue.
+
+## 8. La aplicación en ejecución
+
+Capturas de la app **real** compilada en modo *profile* en Windows, con tamaño de teléfono (412 × 860), conectada al backend corregido y a la base de Supabase. Las tomó `integration_test/capturas_test.dart`, que maneja la app como un usuario. Los productos “P12” son datos temporales de prueba, borrados al terminar.
+
+![A1 — Inicio de sesión](app_en_ejecucion/01_inicio_sesion.png)
+
+![A2 — Tienda: catálogo con el producto agotado marcado](app_en_ejecucion/02_tienda_catalogo.png)
+
+![A3 — Búsqueda en tiempo real](app_en_ejecucion/03_busqueda.png)
+
+![A4 — Producto agotado: el botón queda deshabilitado (DEF-02 corregido)](app_en_ejecucion/04_producto_agotado.png)
+
+![A5 — Detalle de producto con talla seleccionada](app_en_ejecucion/05_producto_detalle.png)
+
+![A6 — Agregado al carrito (guardado en SQLite)](app_en_ejecucion/06_agregado_al_carrito.png)
+
+![A7 — Carrito](app_en_ejecucion/07_carrito.png)
+
+![A8 — Checkout con dirección de envío](app_en_ejecucion/08_checkout.png)
+
+![A9 — Compra realizada (una transacción, con llave de idempotencia)](app_en_ejecucion/09_compra_realizada.png)
+
+![A10 — Mis pedidos (historial paginado)](app_en_ejecucion/10_mis_pedidos.png)
+
+![A11 — Perfil](app_en_ejecucion/11_perfil.png)
+
+![A12 — Sin conexión: mensaje claro y botón Reintentar](app_en_ejecucion/12_sin_conexion.png)
+
 ---
 
 ## Anexo — Evidencia de la ejecución automática
