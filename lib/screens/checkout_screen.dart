@@ -33,6 +33,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _cargandoDir = true;
   bool _pagando = false;
 
+  /// Práctica 12: una llave por intento de compra. Si la respuesta se pierde y el
+  /// usuario vuelve a pulsar CONFIRMAR, se reenvía la MISMA llave y el servidor
+  /// devuelve la compra original en lugar de crear un duplicado.
+  final String _llave = nuevaLlaveIdempotencia();
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +85,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           estado: _estado.text.trim(),
           codigoPostal: _cp.text.trim(),
         ),
+        idempotencyKey: _llave,
       );
       await _carrito.vaciar();
       if (!mounted) return;

@@ -1,0 +1,150 @@
+====================================================================================================
+PRÁCTICA 12 — OPTIMIZACIÓN, ESTRÉS Y RESILIENCIA · CHAAC XANAB
+Pruebas ejecutadas y resultados (generado desde las ejecuciones reales)
+====================================================================================================
+Fecha: 2026-11-12/13 · Equipo: Lenovo i7-8650U, 16 GB, Windows 11 · BD: Supabase (la misma ANTES y DESPUÉS)
+API ANTES: commit bbf3f21 (puerto 3001) · API DESPUÉS: rama practica12 (puerto 3000) · App: Flutter 3.44 modo profile
+
+====================================================================================================
+1. PRUEBAS DE ESTRÉS (estres.mjs) — 100 solicitudes por etapa
+====================================================================================================
+
+--- ESCRITURA POST /api/compras --------------------------------------------------------------------
+  usuarios | RPS antes→después | prom ms antes→después | P90 antes→después | P95 antes→después | máx antes→después | errores
+         1 |    1.77 → 9.43    |   564.61 → 106.07   |   614.34 → 122.2    |   645.35 → 129.81   |   962.43 → 196.65   | 0% → 0%  {'201': 100}
+         5 |    8.53 → 39.37   |    579.5 → 125.01   |   672.77 → 190.51   |   776.29 → 226.32   |   931.75 → 322.38   | 0% → 0%  {'201': 100}
+        10 |   16.22 → 79.74   |   591.49 → 120.23   |   646.19 → 164.58   |   694.47 → 199.08   |    820.2 → 311.15   | 0% → 0%  {'201': 100}
+        25 |   35.53 → 133.48  |   650.92 → 167.51   |   804.99 → 278.59   |   826.38 → 348.58   |   958.18 → 472.34   | 0% → 0%  {'201': 100}
+        50 |   45.63 → 90.92   |   969.92 → 438.49   |  1149.43 → 750.46   |   1201.1 → 1028.85  |  1352.68 → 1077.68  | 0% → 0%  {'201': 100}
+
+--- HISTORIAL GET /api/compras/mis-compras ---------------------------------------------------------
+  usuarios | RPS antes→después | prom ms antes→después | P90 antes→después | P95 antes→después | máx antes→después | errores
+         1 |    4.88 → 10.34   |   205.03 → 96.67    |   236.65 → 115.44   |   256.41 → 118.89   |   300.11 → 135.31   | 0% → 0%  {'200': 40}
+         5 |   21.82 → 42.43   |   217.28 → 109.46   |   261.62 → 145.18   |   292.69 → 172.8    |   331.26 → 192.86   | 0% → 0%  {'200': 40}
+        10 |   36.43 → 70.92   |   242.19 → 121.39   |   360.31 → 195.44   |   374.24 → 199.72   |   513.62 → 235.64   | 0% → 0%  {'200': 40}
+        25 |   47.26 → 98.04   |    407.6 → 214.98   |   573.33 → 360.8    |   594.57 → 363.16   |   727.17 → 381.43   | 0% → 0%  {'200': 40}
+
+--- LECTURA GET /api/productos (control) -----------------------------------------------------------
+  usuarios | RPS antes→después | prom ms antes→después | P90 antes→después | P95 antes→después | máx antes→después | errores
+         1 |  428.19 → 705.33  |     2.33 → 1.41     |     3.48 → 2.07     |     4.03 → 2.58     |     9.14 → 4.54     | 0% → 0%  {'200': 100}
+         5 | 1438.17 → 1124.73 |     3.41 → 4.33     |      5.4 → 5.57     |     6.01 → 9.14     |    11.25 → 11.4     | 0% → 0%  {'200': 100}
+        10 | 1456.05 → 1232.45 |     6.64 → 7.59     |     9.98 → 11.38    |    13.96 → 14.55    |    20.02 → 23.23    | 0% → 0%  {'200': 100}
+        25 | 1507.34 → 1048.24 |    15.13 → 22.14    |    28.15 → 40.77    |    31.34 → 41.42    |     32.3 → 47.2     | 0% → 0%  {'200': 100}
+        50 | 1118.52 → 1389.97 |    35.28 → 29.48    |    61.98 → 50.42    |    62.56 → 52.41    |    63.26 → 52.66    | 0% → 0%  {'200': 100}
+       100 | 1467.27 → 1559.07 |    40.76 → 36.42    |    49.21 → 45.07    |    50.29 → 45.67    |    51.74 → 45.75    | 0% → 0%  {'200': 100}
+
+--- LECTURA EN PRODUCCIÓN (Vercel) -----------------------------------------------------------------
+  usuarios   1: RPS 9.29  prom 107.7 ms  P90 127.79  P95 141.59  máx 527.39  errores 0%
+  usuarios   5: RPS 30.92  prom 160.8 ms  P90 179.86  P95 252.61  máx 1903.79  errores 0%
+  usuarios  10: RPS 77.09  prom 117.95 ms  P90 151.03  P95 237.54  máx 305.48  errores 0%
+  usuarios  25: RPS 46.88  prom 212.45 ms  P90 228.09  P95 438.72  máx 2089.88  errores 0%
+  usuarios  50: RPS 47.78  prom 297.08 ms  P90 305.42  P95 1743.7  máx 2082.8  errores 0%
+
+--- SERVIDOR (proceso Node, % de la máquina) -------------------------------------------------------
+  escritura_antes      CPU prom 1.69%  CPU máx 7.3%  RAM máx 190.8 MB
+  escritura_despues    CPU prom 2.48%  CPU máx 11.21%  RAM máx 154.5 MB
+  lectura_antes        CPU prom 1.22%  CPU máx 3.03%  RAM máx 116.0 MB
+  lectura_despues      CPU prom 1.52%  CPU máx 2.66%  RAM máx 151.8 MB
+
+--- INTEGRIDAD DESPUÉS DEL ESTRÉS DE ESCRITURA -----------------------------------------------------
+  [FALLA] antes    vendidas 501  stock esperado 99499  real 99847  diferencia 348  huérfanas 0
+  [OK]    despues  vendidas 1009  stock esperado 98991  real 98991  diferencia 0  huérfanas 0
+
+====================================================================================================
+2. BASE DE DATOS (db_pruebas.js + EXPLAIN ANALYZE en Supabase)
+====================================================================================================
+
+--- ANTES ------------------------------------------------------------------------------------------
+  1. por identificador (productos.id)            filas     1  bytes     113  prom 117.17 ms  P95 189.76 ms
+  2. conjunto pequeño (10 productos recientes)   filas    10  bytes     915  prom 192.06 ms  P95 468.6 ms
+  3. conjunto grande: historial completo P12     filas   503  bytes  144307  prom 166.48 ms  P95 426.95 ms
+  3b. historial P12 paginado (20, índice)        filas    20  bytes    5739  prom 129.84 ms  P95 227.4 ms
+  4. con filtros (activo, precio, nombre, orden) filas    17  bytes    1530  prom 100.75 ms  P95 180.84 ms
+  [FALLA] 5. 50 descuentos de stock simultáneos sobre el mismo producto: aplicados 2/50, perdidos 48 (1375.87 ms)
+  [OK]    6. dos UPDATE simultáneos del estado de la misma compra: final 'confirmado'
+
+--- DESPUES ----------------------------------------------------------------------------------------
+  1. por identificador (productos.id)            filas     1  bytes     113  prom 103.08 ms  P95 124.4 ms
+  2. conjunto pequeño (10 productos recientes)   filas    10  bytes     915  prom 100.57 ms  P95 155.93 ms
+  3. conjunto grande: historial completo P12     filas  1000  bytes  286880  prom 201.2 ms  P95 237.54 ms
+  3b. historial P12 paginado (20, índice)        filas    20  bytes    5737  prom 183.19 ms  P95 609.79 ms
+  4. con filtros (activo, precio, nombre, orden) filas    17  bytes    1530  prom 97.17 ms  P95 114.41 ms
+  [OK]    5. 50 descuentos de stock simultáneos sobre el mismo producto: aplicados 50/50, perdidos 0 (503.97 ms)
+  [OK]    6. dos UPDATE simultáneos del estado de la misma compra: final 'enviado'
+
+--- PLAN DE EJECUCIÓN DEL HISTORIAL (LIMIT 20) -----------------------------------------------------
+  ANTES  (idx_compras_user):          Index Scan 507 filas + Sort top-N heapsort -> Limit 11.945 ms (Execution 12.036 ms)
+  DESPUÉS (idx_compras_usuario_fecha): índice ya ordenado, sin Sort            -> Limit  0.640 ms
+
+====================================================================================================
+3. RESILIENCIA (proxy de fallas + código real de la app)
+====================================================================================================
+
+--- ANTES ------------------------------------------------------------------------------------------
+  [OK]    RES-01 Pérdida de Internet durante una consulta         99 ms  ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet.
+  [OK]    RES-02 Pérdida de Internet durante una escritura         8 ms  ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · compras nuev
+  [OK]    RES-03 Servidor sin respuesta                        20002 ms  ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet.
+  [OK]    RES-04 Respuesta HTTP 500                                7 ms  ApiException(500): Internal server error · siguiente consulta: OK (42 ms)
+  [OK]    RES-05 Respuesta HTTP 401 o 403                          2 ms  401 → noAutorizado=true (cierra sesión) · 403 → noAutorizado=false (3 ms)
+  [OK]    RES-06 Recuperación de conexión                       1007 ms  primer intento: ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet
+  [FALLA] RES-07 Reintento de una escritura                      796 ms  1.er intento: ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. 
+  [FALLA] RES-08 Respuesta tardía                               3666 ms  dos envíos durante la espera → compras creadas: 2 (sin error / sin error). En la UI, CheckoutScreen deshabilit
+  Aprobados: 6/8
+
+--- DESPUES ----------------------------------------------------------------------------------------
+  [OK]    RES-01 Pérdida de Internet durante una consulta       1790 ms  ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · reintentos a
+  [OK]    RES-02 Pérdida de Internet durante una escritura      1961 ms  ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · compras nuev
+  [OK]    RES-03 Servidor sin respuesta                        10002 ms  ApiException(sin status): El servidor tardó demasiado en responder. Revisa tu conexión e intenta de nuevo. · p
+  [OK]    RES-04 Respuesta HTTP 500                                5 ms  ApiException(500): Internal server error · siguiente consulta: OK (8 ms)
+  [OK]    RES-05 Respuesta HTTP 401 o 403                          2 ms  401 → noAutorizado=true (cierra sesión) · 403 → noAutorizado=false (2 ms)
+  [OK]    RES-06 Recuperación de conexión                       3157 ms  recuperación AUTOMÁTICA en 3157 ms con 1 reintento(s) con backoff, sin intervención del usuario
+  [OK]    RES-07 Reintento de una escritura                     1167 ms  1.er envío: sin error (reintentos automáticos: 1) · 2.º envío manual: sin error · compras creadas: 1
+  [OK]    RES-08 Respuesta tardía                               2808 ms  dos envíos con la misma llave durante la espera → compras creadas: 1 (sin error / sin error). Además la UI des
+  Aprobados: 8/8
+
+====================================================================================================
+4. PROFILING DE LA APP (integration_test + muestreo de CPU/RAM)
+====================================================================================================
+
+--- OPERACIONES (ms, promedio) ---------------------------------------------------------------------
+  login                n=1       2383 → 986      (-58.6 %)
+  consulta_catalogo    n=10      83.3 → 86.4     (+3.7 %)
+  filtro_busqueda      n=27      32.7 → 31.1     (-4.9 %)
+  ir_carrito           n=3         45 → 46.3     (+2.9 %)
+  abrir_pedidos_1ra    n=1       1052 → 289      (-72.5 %)
+  scroll_pedidos       n=3     3537.7 → 2682.7   (-24.2 %)
+  ir_perfil            n=3       48.7 → 38.7     (-20.5 %)
+  ir_tienda            n=3         34 → 33.3     (-2.1 %)
+  abrir_pedidos        n=2       41.5 → 39.5     (-4.8 %)
+  agregar_carrito      n=2         42 → 41       (-2.4 %)
+  confirmar_compra     n=2       1135 → 158      (-86.1 %)
+
+--- FRAMES -----------------------------------------------------------------------------------------
+  frames_consulta        frames 49→60  build p90 1.79→1.74  build p99 3.36→3.3  raster p99 7.09→5.78  lentos 0→0
+  frames_procesamiento   frames 98→101  build p90 2.75→2.52  build p99 3.95→3.23  raster p99 6.77→7.76  lentos 1→1
+  frames_navegacion      frames 731→574  build p90 7.04→1.03  build p99 8.72→1.6  raster p99 2.83→2.21  lentos 2→2
+  frames_escritura       frames 418→323  build p90 0.91→1.04  build p99 5.78→4.0  raster p99 3.8→2.06  lentos 0→0
+
+--- PROCESO ----------------------------------------------------------------------------------------
+  antes    CPU prom 3.86%  CPU máx 10.26%  RAM inicial 75.3  máx 225.7  final 225.7 MB  (72 muestras)
+  despues  CPU prom 2.57%  CPU máx 6.96%  RAM inicial 75.1  máx 222.7  final 222.0 MB  (56 muestras)
+
+====================================================================================================
+5. SUITES AUTOMATIZADAS (ausencia de defectos nuevos)
+====================================================================================================
+  App (flutter test):  111/111 aprobadas  · flutter analyze: sin problemas
+  API (jest):          103/103 aprobadas  · 10 suites (incluye regresión de DEF-01/03/06/08)
+
+====================================================================================================
+RESUMEN ANTES → DESPUÉS
+====================================================================================================
+  Latencia promedio POST /compras (1 usuario)        564.61 → 106.07     ms      (-81.2 %)
+  P95 POST /compras (1 usuario)                      645.35 → 129.81     ms      (-79.9 %)
+  RPS máximo de escritura                             45.63 → 133.48     rps     (+192.5 %)
+  Consulta historial LIMIT 20 (EXPLAIN, Limit)       11.945 → 0.64       ms      (-94.6 %)
+  Confirmar compra en la app                           1135 → 158        ms      (-86.1 %)
+  Abrir Pedidos (1.ª vez)                              1052 → 289        ms      (-72.5 %)
+  CPU promedio de la app                               3.86 → 2.57       %       (-33.4 %)
+  RAM máxima de la app                                225.7 → 222.7      MB      (-1.3 %)
+  Descuentos de stock perdidos (estrés)                 348 → 0          piezas  (-100.0 %)
+  Errores HTTP en 3,020 solicitudes de estrés: 0 % antes y después · Resiliencia: 6/8 → 8/8

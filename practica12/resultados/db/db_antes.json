@@ -1,0 +1,73 @@
+{
+  "modo": "antes",
+  "fecha": "2026-11-13T04:29:02.122Z",
+  "consultas": [
+    {
+      "prueba": "1. por identificador (productos.id)",
+      "repeticiones": 30,
+      "filas": 1,
+      "bytes": 113,
+      "promedio_ms": 117.17,
+      "min_ms": 78.21,
+      "p95_ms": 189.76,
+      "max_ms": 269.09
+    },
+    {
+      "prueba": "2. conjunto pequeño (10 productos recientes)",
+      "repeticiones": 30,
+      "filas": 10,
+      "bytes": 915,
+      "promedio_ms": 192.06,
+      "min_ms": 77.35,
+      "p95_ms": 468.6,
+      "max_ms": 950.61
+    },
+    {
+      "prueba": "3. conjunto grande: historial completo P12",
+      "repeticiones": 10,
+      "filas": 503,
+      "bytes": 144307,
+      "promedio_ms": 166.48,
+      "min_ms": 112.71,
+      "p95_ms": 426.95,
+      "max_ms": 426.95
+    },
+    {
+      "prueba": "3b. historial P12 paginado (20, índice)",
+      "repeticiones": 10,
+      "filas": 20,
+      "bytes": 5739,
+      "promedio_ms": 129.84,
+      "min_ms": 91.65,
+      "p95_ms": 227.4,
+      "max_ms": 227.4
+    },
+    {
+      "prueba": "4. con filtros (activo, precio, nombre, orden)",
+      "repeticiones": 30,
+      "filas": 17,
+      "bytes": 1530,
+      "promedio_ms": 100.75,
+      "min_ms": 78.63,
+      "p95_ms": 180.84,
+      "max_ms": 230.74
+    }
+  ],
+  "concurrencia": {
+    "prueba": "5. 50 descuentos de stock simultáneos sobre el mismo producto",
+    "metodo": "SELECT + UPDATE stock = valor_leído − 1",
+    "stock_inicial": 99845,
+    "stock_final": 99843,
+    "descuentos_esperados": 50,
+    "descuentos_aplicados": 2,
+    "actualizaciones_perdidas": 48,
+    "errores": 0,
+    "duracion_ms": 1375.87
+  },
+  "escrituras_simultaneas": {
+    "prueba": "6. dos UPDATE simultáneos del estado de la misma compra",
+    "resultado_final": "confirmado",
+    "valido": true,
+    "nota": "PostgreSQL bloquea la fila: la segunda escritura espera a la primera y gana la última (sin corrupción)."
+  }
+}

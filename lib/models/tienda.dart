@@ -100,12 +100,16 @@ class Compra {
   final DateTime fecha;
   final List<CompraItem> items;
 
-  Compra({required this.id, required this.total, required this.estado, required this.fecha, required this.items});
+  /// created_at exactamente como lo envía el servidor; cursor de la paginación (Práctica 12).
+  final String? fechaServidor;
+
+  Compra({required this.id, required this.total, required this.estado, required this.fecha, required this.items, this.fechaServidor});
 
   factory Compra.fromJson(Map<String, dynamic> j) => Compra(
         id: j['id'] as String,
         total: (j['total'] as num?)?.toDouble() ?? 0,
         estado: j['status'] as String? ?? 'pendiente',
+        fechaServidor: j['created_at'] as String?,
         fecha: DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ?? DateTime.now(),
         items: ((j['compras_items'] ?? j['items']) as List<dynamic>? ?? [])
             .map((e) => CompraItem.fromJson(e as Map<String, dynamic>))

@@ -1,0 +1,83 @@
+# Prácticas 13 y 14 — Integración continua de la app Flutter CHAAC XANAB.
+# Se ejecuta automáticamente en cada push y pull request (y a mano desde la pestaña Actions).
+name: CI app Flutter
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruebas:
+    name: Análisis + pruebas unitarias, integración y persistencia
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Obtener el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Flutter 3.44.0 (misma versión que en desarrollo)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+
+      - name: SQLite nativo para las pruebas de persistencia (sqflite_common_ffi)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libsqlite3-dev
+
+      - name: Dependencias
+        run: flutter pub get
+
+      - name: Análisis estático (flutter analyze)
+        run: flutter analyze
+
+      - name: Pruebas de las Prácticas 13-14 (AUT-01 … AUT-06)
+        run: flutter test test/p13 --concurrency=1 --reporter expanded --file-reporter json:resultados_p13.json
+
+      - name: Suite completa (Prácticas 11-14) con cobertura de líneas y ramas
+        if: success() || failure()
+        run: flutter test --concurrency=1 --coverage --branch-coverage --file-reporter json:resultados_completos.json
+
+      - name: Resumen de resultados
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          import json, os
+          def leer(ruta):
+              ok = mal = salto = 0; nombres = {}; fallidas = []; dur = 0
+              if not os.path.exists(ruta): return None
+              for linea in open(ruta, encoding='utf-8'):
+                  e = json.loads(linea)
+                  if e.get('type') == 'testStart': nombres[e['test']['id']] = e['test']['name']
+                  if e.get('type') == 'testDone' and not e.get('hidden'):
+                      if e.get('skipped'): salto += 1
+                      elif e['result'] == 'success': ok += 1
+                      else: mal += 1; fallidas.append(nombres.get(e['testID'], '?'))
+                  if e.get('type') == 'done': dur = e['time'] / 1000
+              return ok, mal, salto, dur, fallidas
+          out = ['## Resultados de pruebas', '', '| Conjunto | Aprobadas | Fallidas | Omitidas | Tiempo (s) |', '|---|---|---|---|---|']
+          fallas = []
+          for etiqueta, ruta in [('Prácticas 13-14 (test/p13)', 'resultados_p13.json'), ('Suite completa', 'resultados_completos.json')]:
+              r = leer(ruta)
+              if r: out.append(f'| {etiqueta} | {r[0]} | {r[1]} | {r[2]} | {r[3]:.1f} |'); fallas += r[4]
+          if fallas: out += ['', '### Pruebas fallidas', *[f'- {n}' for n in sorted(set(fallas))]]
+          open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8').write('\n'.join(out) + '\n')
+          print('\n'.join(out))
+          EOF
+
+      - name: Guardar resultados y cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-pruebas
+          path: |
+            resultados_p13.json
+            resultados_completos.json
+            coverage/lcov.info
+          if-no-files-found: ignore

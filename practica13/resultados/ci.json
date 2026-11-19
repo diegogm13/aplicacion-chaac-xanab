@@ -1,0 +1,422 @@
+{
+  "app": [
+    {
+      "conclusion": "failure",
+      "createdAt": "2026-11-19T00:13:26Z",
+      "databaseId": 44427255965,
+      "displayTitle": "test: pruebas automatizadas y pipeline CI (Prácticas 13-14)",
+      "event": "push",
+      "headSha": "7e26b9a37781b32ab98f474afa947a2a5856cdff",
+      "status": "completed",
+      "updatedAt": "2026-11-19T00:15:20Z",
+      "url": "https://github.com/diegogm13/aplicacion-chaac-xanab/actions/runs/44427255965",
+      "workflowName": "CI app Flutter",
+      "duracion_s": 114.0,
+      "pasos": [
+        {
+          "paso": "Set up job",
+          "resultado": "success",
+          "segundos": 4.0
+        },
+        {
+          "paso": "Obtener el código",
+          "resultado": "success",
+          "segundos": 5.0
+        },
+        {
+          "paso": "Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 31.0
+        },
+        {
+          "paso": "SQLite nativo para las pruebas de persistencia (sqflite_common_ffi)",
+          "resultado": "success",
+          "segundos": 28.0
+        },
+        {
+          "paso": "Dependencias",
+          "resultado": "success",
+          "segundos": 5.0
+        },
+        {
+          "paso": "Análisis estático (flutter analyze)",
+          "resultado": "success",
+          "segundos": 7.0
+        },
+        {
+          "paso": "Pruebas de las Prácticas 13-14 (AUT-01 … AUT-06)",
+          "resultado": "failure",
+          "segundos": 13.0
+        },
+        {
+          "paso": "Suite completa (Prácticas 11-14) con cobertura de líneas y ramas",
+          "resultado": "failure",
+          "segundos": 15.0
+        },
+        {
+          "paso": "Resumen de resultados",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Guardar resultados y cobertura",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Post Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Post Obtener el código",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Complete job",
+          "resultado": "success",
+          "segundos": 0.0
+        }
+      ],
+      "resumen": [
+        "| Prácticas 13-14 (test/p13) | 18 | 1 | 0 | 11.0 |",
+        "| Suite completa | 129 | 1 | 0 | 14.1 |"
+      ],
+      "pruebas_fallidas": [
+        "AUT-02 Carrito: cálculo y excepciones excepción controlada: producto agotado (stock 0) → CarritoException, el carrito no cambia (DEF-02)"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-19T00:18:12Z",
+      "databaseId": 44427905213,
+      "displayTitle": "fix: carrito rechaza productos agotados con error controlado (DEF-02)",
+      "event": "push",
+      "headSha": "97128919ff220516d23b78061219d102024c137c",
+      "status": "completed",
+      "updatedAt": "2026-11-19T00:19:47Z",
+      "url": "https://github.com/diegogm13/aplicacion-chaac-xanab/actions/runs/44427905213",
+      "workflowName": "CI app Flutter",
+      "duracion_s": 95.0,
+      "pasos": [
+        {
+          "paso": "Set up job",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Obtener el código",
+          "resultado": "success",
+          "segundos": 2.0
+        },
+        {
+          "paso": "Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 26.0
+        },
+        {
+          "paso": "SQLite nativo para las pruebas de persistencia (sqflite_common_ffi)",
+          "resultado": "success",
+          "segundos": 4.0
+        },
+        {
+          "paso": "Dependencias",
+          "resultado": "success",
+          "segundos": 7.0
+        },
+        {
+          "paso": "Análisis estático (flutter analyze)",
+          "resultado": "success",
+          "segundos": 7.0
+        },
+        {
+          "paso": "Pruebas de las Prácticas 13-14 (AUT-01 … AUT-06)",
+          "resultado": "success",
+          "segundos": 11.0
+        },
+        {
+          "paso": "Suite completa (Prácticas 11-14) con cobertura de líneas y ramas",
+          "resultado": "success",
+          "segundos": 17.0
+        },
+        {
+          "paso": "Resumen de resultados",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Guardar resultados y cobertura",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Post Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 14.0
+        },
+        {
+          "paso": "Post Obtener el código",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Complete job",
+          "resultado": "success",
+          "segundos": 0.0
+        }
+      ],
+      "resumen": [
+        "| Prácticas 13-14 (test/p13) | 19 | 0 | 0 | 8.9 |",
+        "| Suite completa | 130 | 0 | 0 | 16.0 |"
+      ],
+      "pruebas_fallidas": []
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-19T00:20:05Z",
+      "databaseId": 44428152081,
+      "displayTitle": "test: las pruebas ya no reescriben la evidencia de la Práctica 11",
+      "event": "push",
+      "headSha": "1d75dc57589309f649798bb63781d3583e00f68f",
+      "status": "completed",
+      "updatedAt": "2026-11-19T00:21:32Z",
+      "url": "https://github.com/diegogm13/aplicacion-chaac-xanab/actions/runs/44428152081",
+      "workflowName": "CI app Flutter",
+      "duracion_s": 87.0,
+      "pasos": [
+        {
+          "paso": "Set up job",
+          "resultado": "success",
+          "segundos": 2.0
+        },
+        {
+          "paso": "Obtener el código",
+          "resultado": "success",
+          "segundos": 2.0
+        },
+        {
+          "paso": "Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 25.0
+        },
+        {
+          "paso": "SQLite nativo para las pruebas de persistencia (sqflite_common_ffi)",
+          "resultado": "success",
+          "segundos": 3.0
+        },
+        {
+          "paso": "Dependencias",
+          "resultado": "success",
+          "segundos": 2.0
+        },
+        {
+          "paso": "Análisis estático (flutter analyze)",
+          "resultado": "success",
+          "segundos": 9.0
+        },
+        {
+          "paso": "Pruebas de las Prácticas 13-14 (AUT-01 … AUT-06)",
+          "resultado": "success",
+          "segundos": 14.0
+        },
+        {
+          "paso": "Suite completa (Prácticas 11-14) con cobertura de líneas y ramas",
+          "resultado": "success",
+          "segundos": 22.0
+        },
+        {
+          "paso": "Resumen de resultados",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Guardar resultados y cobertura",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Post Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Post Obtener el código",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Complete job",
+          "resultado": "success",
+          "segundos": 0.0
+        }
+      ],
+      "resumen": [
+        "| Prácticas 13-14 (test/p13) | 19 | 0 | 0 | 11.9 |",
+        "| Suite completa | 130 | 0 | 0 | 20.1 |"
+      ],
+      "pruebas_fallidas": []
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-19T00:20:09Z",
+      "databaseId": 44428162191,
+      "displayTitle": "Prácticas 13-14: automatización de pruebas y CI",
+      "event": "pull_request",
+      "headSha": "1d75dc57589309f649798bb63781d3583e00f68f",
+      "status": "completed",
+      "updatedAt": "2026-11-19T00:22:06Z",
+      "url": "https://github.com/diegogm13/aplicacion-chaac-xanab/actions/runs/44428162191",
+      "workflowName": "CI app Flutter",
+      "duracion_s": 117.0,
+      "pasos": [
+        {
+          "paso": "Set up job",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Obtener el código",
+          "resultado": "success",
+          "segundos": 2.0
+        },
+        {
+          "paso": "Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 38.0
+        },
+        {
+          "paso": "SQLite nativo para las pruebas de persistencia (sqflite_common_ffi)",
+          "resultado": "success",
+          "segundos": 4.0
+        },
+        {
+          "paso": "Dependencias",
+          "resultado": "success",
+          "segundos": 7.0
+        },
+        {
+          "paso": "Análisis estático (flutter analyze)",
+          "resultado": "success",
+          "segundos": 10.0
+        },
+        {
+          "paso": "Pruebas de las Prácticas 13-14 (AUT-01 … AUT-06)",
+          "resultado": "success",
+          "segundos": 14.0
+        },
+        {
+          "paso": "Suite completa (Prácticas 11-14) con cobertura de líneas y ramas",
+          "resultado": "success",
+          "segundos": 20.0
+        },
+        {
+          "paso": "Resumen de resultados",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Guardar resultados y cobertura",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Post Instalar Flutter 3.44.0 (misma versión que en desarrollo)",
+          "resultado": "success",
+          "segundos": 14.0
+        },
+        {
+          "paso": "Post Obtener el código",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Complete job",
+          "resultado": "success",
+          "segundos": 0.0
+        }
+      ],
+      "resumen": [
+        "| Prácticas 13-14 (test/p13) | 19 | 0 | 0 | 11.3 |",
+        "| Suite completa | 130 | 0 | 0 | 18.7 |"
+      ],
+      "pruebas_fallidas": []
+    }
+  ],
+  "backend": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-11-19T00:14:17Z",
+      "databaseId": 44427370291,
+      "displayTitle": "ci: pipeline de GitHub Actions para el backend (Prácticas 13-14)",
+      "event": "push",
+      "headSha": "9127fc5401c17b97a0a9620f4a8f477e145f129e",
+      "status": "completed",
+      "updatedAt": "2026-11-19T00:14:49Z",
+      "url": "https://github.com/diegogm13/backend-chaac-xanab/actions/runs/44427370291",
+      "workflowName": "CI backend NestJS",
+      "duracion_s": 32.0,
+      "pasos": [
+        {
+          "paso": "Set up job",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Obtener el código",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Instalar Node.js 22",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Dependencias (exactas, desde package-lock.json)",
+          "resultado": "success",
+          "segundos": 8.0
+        },
+        {
+          "paso": "Compilación de producción (tsc -p tsconfig.build.json)",
+          "resultado": "success",
+          "segundos": 3.0
+        },
+        {
+          "paso": "Pruebas unitarias e integración HTTP (Jest) con cobertura",
+          "resultado": "success",
+          "segundos": 8.0
+        },
+        {
+          "paso": "Resumen de resultados",
+          "resultado": "success",
+          "segundos": 0.0
+        },
+        {
+          "paso": "Guardar resultados y cobertura",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Post Instalar Node.js 22",
+          "resultado": "success",
+          "segundos": 3.0
+        },
+        {
+          "paso": "Post Obtener el código",
+          "resultado": "success",
+          "segundos": 1.0
+        },
+        {
+          "paso": "Complete job",
+          "resultado": "success",
+          "segundos": 0.0
+        }
+      ],
+      "resumen": [
+        "| 10/10 | 103 | 0 | 103 | 7.6 |"
+      ],
+      "pruebas_fallidas": []
+    }
+  ]
+}

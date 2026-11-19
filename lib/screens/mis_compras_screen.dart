@@ -17,10 +17,16 @@ class MisComprasScreen extends StatefulWidget {
 }
 
 class _MisComprasScreenState extends State<MisComprasScreen> {
+  /// Práctica 12: el historial se pide por páginas. Antes se descargaban TODAS las
+  /// compras (≈144 KB y >500 tarjetas para un usuario con 500 pedidos).
+  static const porPagina = 20;
+
   final _servicio = TiendaService();
   List<Compra>? _compras;
   String? _error;
   bool _cargando = false;
+  bool _cargandoMas = false;
+  bool _hayMas = false;
 
   @override
   void didUpdateWidget(MisComprasScreen old) {
@@ -35,13 +41,38 @@ class _MisComprasScreenState extends State<MisComprasScreen> {
       _error = null;
     });
     try {
-      final c = await _servicio.misCompras();
-      if (mounted) setState(() => _compras = c);
+      final c = await _servicio.misCompras(limite: porPagina);
+      if (mounted) {
+        setState(() {
+          _compras = c;
+          _hayMas = c.length == porPagina;
+        });
+      }
     } on ApiException catch (e) {
       if (e.noAutorizado) await AuthService.instancia.sesionExpirada();
       if (mounted) setState(() => _error = e.mensaje);
     } finally {
       if (mounted) setState(() => _cargando = false);
+    }
+  }
+
+  /// Siguiente página: compras anteriores a la última mostrada (cursor por fecha).
+  Future<void> _cargarMas() async {
+    final actuales = _compras;
+    if (_cargandoMas || !_hayMas || actuales == null || actuales.isEmpty) return;
+    _cargandoMas = true;
+    try {
+      final c = await _servicio.misCompras(limite: porPagina, antes: actuales.last.fechaServidor);
+      if (mounted) {
+        setState(() {
+          _compras = [...actuales, ...c];
+          _hayMas = c.length == porPagina;
+        });
+      }
+    } on ApiException {
+      // Se reintentará cuando el usuario vuelva a llegar al final de la lista.
+    } finally {
+      _cargandoMas = false;
     }
   }
 
@@ -84,9 +115,17 @@ class _MisComprasScreenState extends State<MisComprasScreen> {
       color: ChaacColors.coral,
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-        itemCount: compras.length,
+        itemCount: compras.length + (_hayMas ? 1 : 0),
         separatorBuilder: (_, _) => const SizedBox(height: 12),
-        itemBuilder: (_, i) => _TarjetaCompra(compra: compras[i]),
+        itemBuilder: (_, i) {
+          if (i < compras.length) return _TarjetaCompra(compra: compras[i]);
+          // Al construir el último renglón se pide la siguiente página.
+          WidgetsBinding.instance.addPostFrameCallback((_) => _cargarMas());
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator(color: ChaacColors.coral)),
+          );
+        },
       ),
     );
   }

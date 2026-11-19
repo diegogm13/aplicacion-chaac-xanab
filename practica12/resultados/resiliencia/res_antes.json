@@ -1,0 +1,74 @@
+{
+  "fecha": "2026-11-12T22:31:42.211227",
+  "resultados": [
+    {
+      "id": "RES-01",
+      "escenario": "Pérdida de Internet durante una consulta",
+      "esperado": "Error controlado",
+      "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet.",
+      "tiempo_ms": 99,
+      "cumple": true
+    },
+    {
+      "id": "RES-02",
+      "escenario": "Pérdida de Internet durante una escritura",
+      "esperado": "No confirmar falsamente el registro",
+      "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · compras nuevas en servidor: 0",
+      "tiempo_ms": 8,
+      "cumple": true,
+      "compras_nuevas": 0
+    },
+    {
+      "id": "RES-03",
+      "escenario": "Servidor sin respuesta",
+      "esperado": "Timeout controlado",
+      "observado": "ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet.",
+      "tiempo_ms": 20002,
+      "cumple": true
+    },
+    {
+      "id": "RES-04",
+      "escenario": "Respuesta HTTP 500",
+      "esperado": "Mostrar error y conservar estabilidad",
+      "observado": "ApiException(500): Internal server error · siguiente consulta: OK (42 ms)",
+      "tiempo_ms": 7,
+      "cumple": true
+    },
+    {
+      "id": "RES-05",
+      "escenario": "Respuesta HTTP 401 o 403",
+      "esperado": "Gestionar autenticación o permisos",
+      "observado": "401 → noAutorizado=true (cierra sesión) · 403 → noAutorizado=false (3 ms)",
+      "tiempo_ms": 2,
+      "cumple": true
+    },
+    {
+      "id": "RES-06",
+      "escenario": "Recuperación de conexión",
+      "esperado": "Restablecer comunicación",
+      "observado": "primer intento: ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. (2024 ms) · sin reintento automático; recuperó con 1 reintento(s) MANUAL(es) a los 1007 ms",
+      "tiempo_ms": 1007,
+      "cumple": true,
+      "reintento_automatico": false,
+      "intentos_manuales": 1
+    },
+    {
+      "id": "RES-07",
+      "escenario": "Reintento de una escritura",
+      "esperado": "Evitar duplicados inesperados",
+      "observado": "1.er intento: ApiException(sin status): No fue posible conectar con la tienda. Revisa tu conexión a internet. · reintento: sin error · compras creadas: 2",
+      "tiempo_ms": 796,
+      "cumple": false,
+      "compras_nuevas": 2
+    },
+    {
+      "id": "RES-08",
+      "escenario": "Respuesta tardía",
+      "esperado": "Evitar operaciones duplicadas o inconsistentes",
+      "observado": "dos envíos durante la espera → compras creadas: 2 (sin error / sin error). En la UI, CheckoutScreen deshabilita el botón mientras espera (_pagando).",
+      "tiempo_ms": 3666,
+      "cumple": false,
+      "compras_nuevas": 2
+    }
+  ]
+}

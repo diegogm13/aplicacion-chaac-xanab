@@ -1,0 +1,11 @@
+{
+  "fecha": "2026-11-13T18:16:42.390Z",
+  "stock_inicial": 100000,
+  "piezas_vendidas": 1009,
+  "stock_esperado": 98991,
+  "stock_real": 98991,
+  "diferencia": 0,
+  "compras_usuario_p12": 1009,
+  "compras_con_renglones": 1009,
+  "compras_huerfanas": 0
+}

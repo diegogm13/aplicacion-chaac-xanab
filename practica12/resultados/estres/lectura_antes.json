@@ -1,0 +1,150 @@
+{
+  "fecha": "2026-11-13T03:49:26.057Z",
+  "base": "http://localhost:3001/api",
+  "tipo": "lectura",
+  "etiqueta": "antes",
+  "endpoint": "GET /productos",
+  "solicitudes_por_etapa": 100,
+  "idempotencia": false,
+  "timeout_ms": 30000,
+  "etapas": [
+    {
+      "usuarios": 1,
+      "solicitudes": 100,
+      "inicio": 1794541766059,
+      "fin": 1794541766293,
+      "duracion_s": 0.23,
+      "rps": 428.19,
+      "exitosas": 100,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 100
+      },
+      "promedio_ms": 2.33,
+      "p50_ms": 2.06,
+      "p90_ms": 3.48,
+      "p95_ms": 4.03,
+      "p99_ms": 5.02,
+      "min_ms": 1.24,
+      "max_ms": 9.14,
+      "kbps": 37427.5,
+      "errores_red": []
+    },
+    {
+      "usuarios": 5,
+      "solicitudes": 100,
+      "inicio": 1794541768297,
+      "fin": 1794541768367,
+      "duracion_s": 0.07,
+      "rps": 1438.17,
+      "exitosas": 100,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 100
+      },
+      "promedio_ms": 3.41,
+      "p50_ms": 3.04,
+      "p90_ms": 5.4,
+      "p95_ms": 6.01,
+      "p99_ms": 10.05,
+      "min_ms": 1.6,
+      "max_ms": 11.25,
+      "kbps": 125707.76,
+      "errores_red": []
+    },
+    {
+      "usuarios": 10,
+      "solicitudes": 100,
+      "inicio": 1794541770371,
+      "fin": 1794541770440,
+      "duracion_s": 0.07,
+      "rps": 1456.05,
+      "exitosas": 100,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 100
+      },
+      "promedio_ms": 6.64,
+      "p50_ms": 5.68,
+      "p90_ms": 9.98,
+      "p95_ms": 13.96,
+      "p99_ms": 18.7,
+      "min_ms": 2.63,
+      "max_ms": 20.02,
+      "kbps": 127270.53,
+      "errores_red": []
+    },
+    {
+      "usuarios": 25,
+      "solicitudes": 100,
+      "inicio": 1794541772442,
+      "fin": 1794541772509,
+      "duracion_s": 0.07,
+      "rps": 1507.34,
+      "exitosas": 100,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 100
+      },
+      "promedio_ms": 15.13,
+      "p50_ms": 12.72,
+      "p90_ms": 28.15,
+      "p95_ms": 31.34,
+      "p99_ms": 32.15,
+      "min_ms": 5.2,
+      "max_ms": 32.3,
+      "kbps": 131753.64,
+      "errores_red": []
+    },
+    {
+      "usuarios": 50,
+      "solicitudes": 100,
+      "inicio": 1794541774521,
+      "fin": 1794541774610,
+      "duracion_s": 0.09,
+      "rps": 1118.52,
+      "exitosas": 100,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 100
+      },
+      "promedio_ms": 35.28,
+      "p50_ms": 27.95,
+      "p90_ms": 61.98,
+      "p95_ms": 62.56,
+      "p99_ms": 63.23,
+      "min_ms": 8.59,
+      "max_ms": 63.26,
+      "kbps": 97767.44,
+      "errores_red": []
+    },
+    {
+      "usuarios": 100,
+      "solicitudes": 100,
+      "inicio": 1794541776625,
+      "fin": 1794541776693,
+      "duracion_s": 0.07,
+      "rps": 1467.27,
+      "exitosas": 100,
+      "errores": 0,
+      "errores_pct": 0,
+      "codigos": {
+        "200": 100
+      },
+      "promedio_ms": 40.76,
+      "p50_ms": 44.68,
+      "p90_ms": 49.21,
+      "p95_ms": 50.29,
+      "p99_ms": 51.65,
+      "min_ms": 19.02,
+      "max_ms": 51.74,
+      "kbps": 128251.1,
+      "errores_red": []
+    }
+  ]
+}

@@ -28,7 +28,14 @@ class _ProductoScreenState extends State<ProductoScreen> {
       return;
     }
     setState(() => _agregando = true);
-    await CarritoService.instancia.agregar(p, _talla!, _cantidad);
+    try {
+      await CarritoService.instancia.agregar(p, _talla!, _cantidad);
+    } on CarritoException catch (e) {
+      if (!mounted) return;
+      setState(() => _agregando = false);
+      avisar(context, e.mensaje, error: true);
+      return;
+    }
     if (!mounted) return;
     setState(() => _agregando = false);
     ScaffoldMessenger.of(context)

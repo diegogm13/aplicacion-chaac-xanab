@@ -26,6 +26,15 @@ class ItemCarrito {
   double get subtotal => precio * cantidad;
 }
 
+/// Error de negocio del carrito, con un mensaje listo para mostrarse (Práctica 13).
+class CarritoException implements Exception {
+  final String mensaje;
+  CarritoException(this.mensaje);
+
+  @override
+  String toString() => mensaje;
+}
+
 /// Carrito guardado en SQLite: no se pierde al cerrar la app.
 class CarritoService extends ChangeNotifier {
   CarritoService._();
@@ -44,6 +53,9 @@ class CarritoService extends ChangeNotifier {
   }
 
   Future<void> agregar(Producto p, String talla, int cantidad) async {
+    // DEF-02 (Práctica 11), corregido en la Práctica 13: con stock 0, `clamp(1, 0)`
+    // lanzaba ArgumentError. Ahora se rechaza con un error de negocio controlado.
+    if (p.stock <= 0) throw CarritoException('${p.nombre} está agotado.');
     final db = await AppDatabase.instancia;
     final existente = await db.query('carrito',
         where: 'producto_id = ? AND talla = ?', whereArgs: [p.id, talla], limit: 1);
@@ -66,7 +78,7 @@ class CarritoService extends ChangeNotifier {
   }
 
   Future<void> cambiarCantidad(ItemCarrito item, int cantidad) async {
-    if (cantidad < 1) return quitar(item);
+    if (cantidad < 1 || item.stock <= 0) return quitar(item); // agotado: se retira del carrito
     final db = await AppDatabase.instancia;
     await db.update('carrito', {'cantidad': cantidad.clamp(1, item.stock)}, where: 'id = ?', whereArgs: [item.id]);
     await cargar();

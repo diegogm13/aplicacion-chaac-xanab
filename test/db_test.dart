@@ -56,6 +56,8 @@ void main() {
   });
 
   tearDownAll(() async {
+    // Evidencia de la Práctica 11: sólo se reescribe con GUARDAR_METRICAS=1.
+    if (Platform.environment['GUARDAR_METRICAS'] != '1') return;
     final dir = Directory('practica11/resultados')..createSync(recursive: true);
     File(p.join(dir.path, 'db_metricas.json'))
         .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(metricas));
@@ -108,10 +110,10 @@ void main() {
       expect(carrito.paraCompra().last, {'producto_id': 'p2', 'size': '26', 'quantity': 2});
     });
 
-    test('DEFECTO DEF-02: stock 0 -> ArgumentError no controlado en clamp(1, 0)', () async {
-      // La UI deshabilita el botón si p.agotado, pero el servicio no se protege:
-      // cualquier otro llamador (o un producto cuyo stock bajó a 0) truena.
-      expect(() => carrito.agregar(prod(stock: 0), '26', 1), throwsArgumentError);
+    test('CORREGIDO P13 (DEF-02): stock 0 -> CarritoException controlada, sin ArgumentError', () async {
+      // Antes: clamp(1, 0) lanzaba ArgumentError no controlado. Ahora el servicio se protege.
+      await expectLater(carrito.agregar(prod(stock: 0), '26', 1), throwsA(isA<CarritoException>()));
+      expect(carrito.vacio, isTrue);
     });
   });
 

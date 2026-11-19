@@ -1,0 +1,28 @@
+{
+  "fuente": "Supabase SQL Editor — practica12/sql/optimizacion.sql, BLOQUE A (antes de idx_compras_usuario_fecha)",
+  "consulta": "SELECT id, total, status, created_at FROM compras WHERE user_id = <P12> ORDER BY created_at DESC LIMIT 20",
+  "planning_ms": 3.797,
+  "execution_ms": 12.036,
+  "filas_leidas_del_indice": 507,
+  "filas_devueltas": 20,
+  "plan": [
+    "Limit  (cost=7.18..7.23 rows=20 width=39) (actual time=11.940..11.945 rows=20 loops=1)",
+    "  Buffers: shared hit=18",
+    "  InitPlan 1",
+    "    ->  Seq Scan on usuarios  (cost=0.00..1.35 rows=1 width=16) (actual time=1.355..1.356 rows=1 loops=1)",
+    "          Filter: (email = 'p12.carga@example.invalid'::text)",
+    "          Rows Removed by Filter: 37",
+    "          Buffers: shared hit=1",
+    "  ->  Sort  (cost=5.83..5.93 rows=43 width=39) (actual time=11.939..11.941 rows=20 loops=1)",
+    "        Sort Key: compras.created_at DESC",
+    "        Sort Method: top-N heapsort  Memory: 27kB",
+    "        Buffers: shared hit=18",
+    "        ->  Index Scan using idx_compras_user on compras  (cost=0.15..4.68 rows=43 width=39) (actual time=3.046..11.749 rows=507 loops=1)",
+    "              Index Cond: (user_id = (InitPlan 1).col1)",
+    "              Buffers: shared hit=15",
+    "Planning:",
+    "  Buffers: shared hit=148",
+    "Planning Time: 3.797 ms",
+    "Execution Time: 12.036 ms"
+  ]
+}
