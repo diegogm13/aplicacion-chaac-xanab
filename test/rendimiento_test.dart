@@ -34,6 +34,9 @@ void main() {
   final metricas = <String, Object?>{};
 
   tearDownAll(() {
+    // Las métricas son evidencia de la Práctica 11: sólo se reescriben si se pide
+    // (GUARDAR_METRICAS=1), para que el CI y las corridas normales no las alteren.
+    if (Platform.environment['GUARDAR_METRICAS'] != '1') return;
     File('practica11/resultados/rendimiento_app.json')
         .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(metricas));
   });

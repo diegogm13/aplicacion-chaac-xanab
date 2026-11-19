@@ -56,6 +56,8 @@ void main() {
   });
 
   tearDownAll(() async {
+    // Evidencia de la Práctica 11: sólo se reescribe con GUARDAR_METRICAS=1.
+    if (Platform.environment['GUARDAR_METRICAS'] != '1') return;
     final dir = Directory('practica11/resultados')..createSync(recursive: true);
     File(p.join(dir.path, 'db_metricas.json'))
         .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(metricas));
