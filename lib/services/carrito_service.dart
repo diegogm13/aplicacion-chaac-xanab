@@ -26,6 +26,15 @@ class ItemCarrito {
   double get subtotal => precio * cantidad;
 }
 
+/// Error de negocio del carrito, con un mensaje listo para mostrarse (Práctica 13).
+class CarritoException implements Exception {
+  final String mensaje;
+  CarritoException(this.mensaje);
+
+  @override
+  String toString() => mensaje;
+}
+
 /// Carrito guardado en SQLite: no se pierde al cerrar la app.
 class CarritoService extends ChangeNotifier {
   CarritoService._();
