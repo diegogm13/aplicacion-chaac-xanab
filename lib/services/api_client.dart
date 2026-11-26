@@ -135,6 +135,9 @@ class ApiClient {
   }
 
   String _mensajeDe(Map<String, dynamic>? cuerpo, int status) {
+    // Práctica 5: ante un error del servidor (5xx) nunca se muestra su mensaje, que puede
+    // traer detalles técnicos ("Internal server error", nombres de tablas, trazas).
+    if (status >= 500) return 'La tienda tuvo un problema. Intenta de nuevo en unos minutos.';
     final m = cuerpo?['message'];
     if (m is List && m.isNotEmpty) return m.first.toString();
     if (m is String && m.isNotEmpty) return m;

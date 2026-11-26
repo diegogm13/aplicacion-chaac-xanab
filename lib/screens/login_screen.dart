@@ -84,12 +84,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(hintText: 'Correo electrónico', prefixIcon: Icon(Icons.mail_outline)),
                     // OBS-02 (P11): antes bastaba con una "@" ("a@" pasaba); ahora es la misma regla del registro.
-                    validator: Validaciones.email,
+                    // Práctica 5: además rechaza solo espacios y correos de más de 100 caracteres.
+                    validator: Validaciones.correoLogin,
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _pass,
+                    // Práctica 5: la contraseña se oculta y el teclado no la sugiere ni la autocorrige.
                     obscureText: !_verPass,
+                    enableSuggestions: false,
+                    autocorrect: false,
                     autofillHints: const [AutofillHints.password],
                     onFieldSubmitted: (_) => _entrar(),
                     decoration: InputDecoration(
@@ -100,7 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () => setState(() => _verPass = !_verPass),
                       ),
                     ),
-                    validator: (v) => (v == null || v.isEmpty) ? 'Escribe tu contraseña' : null,
+                    // Práctica 5: de 8 a 64 caracteres. La contraseña nunca se imprime en el registro (Logcat).
+                    validator: Validaciones.passwordLogin,
                   ),
                   if (_error != null) ...[
                     const SizedBox(height: 14),

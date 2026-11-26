@@ -33,6 +33,31 @@ class Validaciones {
     return emailBasico(valor) ? null : mensaje;
   }
 
+  // ---- Práctica 5: código seguro en el inicio de sesión ----
+
+  /// Longitudes máximas aceptadas en el login (el correo más largo permitido por RFC 5321 es 254).
+  static const int maxCorreo = 100;
+  static const int maxPassword = 64;
+  static const int minPassword = 8;
+
+  /// Correo del login: obligatorio, sin aceptar solo espacios, con longitud máxima y formato válido.
+  static String? correoLogin(String? valor) {
+    final t = valor?.trim() ?? '';
+    if (t.isEmpty) return 'Escribe tu correo';
+    if (t.length > maxCorreo) return 'El correo no puede tener más de $maxCorreo caracteres';
+    if (!emailValido(t)) return 'Escribe un correo válido';
+    return null;
+  }
+
+  /// Contraseña del login: obligatoria, de 8 a 64 caracteres. No se recorta: los espacios cuentan.
+  static String? passwordLogin(String? valor) {
+    final v = valor ?? '';
+    if (v.isEmpty) return 'Escribe tu contraseña';
+    if (v.length < minPassword) return 'La contraseña debe tener al menos $minPassword caracteres';
+    if (v.length > maxPassword) return 'La contraseña no puede tener más de $maxPassword caracteres';
+    return null;
+  }
+
   /// Reglas de contraseña fuertes, idénticas a `IsStrongPassword` del backend.
   static Map<String, bool> reglasPassword(String password) {
     return {

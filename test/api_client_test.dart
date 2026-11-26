@@ -115,16 +115,23 @@ void main() {
       expect(e.cuerpo, isNull);
     });
 
-    test('D5=F  500 con cuerpo HTML -> genérico, cuerpo null', () async {
+    test('D5=F  502 con cuerpo HTML -> genérico, cuerpo null', () async {
       final e = await fallo(con((_) async => resp('<h1>Bad Gateway</h1>', 502)).get('/x'));
-      expect(e.mensaje, 'Ocurrió un error (502). Intenta de nuevo.');
+      expect(e.mensaje, 'La tienda tuvo un problema. Intenta de nuevo en unos minutos.');
       expect(e.cuerpo, isNull);
     });
 
     test('D5=F  cuerpo JSON que es lista (no Map) -> genérico', () async {
-      final e = await fallo(con((_) async => resp([1, 2], 500)).get('/x'));
+      final e = await fallo(con((_) async => resp([1, 2], 422)).get('/x'));
       expect(e.cuerpo, isNull);
-      expect(e.toString(), 'Ocurrió un error (500). Intenta de nuevo.');
+      expect(e.toString(), 'Ocurrió un error (422). Intenta de nuevo.');
+    });
+
+    test('P5  un 500 nunca muestra el mensaje técnico del servidor', () async {
+      final e = await fallo(con((_) async => resp({'statusCode': 500, 'message': 'Internal server error'}, 500)).get('/x'));
+      expect(e.mensaje, 'La tienda tuvo un problema. Intenta de nuevo en unos minutos.');
+      expect(e.mensaje, isNot(contains('Internal')));
+      expect(e.status, 500);
     });
 
     test('403 se distingue de 401 (autorización ≠ autenticación)', () async {
